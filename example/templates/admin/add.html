@@ -1,0 +1,34 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}
+  New instance of {{model_name}}
+{% endblock %}
+
+
+{% block main %}
+
+<h1>New {{model_name}}</h1>
+
+<br />
+
+<fieldset>
+<legend>
+New {{model_name}}
+</legend>
+<form method="POST">
+  {% from "_formhelpers.html" import render_field %}
+    <dl>
+      {% for field in form %}
+        {{ render_field(field) }}	
+      {% endfor %}
+      {{ form.csrf }}
+    </dl>
+
+    <input type="submit" value="Submit" class="button">
+    <input type="button" value="Cancel" class="button"
+           onclick="javascript:window.location = '{{ url_for('generic_model_list', model_name=model_name) }}'" />
+  </div>
+</form>
+</fieldset>
+
+{% endblock %}

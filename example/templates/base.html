@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>{% block title %}{% endblock title %}</title>
+
+    <link rel="stylesheet" href="/static/css/blueprint/screen.css" type="text/css" media="screen, projection"/>
+    <link rel="stylesheet" href="/static/css/blueprint/print.css" type="text/css" media="print"/>
+      <!--[if lt IE 8]>
+          <link rel="stylesheet" href="/static/css/blueprint/ie.css" type="text/css" media="screen, projection"/>
+      <![endif]-->
+
+    <link rel="stylesheet" href="/static/css/layout.css" type="text/css"/>
+    {% block extra_head %}
+    {% endblock extra_head %}
+  </head>
+    
+  <body>
+    <div class="container">
+      <div id="header" class="span-24 last">
+        <div class="span-3">
+          <a href="http://www.twdb.state.tx.us/home/index.asp" title="link to TWDB homepage">
+            <img src="/static/images/swr/twdbseal.gif" width="100" height="100" alt="TWDB Seal" />
+          </a>
+        </div>
+        <div class="span-18 last">
+          <div id="swr-header">
+            <h1>Surface Water Resources</h1>
+            <p>
+              an important natural resource providing water for human use and a habitat for aquatic ecosystems
+            </p>
+          </div>
+        </div>
+      </div>
+      <div id="pagebody" class="span-24 last">
+
+        <div id="navcontainer" class="span-5">
+          <ul id="navlist">
+            <li class="navheader">Links</li>
+            <li><a href="{{ url_for('admin.index') }}">Admin</a></li>
+          </ul>
+        </div>
+        <div id="main" class="span-16 last">
+          {% for category, msg in get_flashed_messages(with_categories=true) %}
+            <p class='{{ category }}'>{{ msg }}</p>
+          {% endfor %}
+
+          {% block main %}
+          {% endblock main %}
+        </div>
+      </div>
+        
+      <div id="footer" class="span-24 last">
+        {% if session.user  %}
+          logged in as: {{ session.user.username }}
+        {% endif %}
+      </div>
+    </div>
+    {% block body_script %}
+    {% endblock body_script %}
+  </body>
+</html>
