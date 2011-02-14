@@ -421,8 +421,6 @@ class User(Base):
 
 
 
-
-
 #------------------------------
 # forms
 #------------------------------
@@ -457,7 +455,7 @@ class UserForm(UserFormBase, model_form(User, exclude=['user_id', 'role_id', 'ag
 
 
 
-admin_mod = Admin(sys.modules[__name__], model_forms={'User': UserForm}, admin_db_session=db_session)
+admin_mod = Admin(sys.modules[__name__], model_forms={'User': UserForm}, admin_db_session=db_session, exclude_pk=True)
 app.register_module(admin_mod, url_prefix='/admin')
 
 if __name__ == '__main__':
