@@ -303,10 +303,6 @@ class SiteEvent(Base):
     event_date = Column(DateTime)
     site_id = Column(Integer, ForeignKey('site.site_id'))
     
-    def __init__(self, comment, site_id):
-        self.comment = comment
-        self.site_id = site_id
-    
 
 
 class Parameter(Base):
