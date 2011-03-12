@@ -1,62 +1,64 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!doctype html>
+<!--[if lt IE 7 ]> <html class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-    <title>{% block title %}{% endblock title %}</title>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock title %}</title>
 
-    <link rel="stylesheet" href="/static/css/blueprint/screen.css" type="text/css" media="screen, projection"/>
-    <link rel="stylesheet" href="/static/css/blueprint/print.css" type="text/css" media="print"/>
-      <!--[if lt IE 8]>
-          <link rel="stylesheet" href="/static/css/blueprint/ie.css" type="text/css" media="screen, projection"/>
-      <![endif]-->
+  <!--  Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="/static/css/layout.css" type="text/css"/>
-    {% block extra_head %}
-    {% endblock extra_head %}
-  </head>
-    
-  <body>
-    <div class="container">
-      <div id="header" class="span-24 last">
-        <div class="span-3">
-          <a href="http://www.twdb.state.tx.us/home/index.asp" title="link to TWDB homepage">
-            <img src="/static/images/swr/twdbseal.gif" width="100" height="100" alt="TWDB Seal" />
-          </a>
-        </div>
-        <div class="span-18 last">
-          <div id="swr-header">
-            <h1>Surface Water Resources</h1>
-            <p>
-              an important natural resource providing water for human use and a habitat for aquatic ecosystems
-            </p>
-          </div>
-        </div>
-      </div>
-      <div id="pagebody" class="span-24 last">
+  <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-        <div id="navcontainer" class="span-5">
-          <ul id="navlist">
-            <li class="navheader">Links</li>
-            <li><a href="{{ url_for('admin.index') }}">Admin</a></li>
-          </ul>
-        </div>
-        <div id="main" class="span-16 last">
-          {% for category, msg in get_flashed_messages(with_categories=true) %}
-            <p class='{{ category }}'>{{ msg }}</p>
-          {% endfor %}
+  <!-- CSS : implied media="all" -->
+  <link rel="stylesheet" href="/static/css/style.css?v=1">
 
-          {% block main %}
-          {% endblock main %}
-        </div>
-      </div>
-        
-      <div id="footer" class="span-24 last">
-        {% if session.user  %}
-          logged in as: {{ session.user.username }}
-        {% endif %}
-      </div>
+  <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
+  <script src="/static/js/libs/modernizr-1.6.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/admin.css" type="text/css"/>
+
+</head>
+
+<body lang="en">
+  <div class="container">
+    <header>
+      <h1>Flask Admin</h1>
+    </header>
+    <div id="main" role="main">
+
+
+
+{% block main %}
+{% endblock main %}
+
     </div>
-    {% block body_script %}
-    {% endblock body_script %}
+      <footer>
+
+      </footer>
+    </div>
+
+
+
+    <!-- JavaScript at the bottom for fast page loading -->
+
+    <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.5.0.js"%3E%3C/script%3E'))</script>
+
+    <!-- scripts concatenated and minified via ant build script-->
+    <script src="/static/js/plugins.js"></script>
+    <script src="/static/js/script.js"></script>
+    <!-- end concatenated and minified scripts-->
+
+    <!--[if lt IE 7 ]>
+        <script src="js/libs/dd_belatedpng.js"></script>
+        <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+    <![endif]-->
   </body>
 </html>

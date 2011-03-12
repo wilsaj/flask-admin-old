@@ -1,4 +1,4 @@
-{% extends "admin/admin_base.html" %}
+{% extends "admin/base.html" %}
 
 {% block title %}
   New instance of {{model_name}}
@@ -19,7 +19,7 @@ New {{model_name}}
   {% from "_formhelpers.html" import render_field %}
     <dl>
       {% for field in form %}
-        {{ render_field(field) }}	
+        {{ render_field(field) }}
       {% endfor %}
       {{ form.csrf }}
     </dl>
