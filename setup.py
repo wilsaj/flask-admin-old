@@ -32,7 +32,6 @@ setup(
         'Flask',
         'Flask-SQLAlchemy',
         'Flask-WTF',
-        'webhelpers', # note: this should be replaced w/Flask-SQLAlchemy pagination
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

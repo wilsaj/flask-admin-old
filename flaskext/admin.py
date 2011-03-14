@@ -25,7 +25,6 @@ from wtforms import widgets, validators
 from wtforms.ext.sqlalchemy import fields as sa_fields
 from wtforms.form import Form
 
-
 def Admin(models, model_forms={}, include_models=[], exclude_models=[], exclude_pks=False, admin_db_session=None):
     global model_dict
     global form_dict
@@ -86,6 +85,7 @@ def generic_model_list(model_name):
     items = model_instances.limit(per_page).offset((page - 1) * per_page).all()
     pagination = Pagination(model_instances, page, per_page, model_instances.count(), items)
     return render_template('admin/list.html',
+                           admin_models=sorted(model_dict.keys()),
                            _get_pk_value=_get_pk_value,
                            model_instances=pagination.items,
                            model_name=model_name,
@@ -119,6 +119,7 @@ def generic_model_add(model_name):
         else:
             flash('There are errors, see below!', 'error')
             return render_template('admin/add.html',
+                                   admin_models=sorted(model_dict.keys()),
                                    model_name=model_name,
                                    form=form)
 
@@ -164,6 +165,7 @@ def generic_model_edit(model_name, model_key):
     if request.method == 'GET':
         form = model_form(obj=model_instance)
         return render_template('admin/edit.html',
+                               admin_models=sorted(model_dict.keys()),
                                model_instance=model_instance,
                                model_name=model_name,
                                form=form)
@@ -181,6 +183,7 @@ def generic_model_edit(model_name, model_key):
         else:
             flash('There are errors, see below!', 'error')
             return render_template('admin/edit.html',
+                                   admin_models=sorted(model_dict.keys()),
                                    model_instance=model_instance,
                                    model_name=model_name,
                                    form=form)
@@ -285,7 +288,6 @@ class AdminConverter(ModelConverter):
     relationship properties and uses custom widgets for date and
     datetime objects.
     """
-
     def convert(self, model, mapper, prop, field_args):
         if not isinstance(prop, sa.orm.properties.ColumnProperty) and not isinstance(prop, sa.orm.properties.RelationshipProperty):
             # XXX We don't support anything but ColumnProperty and

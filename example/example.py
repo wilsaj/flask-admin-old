@@ -1,7 +1,7 @@
 import datetime
 import hashlib
 import sys
-
+import platform
 
 from flask import Flask, g, session
 from flaskext.sqlalchemy import SQLAlchemy
@@ -32,15 +32,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'sqlite:///exa
 app.config['SECRET_KEY'] = 'not secure'
 SECRET_KEY = app.config['SECRET_KEY']
 
+if "ARCH" in platform.uname()[2]:
+    app.config['LIBSPATIALITE_LOCATION'] = "select load_extension('/usr/lib/libspatialite.so.1')"
+else:
+    app.config['LIBSPATIALITE_LOCATION'] = "select load_extension('/usr/lib/libspatialite.so.2')"
+
+
 if app.config['SQLALCHEMY_DATABASE_URI']:
     engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], convert_unicode=True, module=sqlite, echo=True)
     connection = engine.raw_connection().connection
     connection.enable_load_extension(True)
-    import platform
-    if "ARCH" in platform.uname()[2]:
-        engine.execute("select load_extension('/usr/lib/libspatialite.so.1')")
-    else:
-        engine.execute("select load_extension('/usr/lib/libspatialite.so.2')")
+    engine.execute(app.config['LIBSPATIALITE_LOCATION'])
 
 else:
     engine = create_engine(app.config['WHATEVER_DATABASE_URI'], convert_unicode=True)
@@ -53,6 +55,19 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 
 Base = declarative_base()
 Base.query = db_session.query_property()
+
+
+@app.before_request
+def spatialite_kludge():
+    if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
+        from database import engine
+        connection = engine.raw_connection().connection
+        connection.enable_load_extension(True)
+        engine.execute(app.config['LIBSPATIALITE_LOCATION'])
+
+
+
+
 
 
 # ----------------------------------------------------------------------
@@ -95,20 +110,6 @@ class Agency(Base):
 
     def __init__(self, name=""):
         self.name = name
-
-    def __repr__(self):
-        return self.name
-
-    __mapper_args__ = {
-        'order_by': name
-        }
-
-
-class BayEstuary(Base):
-    __tablename__ = 'bay_estuary'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), unique=True)
 
     def __repr__(self):
         return self.name

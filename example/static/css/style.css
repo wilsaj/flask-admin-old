@@ -169,7 +169,8 @@ button {  width: auto; overflow: visible; }
 
 header {
     text-align:center;
-    background: #ccc;
+    background: #ddd;
+    margin-bottom: 5px;
 }
 
 header h1 {
@@ -182,8 +183,11 @@ header span {
 }
 
 #main {
-    width: 900px;
+    float: left;
+    padding-left: 40px;
+    width: 600px;
     margin: 0px auto;
+    bottom: 0px;
 }
 
 body {
@@ -192,7 +196,38 @@ body {
 }
 
 
+div#left_nav {
+    float: left;
+    padding-right: 20px;
+    border-right: 1px solid #CDCDCD;
+}
 
+
+div#left_nav h4 {
+    font-size: 1.2em;
+    padding-left: 10px;
+}
+
+div#left_nav ul {
+    margin-left: 0;
+    padding-left: 4px;
+    list-style-type: none;
+    font-family: Georgia, serif;
+}
+
+
+div#left_nav a {
+    color: #000000;
+    text-decoration: none;
+    display: block;
+    padding: 3px 1px 3px 9px;
+    /* background-color: #D5D2AF; */
+    /* border-bottom: 1px solid #CDCDCD; */
+}
+
+
+
+/* * { border: 1px solid red !important; } */
 
 
 
