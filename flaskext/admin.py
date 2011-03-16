@@ -15,7 +15,8 @@ import types
 
 import sqlalchemy as sa
 import sqlalchemy.ext.declarative
-from flask import app, flash, g, Module, render_template, redirect, request, session, url_for
+from flask import app, flash, g, Module, render_template, redirect, \
+     request, session, url_for
 from flaskext.sqlalchemy import Pagination
 from sqlalchemy.orm.exc import NoResultFound
 from wtforms import widgets, validators
