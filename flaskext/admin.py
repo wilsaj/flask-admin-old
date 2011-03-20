@@ -15,17 +15,19 @@ import types
 
 import sqlalchemy as sa
 import sqlalchemy.ext.declarative
-from flask import app, flash, g, Module, render_template, redirect, request, session, url_for
+from flask import app, flash, g, Module, render_template, redirect, request, \
+     session, url_for
 from flaskext.sqlalchemy import Pagination
 from sqlalchemy.orm.exc import NoResultFound
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
-from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms import fields as wtf_fields
 from wtforms import widgets, validators
 from wtforms.ext.sqlalchemy import fields as sa_fields
 from wtforms.form import Form
 
-def Admin(models, model_forms={}, include_models=[], exclude_models=[], exclude_pks=False, admin_db_session=None):
+
+def Admin(models, model_forms={}, include_models=[], exclude_models=[],
+          exclude_pks=False, admin_db_session=None):
     global model_dict
     global form_dict
     global db_session
@@ -47,13 +49,19 @@ def Admin(models, model_forms={}, include_models=[], exclude_models=[], exclude_
         if include_models:
             for model in include_models:
                 module_dict = models.__dict__
-                if model in module_dict and isinstance(module_dict[model], sa.ext.declarative.DeclarativeMeta):
+                if model in module_dict and \
+                       isinstance(module_dict[model],
+                                  sa.ext.declarative.DeclarativeMeta):
                     model_dict[model] = module_dict[model]
         else:
-            model_dict = dict([(k,v) for k,v in models.__dict__.items() if isinstance(v, sa.ext.declarative.DeclarativeMeta) and k != 'Base'])
+            model_dict = dict([(k, v) for k, v in models.__dict__.items()
+                               if isinstance(v,
+                                             sa.ext.declarative.DeclarativeMeta) \
+                               and k != 'Base'])
 
     if model_dict:
-        form_dict = dict([(k, _form_for_model(v, exclude_pk=exclude_pks)) for k,v in model_dict.items()])
+        form_dict = dict([(k, _form_for_model(v, exclude_pk=exclude_pks))
+                          for k, v in model_dict.items()])
         for model, form in model_forms.items():
             if model in form_dict:
                 form_dict[model] = form
@@ -61,8 +69,8 @@ def Admin(models, model_forms={}, include_models=[], exclude_models=[], exclude_
     return admin
 
 
-
 admin = Module(__name__)
+
 
 @admin.route('/')
 def index():
@@ -81,9 +89,10 @@ def generic_model_list(model_name):
     model = model_dict[model_name]
     model_instances = model.query
     per_page = 15
-    page = int(request.args.get('page','1'))
+    page = int(request.args.get('page', '1'))
     items = model_instances.limit(per_page).offset((page - 1) * per_page).all()
-    pagination = Pagination(model_instances, page, per_page, model_instances.count(), items)
+    pagination = Pagination(model_instances, page, per_page,
+                            model_instances.count(), items)
     return render_template('admin/list.html',
                            admin_models=sorted(model_dict.keys()),
                            _get_pk_value=_get_pk_value,
@@ -114,7 +123,8 @@ def generic_model_add(model_name):
             db_session.add(model_instance)
             db_session.commit()
             flash('%s added: %s' % (model_name, model_instance), 'success')
-            return redirect(url_for('generic_model_list', model_name=model_name))
+            return redirect(url_for('generic_model_list',
+                                    model_name=model_name))
 
         else:
             flash('There are errors, see below!', 'error')
@@ -143,7 +153,6 @@ def generic_model_delete(model_name, model_key):
     db_session.commit()
     flash('%s deleted: %s' % (model_name, model_instance), 'success')
     return redirect(url_for('generic_model_list', model_name=model_name))
-
 
 
 @admin.route('/edit/<model_name>/<model_key>/', methods=['GET', 'POST'])
@@ -178,7 +187,8 @@ def generic_model_edit(model_name, model_key):
             db_session.add(model_instance)
             db_session.commit()
             flash('%s updated: %s' % (model_name, model_instance), 'success')
-            return redirect(url_for('generic_model_list', model_name=model_name))
+            return redirect(url_for('generic_model_list',
+                                    model_name=model_name))
 
         else:
             flash('There are errors, see below!', 'error')
@@ -189,7 +199,6 @@ def generic_model_edit(model_name, model_key):
                                    form=form)
 
 
-
 def _populate_model_from_form(model_instance, form):
     """
     Return a populated model instance from a form.
@@ -198,7 +207,6 @@ def _populate_model_from_form(model_instance, form):
         field.populate_obj(model_instance, name)
 
     return model_instance
-
 
 
 def _get_pk_value(model_instance):
@@ -214,10 +222,11 @@ def _get_pk_name(model):
     Return the primary key attribute name for a given model (either
     instance or class). Assumes single primary key.
     """
-    model_mapper =  model.__mapper__
+    model_mapper = model.__mapper__
 
     for prop in model_mapper.iterate_properties:
-        if isinstance(prop, sa.orm.properties.ColumnProperty) and prop.columns[0].primary_key:
+        if isinstance(prop, sa.orm.properties.ColumnProperty) and \
+               prop.columns[0].primary_key:
             return prop.key
 
     return None
@@ -239,7 +248,10 @@ def _form_for_model(model_class, exclude=[], exclude_pk=False):
     # exclude any foreign_keys that we have relationships for;
     # relationships will be mapped to select fields by the
     # AdminConverter
-    exclude.extend([relationship.local_side[0].name for relationship in model_mapper.iterate_properties if isinstance(relationship, sa.orm.properties.RelationshipProperty)])
+    exclude.extend([relationship.local_side[0].name
+                    for relationship in model_mapper.iterate_properties
+                    if isinstance(relationship,
+                                  sa.orm.properties.RelationshipProperty)])
 
     form = model_form(model_class, exclude=exclude, converter=AdminConverter())
 
@@ -289,14 +301,16 @@ class AdminConverter(ModelConverter):
     datetime objects.
     """
     def convert(self, model, mapper, prop, field_args):
-        if not isinstance(prop, sa.orm.properties.ColumnProperty) and not isinstance(prop, sa.orm.properties.RelationshipProperty):
+        if not isinstance(prop, sa.orm.properties.ColumnProperty) and \
+               not isinstance(prop, sa.orm.properties.RelationshipProperty):
             # XXX We don't support anything but ColumnProperty and
             # RelationshipProperty at the moment.
             return
 
         if isinstance(prop, sa.orm.properties.ColumnProperty):
             if len(prop.columns) != 1:
-                raise TypeError('Do not know how to convert multiple-column properties currently')
+                raise TypeError('Do not know how to convert multiple-'
+                                'column properties currently')
 
             column = prop.columns[0]
 
@@ -318,7 +332,8 @@ class AdminConverter(ModelConverter):
 
             converter = None
             for col_type in types:
-                type_string = '%s.%s' % (col_type.__module__, col_type.__name__)
+                type_string = '%s.%s' % (col_type.__module__,
+                                         col_type.__name__)
                 if type_string.startswith('sqlalchemy'):
                     type_string = type_string[11:]
 
@@ -332,21 +347,25 @@ class AdminConverter(ModelConverter):
                         break
                 else:
                     return
-            return converter(model=model, mapper=mapper, prop=prop, column=column, field_args=kwargs)
-
+            return converter(model=model, mapper=mapper, prop=prop,
+                             column=column, field_args=kwargs)
 
         if isinstance(prop, sa.orm.properties.RelationshipProperty):
-            if prop.direction == sa.orm.interfaces.MANYTOONE and len(prop.local_remote_pairs) != 1:
-                raise TypeError('Do not know how to convert multiple-column properties currently')
+            if prop.direction == sa.orm.interfaces.MANYTOONE and \
+                   len(prop.local_remote_pairs) != 1:
+                raise TypeError('Do not know how to convert multiple'
+                                '-column properties currently')
 
-            elif prop.direction == sa.orm.interfaces.MANYTOMANY and len(prop.local_remote_pairs) != 2:
-                raise TypeError('Do not know how to convert multiple-column properties currently')
+            elif prop.direction == sa.orm.interfaces.MANYTOMANY and \
+                     len(prop.local_remote_pairs) != 2:
+                raise TypeError('Do not know how to convert multiple'
+                                '-column properties currently')
 
             local_column = prop.local_remote_pairs[0][0]
             foreign_model = prop.mapper.class_
 
             if prop.direction == sa.orm.properties.MANYTOONE:
-                return QuerySelectField(
+                return sa_fields.QuerySelectField(
                     foreign_model.__name__,
                     query_factory=_query_factory_for(foreign_model),
                     allow_blank=local_column.nullable)
@@ -356,7 +375,6 @@ class AdminConverter(ModelConverter):
                     foreign_model.__name__,
                     query_factory=_query_factory_for(foreign_model),
                     allow_blank=local_column.nullable)
-
 
     @converts('Date')
     def conv_Date(self, field_args, **extra):
@@ -372,4 +390,3 @@ class AdminConverter(ModelConverter):
                 return None
         field_args['widget'] = DateTimePickerWidget()
         return wtf_fields.DateTimeField(**field_args)
-
