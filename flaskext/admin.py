@@ -25,15 +25,12 @@ from wtforms.form import Form
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
+
 def Admin(models, model_forms={}, include_models=[], exclude_models=[],
           exclude_pks=False, admin_db_session=None, pagination_per_page=25):
     if not hasattr(app, 'extensions'):
         app.extensions = {}
     app.extensions['admin'] = {}
-
-    # global model_dict
-    # global form_dict
-    # global db_session
 
     try:
         app.extensions['admin']['model_dict']
@@ -59,7 +56,7 @@ def Admin(models, model_forms={}, include_models=[], exclude_models=[],
                                   sa.ext.declarative.DeclarativeMeta):
                     app.extensions['admin']['model_dict'][model] = module_dict[model]
         else:
-            app.extensions['admin']['model_dict'] = dict([(k,v)
+            app.extensions['admin']['model_dict'] = dict([(k, v)
                                for k,v in models.__dict__.items()
                                if isinstance(
                                    v,
@@ -69,7 +66,7 @@ def Admin(models, model_forms={}, include_models=[], exclude_models=[],
     if app.extensions['admin']['model_dict']:
         app.extensions['admin']['form_dict'] = dict(
             [(k, _form_for_model(v, exclude_pk=exclude_pks))
-             for k,v in app.extensions['admin']['model_dict'].items()])
+             for k, v in app.extensions['admin']['model_dict'].items()])
 
         for model, form in model_forms.items():
             if model in app.extensions['admin']['form_dict']:
@@ -78,8 +75,8 @@ def Admin(models, model_forms={}, include_models=[], exclude_models=[],
     return admin
 
 
-
 admin = Module(__name__)
+
 
 @admin.route('/')
 def index():
@@ -88,7 +85,8 @@ def index():
     perform CUID
     """
     return render_template('admin/index.html',
-                           admin_models=sorted(app.extensions['admin']['model_dict'].keys()))
+                           admin_models=sorted(
+                               app.extensions['admin']['model_dict'].keys()))
 
 
 @admin.route('/list/<model_name>/')
@@ -104,12 +102,12 @@ def generic_model_list(model_name):
     pagination = Pagination(model_instances, page, per_page,
                             model_instances.count(), items)
     return render_template('admin/list.html',
-                           admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+                           admin_models=sorted(
+                               app.extensions['admin']['model_dict'].keys()),
                            _get_pk_value=_get_pk_value,
                            model_instances=pagination.items,
                            model_name=model_name,
                            pagination=pagination)
-
 
 
 @admin.route('/add/<model_name>/', methods=['GET', 'POST'])
@@ -139,7 +137,8 @@ def generic_model_add(model_name):
         else:
             flash('There are errors, see below!', 'error')
             return render_template('admin/add.html',
-                                   admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+                                   admin_models=sorted(
+                                       app.extensions['admin']['model_dict'].keys()),
                                    model_name=model_name,
                                    form=form)
 
@@ -165,7 +164,6 @@ def generic_model_delete(model_name, model_key):
     return redirect(url_for('generic_model_list', model_name=model_name))
 
 
-
 @admin.route('/edit/<model_name>/<model_key>/', methods=['GET', 'POST'])
 def generic_model_edit(model_name, model_key):
     if not model_name in app.extensions['admin']['model_dict'].keys():
@@ -185,7 +183,8 @@ def generic_model_edit(model_name, model_key):
     if request.method == 'GET':
         form = model_form(obj=model_instance)
         return render_template('admin/edit.html',
-                               admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+                               admin_models=sorted(
+                                   app.extensions['admin']['model_dict'].keys()),
                                model_instance=model_instance,
                                model_name=model_name, form=form)
 
@@ -203,7 +202,8 @@ def generic_model_edit(model_name, model_key):
         else:
             flash('There are errors, see below!', 'error')
             return render_template('admin/edit.html',
-                                   admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+                                   admin_models=sorted(
+                                       app.extensions['admin']['model_dict'].keys()),
                                    model_instance=model_instance,
                                    model_name=model_name, form=form)
 
@@ -216,7 +216,6 @@ def _populate_model_from_form(model_instance, form):
         field.populate_obj(model_instance, name)
 
     return model_instance
-
 
 
 def _get_pk_value(model_instance):
@@ -232,7 +231,7 @@ def _get_pk_name(model):
     Return the primary key attribute name for a given model (either
     instance or class). Assumes single primary key.
     """
-    model_mapper =  model.__mapper__
+    model_mapper = model.__mapper__
 
     for prop in model_mapper.iterate_properties:
         if isinstance(prop, sa.orm.properties.ColumnProperty) and \
@@ -320,7 +319,8 @@ class AdminConverter(ModelConverter):
 
         if isinstance(prop, sa.orm.properties.ColumnProperty):
             if len(prop.columns) != 1:
-                raise TypeError('Do not know how to convert multiple-column properties currently')
+                raise TypeError('Do not know how to convert multiple-'
+                                'column properties currently')
 
             column = prop.columns[0]
 
@@ -360,15 +360,16 @@ class AdminConverter(ModelConverter):
             return converter(model=model, mapper=mapper, prop=prop,
                              column=column, field_args=kwargs)
 
-
         if isinstance(prop, sa.orm.properties.RelationshipProperty):
             if prop.direction == sa.orm.interfaces.MANYTOONE and \
                    len(prop.local_remote_pairs) != 1:
-                raise TypeError('Do not know how to convert multiple-column properties currently')
+                raise TypeError('Do not know how to convert multiple'
+                                '-column properties currently')
 
             elif prop.direction == sa.orm.interfaces.MANYTOMANY and \
                      len(prop.local_remote_pairs) != 2:
-                raise TypeError('Do not know how to convert multiple-column properties currently')
+                raise TypeError('Do not know how to convert multiple'
+                                '-column properties currently')
 
             local_column = prop.local_remote_pairs[0][0]
             foreign_model = prop.mapper.class_
@@ -384,7 +385,6 @@ class AdminConverter(ModelConverter):
                     foreign_model.__name__,
                     query_factory=_query_factory_for(foreign_model),
                     allow_blank=local_column.nullable)
-
 
     @converts('Date')
     def conv_Date(self, field_args, **extra):
