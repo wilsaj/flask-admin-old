@@ -25,8 +25,8 @@ from wtforms.form import Form
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
-def Admin(models, model_forms={}, include_models=[],
-          exclude_models=[], exclude_pks=False, admin_db_session=None):
+def Admin(models, model_forms={}, include_models=[], exclude_models=[],
+          exclude_pks=False, admin_db_session=None, pagination_per_page=25):
     if not hasattr(app, 'extensions'):
         app.extensions = {}
     app.extensions['admin'] = {}
@@ -42,6 +42,8 @@ def Admin(models, model_forms={}, include_models=[],
 
     if admin_db_session:
         app.extensions['admin']['db_session'] = admin_db_session
+
+    app.extensions['admin']['pagination_per_page'] = pagination_per_page
 
     for i in include_models:
         if i in exclude_models:
@@ -95,7 +97,7 @@ def generic_model_list(model_name):
         return "%s cannot be accessed through this admin page" % (model_name,)
     model = app.extensions['admin']['model_dict'][model_name]
     model_instances = model.query
-    per_page = 15
+    per_page = app.extensions['admin']['pagination_per_page']
     page = int(request.args.get('page','1'))
     page_offset = (page - 1) * per_page
     items = model_instances.limit(per_page).offset(page_offset).all()
