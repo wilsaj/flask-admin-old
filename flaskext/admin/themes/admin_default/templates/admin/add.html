@@ -1,22 +1,22 @@
-{% extends "admin/base.html" %}
+{% extends theme("admin/base.html") %}
 
 {% block title %}
-Edit {{model_name}}
+  New instance of {{model_name}}
 {% endblock %}
+
 
 {% block main %}
 
-<h1>Edit {{model_name}}</h1>
+<h1>New {{model_name}}</h1>
 
 <br />
 
 <fieldset>
 <legend>
-Edit an instance of {{model_name}}
+New {{model_name}}
 </legend>
-<form method="POST" action="">
-
-  {% from "_formhelpers.html" import render_field %}
+<form method="POST">
+  {% from theme("_formhelpers.html") import render_field %}
     <dl>
       {% for field in form %}
         {{ render_field(field) }}
@@ -30,6 +30,5 @@ Edit an instance of {{model_name}}
   </div>
 </form>
 </fieldset>
-
 
 {% endblock %}

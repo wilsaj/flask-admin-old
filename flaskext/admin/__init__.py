@@ -11,13 +11,17 @@
 from __future__ import absolute_import
 
 import inspect
+import os
 import types
 
 import sqlalchemy as sa
 import sqlalchemy.ext.declarative
-from flask import app, flash, g, Module, render_template, redirect, \
+from flask import app, current_app, flash, g, Module, render_template, \
+     redirect, \
      request, session, url_for
 from flaskext.sqlalchemy import Pagination
+from flaskext import themes
+from flaskext.themes import render_theme_template
 from sqlalchemy.orm.exc import NoResultFound
 from wtforms import widgets, validators
 from wtforms import fields as wtf_fields
@@ -26,19 +30,28 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
-def Admin(models, model_forms={}, include_models=[],
-          exclude_models=[], exclude_pks=False, admin_db_session=None):
+def Admin(this_app, models, model_forms={}, include_models=[],
+          exclude_models=[], exclude_pks=False, admin_db_session=None,
+          admin_theme="admin_default"):
     if not hasattr(app, 'extensions'):
         app.extensions = {}
     app.extensions['admin'] = {}
 
-    try:
-        app.extensions['admin']['model_dict']
-    except KeyError:
-        app.extensions['admin']['model_dict'] = {}
-
+    app.extensions['admin']['model_dict'] = {}
+    
     if admin_db_session:
         app.extensions['admin']['db_session'] = admin_db_session
+
+    if hasattr(this_app, "theme_manager"):
+        this_app.theme_manager.loaders = [default_admin_theme_loader]
+        this_app.theme_manager.refresh()
+    else:
+        themes.setup_themes(this_app,
+                            loaders=(default_admin_theme_loader,
+                                     themes.packaged_themes_loader,
+                                     themes.theme_paths_loader))
+
+    app.extensions['admin']['theme'] = admin_theme
 
     for i in include_models:
         if i in exclude_models:
@@ -73,6 +86,32 @@ def Admin(models, model_forms={}, include_models=[],
     return admin
 
 
+def default_admin_theme_loader(app):
+    themes_dir = os.path.join(os.path.dirname(__file__), 'themes')
+    if os.path.isdir(themes_dir):
+        default_themes = themes.load_themes_from(themes_dir)
+
+        def set_theme_application_to_import_name(theme):
+            """
+            Set the theme application to the import name of the
+            app. The themes extension checks that theme.application
+            matches an application's import name when it does things
+            like render templates for a theme for example. This is
+            usually set in an info.json file but there is no way to
+            know what the app's import name will be ahead of time for
+            our default theme, so we do it now.
+            """
+            theme.application = app.import_name
+            return theme
+
+        theme_list = [set_theme_application_to_import_name(theme)
+                      for theme in default_themes]
+
+        return theme_list
+    else:
+        return ()
+
+
 admin = Module(__name__)
 
 
@@ -82,9 +121,10 @@ def index():
     Admin module views. List available models/tables for this user to
     perform CUID
     """
-    return render_template('admin/index.html',
-                           admin_models=sorted(
-                               app.extensions['admin']['model_dict'].keys()))
+    return render_theme_template(app.extensions['admin']['theme'],
+                                 'admin/index.html',
+                                 admin_models=sorted(
+                                     app.extensions['admin']['model_dict'].keys()))
 
 
 @admin.route('/list/<model_name>/')
@@ -99,13 +139,14 @@ def generic_model_list(model_name):
     items = model_instances.limit(per_page).offset(page_offset).all()
     pagination = Pagination(model_instances, page, per_page,
                             model_instances.count(), items)
-    return render_template('admin/list.html',
-                           admin_models=sorted(
-                               app.extensions['admin']['model_dict'].keys()),
-                           _get_pk_value=_get_pk_value,
-                           model_instances=pagination.items,
-                           model_name=model_name,
-                           pagination=pagination)
+    return render_theme_template(app.extensions['admin']['theme'],
+                                 'admin/list.html',
+                                 admin_models=sorted(
+                                     app.extensions['admin']['model_dict'].keys()),
+                                 _get_pk_value=_get_pk_value,
+                                 model_instances=pagination.items,
+                                 model_name=model_name,
+                                 pagination=pagination)
 
 
 @admin.route('/add/<model_name>/', methods=['GET', 'POST'])
@@ -134,11 +175,12 @@ def generic_model_add(model_name):
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_template('admin/add.html',
-                                   admin_models=sorted(
-                                       app.extensions['admin']['model_dict'].keys()),
-                                   model_name=model_name,
-                                   form=form)
+            return render_theme_template(app.extensions['admin']['theme'],
+                                         'admin/add.html',
+                                         admin_models=sorted(
+                                             app.extensions['admin']['model_dict'].keys()),
+                                         model_name=model_name,
+                                         form=form)
 
 
 @admin.route('/delete/<model_name>/<model_key>/')
@@ -180,11 +222,12 @@ def generic_model_edit(model_name, model_key):
 
     if request.method == 'GET':
         form = model_form(obj=model_instance)
-        return render_template('admin/edit.html',
-                               admin_models=sorted(
-                                   app.extensions['admin']['model_dict'].keys()),
-                               model_instance=model_instance,
-                               model_name=model_name, form=form)
+        return render_theme_template(app.extensions['admin']['theme'],
+                                     'admin/edit.html',
+                                     admin_models=sorted(
+                                         app.extensions['admin']['model_dict'].keys()),
+                                     model_instance=model_instance,
+                                     model_name=model_name, form=form)
 
     elif request.method == 'POST':
         form = model_form(request.form, obj=model_instance)
@@ -199,11 +242,12 @@ def generic_model_edit(model_name, model_key):
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_template('admin/edit.html',
-                                   admin_models=sorted(
-                                       app.extensions['admin']['model_dict'].keys()),
-                                   model_instance=model_instance,
-                                   model_name=model_name, form=form)
+            return render_theme_template(app.extensions['admin']['theme'],
+                                         'admin/edit.html',
+                                         admin_models=sorted(
+                                             app.extensions['admin']['model_dict'].keys()),
+                                         model_instance=model_instance,
+                                         model_name=model_name, form=form)
 
 
 def _populate_model_from_form(model_instance, form):
