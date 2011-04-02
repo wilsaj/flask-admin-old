@@ -16,9 +16,8 @@ import types
 
 import sqlalchemy as sa
 import sqlalchemy.ext.declarative
-from flask import app, current_app, flash, g, Module, render_template, \
-     redirect, \
-     request, session, url_for
+from flask import (app, current_app, flash, g, Module, render_template,
+                   redirect, request, session, url_for)
 from flaskext.sqlalchemy import Pagination
 from flaskext import themes
 from flaskext.themes import render_theme_template
