@@ -19,12 +19,13 @@
   <link rel="stylesheet" href="/static/css/style.css?v=1">
 
   <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
-  <script src="/static/js/libs/modernizr-1.6.min.js"></script>
+  <script src="{{ theme_static('js/libs/modernizr-1.6.min.js')}}"></script>
 
   <!-- admin specific css -->
-  <link rel="stylesheet" href="/static/css/jquery-ui/smoothness/jquery-ui-1.8.9.custom.css" type="text/css"/>
-  <link rel="stylesheet" href="/static/css/jquery-ui/jquery.crossSelect.custom.css" type="text/css"/>
-  <link rel="stylesheet" href="/static/css/admin.css" type="text/css"/>
+  <!-- <link rel="stylesheet" href="/static/css/jquery-ui/smoothness/jquery-ui-1.8.9.custom.css" type="text/css"/> -->
+  <link rel="stylesheet" href=" {{ theme_static('/css/Aristo/jquery-ui-1.8.9.custom.css') }}" type="text/css"/>
+  <link rel="stylesheet" href=" {{ theme_static('/css/jquery-ui/jquery.crossSelect.custom.css') }}" type="text/css"/>
+  <link rel="stylesheet" href=" {{ theme_static('/css/admin.css') }}" type="text/css"/>
 </head>
 
 <body lang="en">
