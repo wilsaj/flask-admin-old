@@ -37,7 +37,7 @@ def Admin(this_app, models, model_forms={}, include_models=[],
     app.extensions['admin'] = {}
 
     app.extensions['admin']['model_dict'] = {}
-    
+
     if admin_db_session:
         app.extensions['admin']['db_session'] = admin_db_session
 
@@ -159,9 +159,12 @@ def generic_model_add(model_name):
 
     if request.method == 'GET':
         form = model_form()
-        return render_template('admin/add.html',
-                               model_name=model_name,
-                               form=form)
+        return render_theme_template(app.extensions['admin']['theme'],
+                                     'admin/add.html',
+                                     admin_models=sorted(
+                                         app.extensions['admin']['model_dict'].keys()),
+                                     model_name=model_name,
+                                     form=form)
     elif request.method == 'POST':
         form = model_form(request.form)
         if form.validate():

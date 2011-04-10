@@ -6,6 +6,11 @@ var i = 1;
 
 // set up jQuery UI widgets
 $(function(){
+    $('.ui-widget').hover(
+        function() { $(this).addClass('ui-state-hover'); },
+        function() { $(this).removeClass('ui-state-hover'); }
+    );
+
     $('input.datepicker').datepicker({
         dateFormat: 'yy-mm-dd'
     });
@@ -17,6 +22,7 @@ $(function(){
     $('select[multiple="multiple"]').crossSelect();
 
     $('#clicky').click(test);
+
 });
 
 
