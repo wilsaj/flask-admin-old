@@ -25,7 +25,7 @@
   <!-- <link rel="stylesheet" href="/static/css/jquery-ui/smoothness/jquery-ui-1.8.9.custom.css" type="text/css"/> -->
   <link rel="stylesheet" href=" {{ theme_static('css/Aristo/jquery-ui-1.8.7.custom.css') }}" type="text/css"/>
   <link rel="stylesheet" href=" {{ theme_static('css/jquery-ui/jquery.crossSelect.custom.css') }}" type="text/css"/>
-  <link rel="stylesheet" href=" {{ theme_static('css/admin.css') }}" type="text/css"/>
+  <!-- <link rel="stylesheet" href=" {{ theme_static('css/admin.css') }}" type="text/css"/> -->
 </head>
 
 <body lang="en">
@@ -58,20 +58,20 @@
 
     <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.js"></script>
-    <script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.5.0.js"%3E%3C/script%3E'))</script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ theme_static('js/libs/jquery-1.5.0.js') }}"%3E%3C/script%3E'))</script>
 
     <!-- add jquery ui stuff -->
-    <script src="/static/js/libs/jquery-ui-1.8.9.custom.min.js" type="text/javascript"></script>
-    <script src="/static/js/libs/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
-    <script src="/static/js/libs/jQuery.crossSelect-0.5.js" type="text/javascript"></script>
+    <script src="{{ theme_static('js/libs/jquery-ui-1.8.9.custom.min.js') }}" type="text/javascript"></script>
+    <script src="{{ theme_static('js/libs/jquery-ui-timepicker-addon.js') }}" type="text/javascript"></script>
+    <script src="{{ theme_static('js/libs/jQuery.crossSelect-0.5.js') }}" type="text/javascript"></script>
 
     <!-- scripts concatenated and minified via ant build script-->
-    <script src="/static/js/plugins.js"></script>
-    <script src="/static/js/admin.js"></script>
+    <script src="{{ theme_static('js/plugins.js') }}"></script>
+    <script src="{{ theme_static('js/admin.js') }}"></script>
     <!-- end concatenated and minified scripts-->
 
     <!--[if lt IE 7 ]>
-        <script src="js/libs/dd_belatedpng.js"></script>
+        <script src="{{ theme_static('js/libs/dd_belatedpng.js') }}"></script>
         <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
     <![endif]-->
   </body>
