@@ -171,6 +171,7 @@ header {
     text-align:center;
     background: #fafafa;
     margin-bottom: 5px;
+    border-bottom: 1px solid #CDCDCD;
 }
 
 header h1 {
