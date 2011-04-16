@@ -237,6 +237,7 @@ ul#model_list a {
 }
 
 ul#model_list > li {
+    overflow: auto;
     padding: 4px 10px 4px 12px;
     border: 1px solid #999;
     background: #f9f9f9; /* old browsers */
