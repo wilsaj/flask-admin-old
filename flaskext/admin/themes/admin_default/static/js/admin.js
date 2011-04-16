@@ -16,10 +16,13 @@ $(function(){
     });
     $('input.datetimepicker').datetimepicker({
         dateFormat: 'yy-mm-dd',
-        timeFormat: 'hh:mm:ss',
+        timeFormat: 'hh:mm:ss'
     });
 
-    $('select[multiple="multiple"]').crossSelect();
+    $('select[multiple="multiple"]').crossSelect({
+        listWidth: 200,
+        rows: 15
+    });
 
     $('#clicky').click(test);
 
