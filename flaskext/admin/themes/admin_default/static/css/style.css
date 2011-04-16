@@ -185,7 +185,7 @@ header span {
 
 #main {
     float: left;
-    padding-left: 40px;
+    padding: 20px 0  0 40px;
     width: 600px;
     margin: 0px auto;
     bottom: 0px;
@@ -193,25 +193,25 @@ header span {
 
 body {
     margin: 0px auto;
-    padding-bottom: 200px;
+    padding: 0 0 200px 0;
 }
 
 
 div#left_nav {
     float: left;
-    padding-right: 20px;
+    padding: 0 20px 0 0;
     border-right: 1px solid #CDCDCD;
 }
 
 
 div#left_nav h4 {
     font-size: 1.2em;
-    padding-left: 10px;
+    padding: 0 0 0 10px;
 }
 
 div#left_nav ul {
     margin-left: 0;
-    padding-left: 4px;
+    padding: 0 0 0 4px;
     list-style-type: none;
     font-family: Georgia, serif;
 }
@@ -231,17 +231,19 @@ ul#model_list {
     list-style-type: none;
 }
 
+ul#model_list a {
+    text-decoration: none;
+    color: #555;
+}
+
 ul#model_list > li {
-    padding-left: 12px;
-    padding-right: 10px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding: 4px 10px 4px 12px;
     border: 1px solid #999;
     background: #f9f9f9; /* old browsers */
 }
 
 ul#model_list > li:first-child {
-    padding-left: 8px;
+    padding: 0 0 0 8px;
     border-top-right-radius: 20px 15px;
     border-top-left-radius: 6px 6px;
     background: #151616; /* old browsers */
