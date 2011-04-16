@@ -1,34 +1,31 @@
 {% extends theme("admin/base.html") %}
 
 {% block title %}
-  New instance of {{model_name}}
+  Add a new {{model_name}}
 {% endblock %}
 
 
 {% block main %}
 
-<h1>New {{model_name}}</h1>
+<form class="edit_form" method="POST">
+  <fieldset>
+    <legend>
+      Adding a new {{model_name}}
+    </legend>
+    {% from theme("_formhelpers.html") import render_field %}
+      <ul>
+        {% for field in form %}
+          <li>
+            {{ render_field(field) }}
+          </li>
+        {% endfor %}
+        {{ form.csrf }}
+      </ul>
 
-<br />
-
-<fieldset>
-<legend>
-New {{model_name}}
-</legend>
-<form method="POST">
-  {% from theme("_formhelpers.html") import render_field %}
-    <dl>
-      {% for field in form %}
-        {{ render_field(field) }}
-      {% endfor %}
-      {{ form.csrf }}
-    </dl>
-
-    <input type="submit" value="Submit" class="button">
-    <input type="button" value="Cancel" class="button"
-           onclick="javascript:window.location = '{{ url_for('generic_model_list', model_name=model_name) }}'" />
-  </div>
+      <input type="submit" value="Submit" class="button"/>
+      <input type="button" value="Cancel" class="button"
+             onclick="javascript:window.location = '{{ url_for('generic_model_list', model_name=model_name) }}'" />
+    </div>
+  </fieldset>
 </form>
-</fieldset>
-
 {% endblock %}

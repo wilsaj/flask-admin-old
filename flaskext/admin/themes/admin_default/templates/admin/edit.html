@@ -1,35 +1,32 @@
 {% extends theme("admin/base.html") %}
 
 {% block title %}
-Edit {{model_name}}
+Editting {{model_name}}
 {% endblock %}
 
 {% block main %}
 
-<h1>Edit {{model_name}}</h1>
+<form class="edit_form" method="POST" action="">
+  <fieldset>
+    <legend>
+      Editting {{model_name}}
+    </legend>
 
-<br />
+    {% from theme("_formhelpers.html") import render_field %}
+      <ul>
+        {% for field in form %}
+          <li>
+            {{ render_field(field) }}
+          </li>
+        {% endfor %}
+        {{ form.csrf }}
+      </ul>
 
-<fieldset>
-<legend>
-Edit an instance of {{model_name}}
-</legend>
-<form method="POST" action="">
-
-  {% from theme("_formhelpers.html") import render_field %}
-    <dl>
-      {% for field in form %}
-        {{ render_field(field) }}
-      {% endfor %}
-      {{ form.csrf }}
-    </dl>
-
-    <input type="submit" value="Submit" class="button">
-    <input type="button" value="Cancel" class="button"
-           onclick="javascript:window.location = '{{ url_for('generic_model_list', model_name=model_name) }}'" />
-  </div>
+      <input type="submit" value="Submit" class="button"/>
+      <input type="button" value="Cancel" class="button"
+               onclick="javascript:window.location = '{{ url_for('generic_model_list', model_name=model_name) }}'" />
+    </div>
+  </fieldset>
 </form>
-</fieldset>
-
 
 {% endblock %}

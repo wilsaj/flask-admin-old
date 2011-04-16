@@ -263,11 +263,65 @@ ul#model_list > li:last-child {
 
 }
 
-
 .ui-widget {
     float: right;
 }
 
+
+form.edit_form fieldset {
+    margin-bottom: 10px;
+}
+
+form.edit_form legend {
+    padding: 0 2px 10px;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+form.edit_form label {
+    display: inline-block;
+    line-height: 1.8;
+    vertical-align: top;
+    width: 180px; /* Width of labels */
+}
+
+form.edit_form input {
+    min-width: 215px;
+}
+
+form.edit_form input[type="submit"], form.edit_form input[type="button"] {
+    min-width: 0px;
+}
+
+form.edit_form fieldset ul {
+    margin: 0;
+    padding: 0 0 10px;
+}
+
+form.edit_form fieldset li {
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+}
+
+form.edit_form fieldset fieldset legend {
+    padding: 0 0 5px;
+    font-weight: normal;
+}
+
+form.edit_form textarea {
+    display: block;
+    width: 400px;
+}
+
+form.edit_form .jqxs li {
+    padding: 1px;
+}
+
+form.edit_form .jqxs input[type="button"] {
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
 
 
 #pager {
