@@ -267,10 +267,9 @@ ul#model_list > li:last-child {
 
 }
 
-.ui-widget {
+ul#model_list .ui-widget {
     float: right;
 }
-
 
 form.edit_form fieldset {
     margin-bottom: 10px;
