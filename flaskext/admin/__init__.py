@@ -31,16 +31,7 @@ from wtforms.ext.sqlalchemy import fields as sa_fields
 
 def Admin(this_app, models, model_forms={}, include_models=[],
           exclude_models=[], exclude_pks=False, admin_db_session=None,
-          admin_theme="admin_default"):
-    if not hasattr(app, 'extensions'):
-        app.extensions = {}
-    app.extensions['admin'] = {}
-
-    app.extensions['admin']['model_dict'] = {}
-
-    if admin_db_session:
-        app.extensions['admin']['db_session'] = admin_db_session
-
+          admin_theme="admin_default", pagination_per_page=25):
     if hasattr(this_app, "theme_manager"):
         this_app.theme_manager.loaders = [default_admin_theme_loader]
         this_app.theme_manager.refresh()
@@ -51,6 +42,7 @@ def Admin(this_app, models, model_forms={}, include_models=[],
                                      themes.theme_paths_loader))
 
     app.extensions['admin']['theme'] = admin_theme
+    app.extensions['admin']['pagination_per_page'] = pagination_per_page
 
     for i in include_models:
         if i in exclude_models:
@@ -132,8 +124,8 @@ def generic_model_list(model_name):
         return "%s cannot be accessed through this admin page" % (model_name,)
     model = app.extensions['admin']['model_dict'][model_name]
     model_instances = model.query
-    per_page = 15
-    page = int(request.args.get('page', '1'))
+    per_page = app.extensions['admin']['pagination_per_page']
+    page = int(request.args.get('page','1'))
     page_offset = (page - 1) * per_page
     items = model_instances.limit(per_page).offset(page_offset).all()
     pagination = Pagination(model_instances, page, per_page,
