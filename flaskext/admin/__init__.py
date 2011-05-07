@@ -29,8 +29,8 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
-def Admin(this_app, models, model_forms={}, include_models=[],
-          exclude_models=[], exclude_pks=False, admin_db_session=None,
+def Admin(this_app, models, admin_db_session, model_forms={},
+          include_models=[], exclude_models=[], exclude_pks=False,
           admin_theme="admin_default", pagination_per_page=25):
     if hasattr(this_app, "theme_manager"):
         this_app.theme_manager.loaders = [default_admin_theme_loader]
@@ -40,9 +40,12 @@ def Admin(this_app, models, model_forms={}, include_models=[],
                             loaders=(default_admin_theme_loader,
                                      themes.packaged_themes_loader,
                                      themes.theme_paths_loader))
-
+    if not hasattr(app, 'extensions'):
+        app.extensions = {}
+    app.extensions['admin'] = {}
     app.extensions['admin']['theme'] = admin_theme
     app.extensions['admin']['pagination_per_page'] = pagination_per_page
+    app.extensions['admin']['db_session'] = admin_db_session
 
     for i in include_models:
         if i in exclude_models:
