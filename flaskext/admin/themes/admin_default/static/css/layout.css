@@ -1,0 +1,109 @@
+html body
+{
+    background-color: #EFECE6;
+}
+
+.container
+{
+    background-color: #F0F8FF;
+    border: 1px solid #7E99BB;
+}
+
+#header
+{
+    font-family: Georgia,'Times New Roman',Times,serif;
+    border-bottom: 1px solid #CDCDCD;
+}
+
+#header #swr-header
+{
+    padding-top: 20px;
+}
+
+
+#header h1
+{
+    margin-bottom: 0px;
+    display: block;
+    font-style: italic;
+}
+
+#header p
+{
+    text-transform: uppercase;
+}
+
+#pagebody
+{
+    background-color: #FFFFFF;
+    min-height: 400px;
+}
+
+#main
+{
+    font-family: Georgia,'Times New Roman',Times,serif;
+    font-size: 1.2em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+#footer {
+    border-top: 1px solid #CDCDCD;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: Verdana,"Trebuchet MS",Georgia,"Times New Roman",Times,serif;
+    font-size:.8em;
+    text-align:center;
+}
+
+
+/*
+  borrowed from:
+  http://css.maxdesign.com.au/listamatic/vertical08.htm  
+*/
+#navcontainer
+{
+    margin-left: 0px;
+    margin-right: 0px;
+    font-family: "ff-scala-sans-web-1","ff-scala-sans-web-2","Lucida Grande",Helvetica,sans-serif;
+}
+
+#navcontainer ul
+{
+    margin-left: 0;
+    padding-left: 0;
+    list-style-type: none;
+    color #000000;
+    border-left: 1px solid #CDCDCD;
+    border-right: 1px solid #CDCDCD;
+    border-top: 1px solid #CDCDCD;
+}
+
+#navcontainer .navheader
+{
+    color: #000080;
+    background-color: #B0C4DE;
+    font-weight: bold;
+    display: block;
+    padding: 3px 3px 3px 7px;
+    border-bottom: 1px solid #CDCDCD;
+}
+
+#navcontainer a
+{
+    color: #000000;
+    display: block;
+    padding: 3px 1px 3px 9px;
+    background-color: #F0F8FF;
+    border-bottom: 1px solid #CDCDCD;
+}
+
+#navcontainer a:link, #navlist a:visited
+{
+    text-decoration: none;
+}
+
+#navcontainer a:hover
+{
+    background-color: #C6E2FF;
+}

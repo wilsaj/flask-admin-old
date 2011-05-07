@@ -1,0 +1,21 @@
+{% extends theme("admin/base.html") %}
+
+{% block title %}
+Models
+{% endblock title %}
+
+{% block main %}
+
+
+<div id="admincontainer" class="span-16">
+  <ul id="adminlist">
+    <li class="adminheader">Models</li>
+    {% for model in admin_models %}
+      <li class="{{ loop.cycle('odd', 'even') }}">
+        <a href="{{ url_for('generic_model_list', model_name=model,page=1)}}">{{model}}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% endblock main %}

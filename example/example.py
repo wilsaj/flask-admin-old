@@ -5,6 +5,7 @@ import platform
 
 from flask import Flask, g, session
 from flaskext.sqlalchemy import SQLAlchemy
+from flaskext.themes import setup_themes
 from flaskext.admin import Admin, _query_factory_for, AdminConverter
 
 from wtforms.fields import FileField, FloatField, PasswordField, SelectField, TextField
@@ -639,7 +640,8 @@ class UserForm(UserFormBase, model_form(User, exclude=['id', 'role_id', 'agency_
     pass
 
 
-admin_mod = Admin(sys.modules[__name__], model_forms={'User': UserForm}, admin_db_session=db_session, exclude_pks=True)
+admin_mod = Admin(app, sys.modules[__name__], model_forms={'User': UserForm},
+                  admin_db_session=db_session, exclude_pks=True)
 app.register_module(admin_mod, url_prefix='/admin')
 
 if __name__ == '__main__':
