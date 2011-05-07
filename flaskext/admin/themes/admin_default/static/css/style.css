@@ -198,7 +198,7 @@ body {
 
 div#left_nav {
     float: left;
-    padding: 0 20px 0 0;
+    padding: 10px 20px 0 0;
     border-right: 1px solid #CDCDCD;
 }
 
@@ -221,6 +221,10 @@ div#left_nav a {
     padding: 3px 1px 3px 9px;
     /* background-color: #D5D2AF; */
     /* border-bottom: 1px solid #CDCDCD; */
+}
+
+div#left_nav a:hover {
+    color: #555;
 }
 
 ul#model_list h2 {
