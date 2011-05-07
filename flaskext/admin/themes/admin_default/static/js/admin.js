@@ -15,6 +15,7 @@ $(function(){
         dateFormat: 'yy-mm-dd'
     });
     $('input.datetimepicker').datetimepicker({
+        showSecond: true,
         dateFormat: 'yy-mm-dd',
         timeFormat: 'hh:mm:ss'
     });
