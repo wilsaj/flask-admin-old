@@ -112,8 +112,7 @@ admin = Module(__name__)
 @admin.route('/')
 def index():
     """
-    Admin module views. List available models/tables for this user to
-    perform CUID
+    Admin module landing page
     """
     return render_theme_template(app.extensions['admin']['theme'],
                                  'admin/index.html',
@@ -123,6 +122,10 @@ def index():
 
 @admin.route('/list/<model_name>/')
 def generic_model_list(model_name):
+    """
+    List instances of a model, from this view a user can edit, delete
+    or add a new instance of a model.
+    """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
     model = app.extensions['admin']['model_dict'][model_name]
@@ -145,6 +148,10 @@ def generic_model_list(model_name):
 
 @admin.route('/add/<model_name>/', methods=['GET', 'POST'])
 def generic_model_add(model_name):
+    """
+    From this view, a user can add a new instance of a given model to
+    the database.
+    """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
 
@@ -182,6 +189,9 @@ def generic_model_add(model_name):
 
 @admin.route('/delete/<model_name>/<model_key>/')
 def generic_model_delete(model_name, model_key):
+    """
+    Delete an instance of a model.
+    """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
 
@@ -203,6 +213,9 @@ def generic_model_delete(model_name, model_key):
 
 @admin.route('/edit/<model_name>/<model_key>/', methods=['GET', 'POST'])
 def generic_model_edit(model_name, model_key):
+    """
+    From this view a user can edit a particular instance of a model.
+    """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
 
@@ -249,7 +262,8 @@ def generic_model_edit(model_name, model_key):
 
 def _populate_model_from_form(model_instance, form):
     """
-    Return a populated model instance from a form.
+    Returns a model instance that has been populated with the data
+    from a form.
     """
     for name, field in form._fields.iteritems():
         field.populate_obj(model_instance, name)
