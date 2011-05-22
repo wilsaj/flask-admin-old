@@ -32,6 +32,45 @@ from wtforms.ext.sqlalchemy import fields as sa_fields
 def Admin(this_app, models, admin_db_session, model_forms={},
           include_models=[], exclude_models=[], exclude_pks=False,
           admin_theme="admin_default", pagination_per_page=25):
+    """This returns a module that can be registered to your flask app.
+
+    The parameters are:
+
+    `this_app`
+        Your app object
+
+    `models`
+        The module containing your SQLAlchemy models
+
+    `model_forms`
+        A dict with model names as keys, mapped to WTForm Form objects
+        that should be used as forms for creating and editing
+        instances of these models
+
+    `include_models`
+        An iterable of model names that should be available to be
+        manipulated with the admin module. If this is present, then
+        models not included won't be available to the admin module.
+
+    `exclude_models`
+        An iterable of model names that should not be available to
+        the admin module.
+
+    `exclude_pks`
+        Don't include primary keys in the rendered forms
+
+    `admin_theme`
+       Theme that should be used for rendering the admin module
+    """
+    if not hasattr(app, 'extensions'):
+        app.extensions = {}
+    app.extensions['admin'] = {}
+
+    app.extensions['admin']['model_dict'] = {}
+
+    if admin_db_session:
+        app.extensions['admin']['db_session'] = admin_db_session
+
     if hasattr(this_app, "theme_manager"):
         this_app.theme_manager.loaders = [default_admin_theme_loader]
         this_app.theme_manager.refresh()
@@ -112,45 +151,44 @@ admin = Module(__name__)
 @admin.route('/')
 def index():
     """
-    Admin module landing page
+    Landing page view for admin module
     """
-    return render_theme_template(app.extensions['admin']['theme'],
-                                 'admin/index.html',
-                                 admin_models=sorted(
-                                     app.extensions['admin']['model_dict'].keys()))
+    return render_theme_template(
+        app.extensions['admin']['theme'],
+        'admin/index.html',
+        admin_models=sorted(app.extensions['admin']['model_dict'].keys()))
 
 
 @admin.route('/list/<model_name>/')
 def generic_model_list(model_name):
     """
-    List instances of a model, from this view a user can edit, delete
-    or add a new instance of a model.
+    Lists instances of a given model, so they can be selected for
+    editing or deletion.
     """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
     model = app.extensions['admin']['model_dict'][model_name]
     model_instances = model.query
     per_page = app.extensions['admin']['pagination_per_page']
-    page = int(request.args.get('page','1'))
+    page = int(request.args.get('page', '1'))
     page_offset = (page - 1) * per_page
     items = model_instances.limit(per_page).offset(page_offset).all()
     pagination = Pagination(model_instances, page, per_page,
                             model_instances.count(), items)
-    return render_theme_template(app.extensions['admin']['theme'],
-                                 'admin/list.html',
-                                 admin_models=sorted(
-                                     app.extensions['admin']['model_dict'].keys()),
-                                 _get_pk_value=_get_pk_value,
-                                 model_instances=pagination.items,
-                                 model_name=model_name,
-                                 pagination=pagination)
+    return render_theme_template(
+        app.extensions['admin']['theme'],
+        'admin/list.html',
+        admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+        _get_pk_value=_get_pk_value,
+        model_instances=pagination.items,
+        model_name=model_name,
+        pagination=pagination)
 
 
 @admin.route('/add/<model_name>/', methods=['GET', 'POST'])
 def generic_model_add(model_name):
     """
-    From this view, a user can add a new instance of a given model to
-    the database.
+    Create a new instance of a model.
     """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
@@ -161,12 +199,13 @@ def generic_model_add(model_name):
 
     if request.method == 'GET':
         form = model_form()
-        return render_theme_template(app.extensions['admin']['theme'],
-                                     'admin/add.html',
-                                     admin_models=sorted(
-                                         app.extensions['admin']['model_dict'].keys()),
-                                     model_name=model_name,
-                                     form=form)
+        return render_theme_template(
+            app.extensions['admin']['theme'],
+            'admin/add.html',
+            admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+            model_name=model_name,
+            form=form)
+
     elif request.method == 'POST':
         form = model_form(request.form)
         if form.validate():
@@ -179,12 +218,12 @@ def generic_model_add(model_name):
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_theme_template(app.extensions['admin']['theme'],
-                                         'admin/add.html',
-                                         admin_models=sorted(
-                                             app.extensions['admin']['model_dict'].keys()),
-                                         model_name=model_name,
-                                         form=form)
+            return render_theme_template(
+                app.extensions['admin']['theme'],
+                'admin/add.html',
+                admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+                model_name=model_name,
+                form=form)
 
 
 @admin.route('/delete/<model_name>/<model_key>/')
@@ -232,12 +271,12 @@ def generic_model_edit(model_name, model_key):
 
     if request.method == 'GET':
         form = model_form(obj=model_instance)
-        return render_theme_template(app.extensions['admin']['theme'],
-                                     'admin/edit.html',
-                                     admin_models=sorted(
-                                         app.extensions['admin']['model_dict'].keys()),
-                                     model_instance=model_instance,
-                                     model_name=model_name, form=form)
+        return render_theme_template(
+            app.extensions['admin']['theme'],
+            'admin/edit.html',
+            admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+            model_instance=model_instance,
+            model_name=model_name, form=form)
 
     elif request.method == 'POST':
         form = model_form(request.form, obj=model_instance)
@@ -247,17 +286,17 @@ def generic_model_edit(model_name, model_key):
             app.extensions['admin']['db_session'].add(model_instance)
             app.extensions['admin']['db_session'].commit()
             flash('%s updated: %s' % (model_name, model_instance), 'success')
-            return redirect(url_for('generic_model_list',
-                                    model_name=model_name))
+            return redirect(
+                url_for('generic_model_list', model_name=model_name))
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_theme_template(app.extensions['admin']['theme'],
-                                         'admin/edit.html',
-                                         admin_models=sorted(
-                                             app.extensions['admin']['model_dict'].keys()),
-                                         model_instance=model_instance,
-                                         model_name=model_name, form=form)
+            return render_theme_template(
+                app.extensions['admin']['theme'],
+                'admin/edit.html',
+                admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
+                model_instance=model_instance,
+                model_name=model_name, form=form)
 
 
 def _populate_model_from_form(model_instance, form):
@@ -310,8 +349,8 @@ def _form_for_model(model_class, exclude=[], exclude_pk=False):
     # exclude any foreign_keys that we have relationships for;
     # relationships will be mapped to select fields by the
     # AdminConverter
-    exclude.extend([relationship.local_side[0].name for
-                    relationship in model_mapper.iterate_properties
+    exclude.extend([relationship.local_side[0].name
+                    for relationship in model_mapper.iterate_properties
                     if isinstance(relationship,
                                   sa.orm.properties.RelationshipProperty)])
 
@@ -323,9 +362,9 @@ def _form_for_model(model_class, exclude=[], exclude_pk=False):
 
 def _query_factory_for(model_class):
     """
-    Return a query factory for a given model_class. This looks weird,
-    but it gives us an all-purpose way of generating query factories
-    for QuerySelectFields.
+    Return a query factory for a given model_class. This gives us an
+    all-purpose way of generating query factories for
+    QuerySelectFields.
     """
     def query_factory():
         return sorted(model_class.query.all(), key=repr)
