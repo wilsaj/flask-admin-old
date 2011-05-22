@@ -29,6 +29,10 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
+# XXX: determine this in a more useful manor
+using_themes = True
+
+
 def Admin(this_app, models, admin_db_session, model_forms={},
           include_models=[], exclude_models=[], exclude_pks=False,
           admin_theme="admin_default", pagination_per_page=25):
@@ -148,13 +152,25 @@ def default_admin_theme_loader(app):
 admin = Module(__name__)
 
 
+def render_admin_template(*args, **kwargs):
+    """
+    render theme template if using themes, render a regular template
+    if not
+    """
+    if using_themes:
+        return render_theme_template(
+            app.extensions['admin']['theme'],
+            *args, **kwargs)
+    else:
+        return render_template(*args, **kwargs)
+
+
 @admin.route('/')
 def index():
     """
     Landing page view for admin module
     """
-    return render_theme_template(
-        app.extensions['admin']['theme'],
+    return render_admin_template(
         'admin/index.html',
         admin_models=sorted(app.extensions['admin']['model_dict'].keys()))
 
@@ -175,8 +191,7 @@ def generic_model_list(model_name):
     items = model_instances.limit(per_page).offset(page_offset).all()
     pagination = Pagination(model_instances, page, per_page,
                             model_instances.count(), items)
-    return render_theme_template(
-        app.extensions['admin']['theme'],
+    return render_admin_template(
         'admin/list.html',
         admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
         _get_pk_value=_get_pk_value,
@@ -199,8 +214,7 @@ def generic_model_add(model_name):
 
     if request.method == 'GET':
         form = model_form()
-        return render_theme_template(
-            app.extensions['admin']['theme'],
+        return render_admin_template(
             'admin/add.html',
             admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
             model_name=model_name,
@@ -218,8 +232,7 @@ def generic_model_add(model_name):
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_theme_template(
-                app.extensions['admin']['theme'],
+            return render_admin_template(
                 'admin/add.html',
                 admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
                 model_name=model_name,
@@ -271,8 +284,7 @@ def generic_model_edit(model_name, model_key):
 
     if request.method == 'GET':
         form = model_form(obj=model_instance)
-        return render_theme_template(
-            app.extensions['admin']['theme'],
+        return render_admin_template(
             'admin/edit.html',
             admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
             model_instance=model_instance,
@@ -291,8 +303,7 @@ def generic_model_edit(model_name, model_key):
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_theme_template(
-                app.extensions['admin']['theme'],
+            return render_admin_template(
                 'admin/edit.html',
                 admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
                 model_instance=model_instance,
