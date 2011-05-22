@@ -58,7 +58,7 @@ def Admin(this_app, models, admin_db_session, model_forms={},
 
     `exclude_models`
         An iterable of model names that should not be available to
-        the admin module.
+        the admin module
 
     `exclude_pks`
         Don't include primary keys in the rendered forms
@@ -266,7 +266,7 @@ def generic_model_delete(model_name, model_key):
 @admin.route('/edit/<model_name>/<model_key>/', methods=['GET', 'POST'])
 def generic_model_edit(model_name, model_key):
     """
-    From this view a user can edit a particular instance of a model.
+    Edit a particular instance of a model.
     """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
