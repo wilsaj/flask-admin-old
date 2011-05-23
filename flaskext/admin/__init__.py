@@ -92,7 +92,7 @@ def Admin(models, admin_db_session, model_forms={},
                     app.extensions['admin']['model_dict'][model] = module_dict[model]
         else:
             app.extensions['admin']['model_dict'] = dict([(k, v)
-                               for k,v in models.__dict__.items()
+                               for k, v in models.__dict__.items()
                                if isinstance(
                                    v,
                                    sa.ext.declarative.DeclarativeMeta) \
