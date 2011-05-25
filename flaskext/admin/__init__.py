@@ -43,9 +43,11 @@ def Admin(this_app, models, model_forms={}, include_models=[],
         The module containing your SQLAlchemy models
 
     `model_forms`
-        A dict with model names as keys, mapped to WTForm Form objects
+        Flask-Admin will automatically generate forms for the included
+        models. If you want to use a custom form for a model, use this
+        dict with model names as keys, mapped to WTForm Form objects
         that should be used as forms for creating and editing
-        instances of these models
+        instances of the models.
 
     `include_models`
         An iterable of model names that should be available to be
@@ -57,7 +59,9 @@ def Admin(this_app, models, model_forms={}, include_models=[],
         the admin module.
 
     `exclude_pks`
-        Don't include primary keys in the rendered forms
+        Set this to True if you want to include primary keys in the
+        forms for models. In most cases, primary keys are a hidden
+        implementation detail.
 
     `admin_theme`
        Theme that should be used for rendering the admin module
