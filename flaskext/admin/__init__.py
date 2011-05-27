@@ -14,13 +14,15 @@ import inspect
 import os
 import types
 
-import sqlalchemy as sa
-import sqlalchemy.ext.declarative
+import flask
 from flask import (app, current_app, flash, g, Module, render_template,
                    redirect, request, session, url_for)
 from flaskext.sqlalchemy import Pagination
 from flaskext import themes
 from flaskext.themes import render_theme_template
+import jinja2.exceptions
+import sqlalchemy as sa
+import sqlalchemy.ext.declarative
 from sqlalchemy.orm.exc import NoResultFound
 from wtforms import widgets, validators
 from wtforms import fields as wtf_fields
@@ -29,15 +31,12 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
-def Admin(this_app, models, model_forms={}, include_models=[],
-          exclude_models=[], exclude_pks=False, admin_db_session=None,
-          admin_theme="admin_default"):
+def Admin(models, admin_db_session, model_forms={},
+          include_models=[], exclude_models=[], exclude_pks=False,
+          admin_theme='admin_default', pagination_per_page=25):
     """This returns a module that can be registered to your flask app.
 
     The parameters are:
-
-    `this_app`
-        Your app object
 
     `models`
         The module containing your SQLAlchemy models
@@ -56,7 +55,7 @@ def Admin(this_app, models, model_forms={}, include_models=[],
 
     `exclude_models`
         An iterable of model names that should not be available to
-        the admin module.
+        the admin module
 
     `exclude_pks`
         Set this to True if you want to include primary keys in the
@@ -75,16 +74,12 @@ def Admin(this_app, models, model_forms={}, include_models=[],
     if admin_db_session:
         app.extensions['admin']['db_session'] = admin_db_session
 
-    if hasattr(this_app, "theme_manager"):
-        this_app.theme_manager.loaders = [default_admin_theme_loader]
-        this_app.theme_manager.refresh()
-    else:
-        themes.setup_themes(this_app,
-                            loaders=(default_admin_theme_loader,
-                                     themes.packaged_themes_loader,
-                                     themes.theme_paths_loader))
-
+    if not hasattr(app, 'extensions'):
+        app.extensions = {}
+    app.extensions['admin'] = {}
     app.extensions['admin']['theme'] = admin_theme
+    app.extensions['admin']['pagination_per_page'] = pagination_per_page
+    app.extensions['admin']['db_session'] = admin_db_session
 
     for i in include_models:
         if i in exclude_models:
@@ -101,7 +96,7 @@ def Admin(this_app, models, model_forms={}, include_models=[],
                     app.extensions['admin']['model_dict'][model] = module_dict[model]
         else:
             app.extensions['admin']['model_dict'] = dict([(k, v)
-                               for k,v in models.__dict__.items()
+                               for k, v in models.__dict__.items()
                                if isinstance(
                                    v,
                                    sa.ext.declarative.DeclarativeMeta) \
@@ -148,13 +143,42 @@ def default_admin_theme_loader(app):
 admin = Module(__name__)
 
 
+def render_admin_template(*args, **kwargs):
+    """
+    render theme template if using themes, fallback to trying to
+    render a regular template if not
+    """
+    this_app = flask.current_app
+    if hasattr(this_app, "theme_manager"):
+        try:
+            return render_theme_template(
+                app.extensions['admin']['theme'],
+                *args, **kwargs)
+        except jinja2.exceptions.TemplateNotFound:
+            if default_admin_theme_loader not in this_app.theme_manager.loaders:
+                this_app.theme_manager.loaders.append(default_admin_theme_loader)
+                this_app.theme_manager.refresh()
+            return render_theme_template(
+                app.extensions['admin']['theme'],
+                *args, **kwargs)
+
+    else:
+        try:
+            return render_template(*args, **kwargs)
+        except jinja2.exceptions.TemplateNotFound:
+            raise jinja2.exceptions.TemplateNotFound(
+                "Flask-Admin cannot find its templates. The most likely cause for this "
+                "is that setup_themes hasn't been run. See the 'Customizing "
+                "your interface' section of the Flask-Admin docs for more "
+                "info and other options.")
+
+
 @admin.route('/')
 def index():
     """
     Landing page view for admin module
     """
-    return render_theme_template(
-        app.extensions['admin']['theme'],
+    return render_admin_template(
         'admin/index.html',
         admin_models=sorted(app.extensions['admin']['model_dict'].keys()))
 
@@ -165,19 +189,17 @@ def generic_model_list(model_name):
     Lists instances of a given model, so they can be selected for
     editing or deletion.
     """
-
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
     model = app.extensions['admin']['model_dict'][model_name]
     model_instances = model.query
-    per_page = 15
+    per_page = app.extensions['admin']['pagination_per_page']
     page = int(request.args.get('page', '1'))
     page_offset = (page - 1) * per_page
     items = model_instances.limit(per_page).offset(page_offset).all()
     pagination = Pagination(model_instances, page, per_page,
                             model_instances.count(), items)
-    return render_theme_template(
-        app.extensions['admin']['theme'],
+    return render_admin_template(
         'admin/list.html',
         admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
         _get_pk_value=_get_pk_value,
@@ -200,8 +222,7 @@ def generic_model_add(model_name):
 
     if request.method == 'GET':
         form = model_form()
-        return render_theme_template(
-            app.extensions['admin']['theme'],
+        return render_admin_template(
             'admin/add.html',
             admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
             model_name=model_name,
@@ -219,8 +240,7 @@ def generic_model_add(model_name):
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_theme_template(
-                app.extensions['admin']['theme'],
+            return render_admin_template(
                 'admin/add.html',
                 admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
                 model_name=model_name,
@@ -254,7 +274,7 @@ def generic_model_delete(model_name, model_key):
 @admin.route('/edit/<model_name>/<model_key>/', methods=['GET', 'POST'])
 def generic_model_edit(model_name, model_key):
     """
-    Edit an instance of a model.
+    Edit a particular instance of a model.
     """
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
@@ -272,8 +292,7 @@ def generic_model_edit(model_name, model_key):
 
     if request.method == 'GET':
         form = model_form(obj=model_instance)
-        return render_theme_template(
-            app.extensions['admin']['theme'],
+        return render_admin_template(
             'admin/edit.html',
             admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
             model_instance=model_instance,
@@ -292,8 +311,7 @@ def generic_model_edit(model_name, model_key):
 
         else:
             flash('There are errors, see below!', 'error')
-            return render_theme_template(
-                app.extensions['admin']['theme'],
+            return render_admin_template(
                 'admin/edit.html',
                 admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
                 model_instance=model_instance,
@@ -302,7 +320,8 @@ def generic_model_edit(model_name, model_key):
 
 def _populate_model_from_form(model_instance, form):
     """
-    Return a populated model instance from a form.
+    Returns a model instance that has been populated with the data
+    from a form.
     """
     for name, field in form._fields.iteritems():
         field.populate_obj(model_instance, name)

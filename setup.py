@@ -32,6 +32,7 @@ setup(
         'Flask',
         'Flask-SQLAlchemy',
         'Flask-WTF',
+        'Flask-Themes',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

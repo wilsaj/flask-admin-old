@@ -8,24 +8,6 @@
 
 {% block main %}
 
-<h1>{{model_name}}</h1>
-
-<br />
-
-{% if clsnames %}
-<div id="sidebar">
-  <div class="box">
-    <h2>Related types'</h2>
-    <table>
-      {% for clsname in clsnames %}
-	<tr><td><a href="/SWMIS/Admin/{{clsname}}/?page=1">{{clsname}}</a></td></tr>
-      {% endfor %}
-    </table>
-  </div>
-</div>
-{% endif %}
-
-
   <ul id="model_list">
     <li><h2>{{ model_name }}</h2></li>
     {% for model_instance in model_instances  %}
