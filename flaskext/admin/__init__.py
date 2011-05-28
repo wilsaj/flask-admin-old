@@ -185,10 +185,12 @@ def generic_model_list(model_name):
     Lists instances of a given model, so they can be selected for
     editing or deletion.
     """
+    db_session = app.extensions['admin']['db_session']
+
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
     model = app.extensions['admin']['model_dict'][model_name]
-    model_instances = model.query
+    model_instances = db_session.query(model)
     per_page = app.extensions['admin']['pagination_per_page']
     page = int(request.args.get('page', '1'))
     page_offset = (page - 1) * per_page
@@ -209,6 +211,8 @@ def generic_model_add(model_name):
     """
     Create a new instance of a model.
     """
+    db_session = app.extensions['admin']['db_session']
+
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
 
@@ -228,8 +232,8 @@ def generic_model_add(model_name):
         form = model_form(request.form)
         if form.validate():
             model_instance = _populate_model_from_form(model_instance, form)
-            app.extensions['admin']['db_session'].add(model_instance)
-            app.extensions['admin']['db_session'].commit()
+            db_session.add(model_instance)
+            db_session.commit()
             flash('%s added: %s' % (model_name, model_instance), 'success')
             return redirect(url_for('generic_model_list',
                                     model_name=model_name))
@@ -248,6 +252,8 @@ def generic_model_delete(model_name, model_key):
     """
     Delete an instance of a model.
     """
+    db_session = app.extensions['admin']['db_session']
+
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
 
@@ -257,12 +263,12 @@ def generic_model_delete(model_name, model_key):
     pk_query_dict = {pk: model_key}
 
     try:
-        model_instance = model.query.filter_by(**pk_query_dict).one()
+        model_instance = db_session.query(model).filter_by(**pk_query_dict).one()
     except NoResultFound:
         return "%s not found: %s" % (model_name, model_key)
 
-    app.extensions['admin']['db_session'].delete(model_instance)
-    app.extensions['admin']['db_session'].commit()
+    db_session.delete(model_instance)
+    db_session.commit()
     flash('%s deleted: %s' % (model_name, model_instance), 'success')
     return redirect(url_for('generic_model_list', model_name=model_name))
 
@@ -272,6 +278,8 @@ def generic_model_edit(model_name, model_key):
     """
     Edit a particular instance of a model.
     """
+    db_session = app.extensions['admin']['db_session']
+
     if not model_name in app.extensions['admin']['model_dict'].keys():
         return "%s cannot be accessed through this admin page" % (model_name,)
 
@@ -299,8 +307,8 @@ def generic_model_edit(model_name, model_key):
 
         if form.validate():
             model_instance = _populate_model_from_form(model_instance, form)
-            app.extensions['admin']['db_session'].add(model_instance)
-            app.extensions['admin']['db_session'].commit()
+            db_session.add(model_instance)
+            db_session.commit()
             flash('%s updated: %s' % (model_name, model_instance), 'success')
             return redirect(
                 url_for('generic_model_list', model_name=model_name))
@@ -382,7 +390,8 @@ def _query_factory_for(model_class):
     QuerySelectFields.
     """
     def query_factory():
-        return sorted(model_class.query.all(), key=repr)
+        db_session = app.extensions['admin']['db_session']
+        return sorted(db_session.query(model_class).all(), key=repr)
 
     return query_factory
 
