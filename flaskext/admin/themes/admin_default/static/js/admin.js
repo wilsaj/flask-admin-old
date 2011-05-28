@@ -1,9 +1,3 @@
-/* Author: 
-
-*/
-
-var i = 1;
-
 // set up jQuery UI widgets
 $(function(){
     $('.ui-widget').hover(
@@ -29,16 +23,5 @@ $(function(){
         listWidth: 200,
         rows: 15
     });
-
-
 });
 
-
-function test(){
-    $.get('/field_trip/get_site_form',
-          function(data){
-              $('#placeholder').append('<fieldset><legend>Site ' + i + '</legend>' + data + '</fieldset>');
-          })
-
-    i+=1;
-}
