@@ -394,7 +394,7 @@ class TimeField(wtf_fields.Field):
     """
     widget = widgets.TextInput()
 
-    def __init__(self, label=u'', validators=None, format='%H:%M:%S', **kwargs):
+    def __init__(self, label=None, validators=None, format='%H:%M:%S', **kwargs):
         super(TimeField, self).__init__(label, validators, **kwargs)
         self.format = format
 
