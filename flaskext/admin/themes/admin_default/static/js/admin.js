@@ -19,9 +19,10 @@ $(function(){
         showSecond: true
     });
 
-    $('select[multiple="multiple"]').crossSelect({
+    // if select object has more than a few elements, use a cross select
+    $('select[multiple="multiple"]').filter(function (index) {
+        return this.length > 9;
+    }).crossSelect({
         listWidth: 200,
-        rows: 15
-    });
+        rows: 15});
 });
-
