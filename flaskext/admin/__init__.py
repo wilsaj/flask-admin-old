@@ -286,7 +286,7 @@ def generic_model_edit(model_name, model_key):
     pk_query_dict = {pk: model_key}
 
     try:
-        model_instance = model.query.filter_by(**pk_query_dict).one()
+        model_instance = db_session.query(model).filter_by(**pk_query_dict).one()
     except NoResultFound:
         return "%s not found: %s" % (model_name, model_key)
 
