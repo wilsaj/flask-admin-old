@@ -33,6 +33,9 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
+admin = Module(__name__)
+
+
 def Admin(models, admin_db_session, model_forms={},
           include_models=[], exclude_models=[], exclude_pks=False,
           admin_theme='admin_default', pagination_per_page=25):
@@ -95,8 +98,7 @@ def Admin(models, admin_db_session, model_forms={},
             app.extensions['admin']['model_dict'] = dict([(k, v)
                                for k, v in models.__dict__.items()
                                if isinstance(
-                                   v,
-                                   sa.ext.declarative.DeclarativeMeta) \
+                                   v, sa.ext.declarative.DeclarativeMeta)
                                and k != 'Base'])
 
     if app.extensions['admin']['model_dict']:
@@ -133,9 +135,6 @@ def default_admin_theme_loader(app):
         return theme_list
     else:
         return ()
-
-
-admin = Module(__name__)
 
 
 def render_admin_template(*args, **kwargs):
@@ -394,7 +393,8 @@ class TimeField(wtf_fields.Field):
     """
     widget = widgets.TextInput()
 
-    def __init__(self, label=None, validators=None, format='%H:%M:%S', **kwargs):
+    def __init__(self, label=None, validators=None,
+                 format='%H:%M:%S', **kwargs):
         super(TimeField, self).__init__(label, validators, **kwargs)
         self.format = format
 
