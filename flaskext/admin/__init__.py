@@ -64,7 +64,6 @@ def Admin(models, admin_db_session, model_forms={},
     if not hasattr(app, 'extensions'):
         app.extensions = {}
     app.extensions['admin'] = {}
-
     app.extensions['admin']['model_dict'] = {}
 
     if admin_db_session:
@@ -102,7 +101,6 @@ def Admin(models, admin_db_session, model_forms={},
         app.extensions['admin']['form_dict'] = dict(
             [(k, _form_for_model(v, exclude_pk=exclude_pks))
              for k, v in app.extensions['admin']['model_dict'].items()])
-
         for model, form in model_forms.items():
             if model in app.extensions['admin']['form_dict']:
                 app.extensions['admin']['form_dict'][model] = form
@@ -130,7 +128,6 @@ def default_admin_theme_loader(app):
 
         theme_list = [set_theme_application_to_import_name(theme)
                       for theme in default_themes]
-
         return theme_list
     else:
         return ()
@@ -157,7 +154,6 @@ def render_admin_template(*args, **kwargs):
             return render_theme_template(
                 app.extensions['admin']['theme'],
                 *args, **kwargs)
-
     else:
         try:
             return render_template(*args, **kwargs)
@@ -227,7 +223,6 @@ def generic_model_add(model_name):
             admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
             model_name=model_name,
             form=form)
-
     elif request.method == 'POST':
         form = model_form(request.form)
         if form.validate():
@@ -237,7 +232,6 @@ def generic_model_add(model_name):
             flash('%s added: %s' % (model_name, model_instance), 'success')
             return redirect(url_for('generic_model_list',
                                     model_name=model_name))
-
         else:
             flash('There are errors, see below!', 'error')
             return render_admin_template(
@@ -304,7 +298,6 @@ def generic_model_edit(model_name, model_key):
 
     elif request.method == 'POST':
         form = model_form(request.form, obj=model_instance)
-
         if form.validate():
             model_instance = _populate_model_from_form(model_instance, form)
             db_session.add(model_instance)
@@ -312,7 +305,6 @@ def generic_model_edit(model_name, model_key):
             flash('%s updated: %s' % (model_name, model_instance), 'success')
             return redirect(
                 url_for('generic_model_list', model_name=model_name))
-
         else:
             flash('There are errors, see below!', 'error')
             return render_admin_template(
@@ -363,7 +355,6 @@ def _form_for_model(model_class, exclude=[], exclude_pk=False):
     QuerySelectField for foreign keys.
     """
     model_mapper = sa.orm.class_mapper(model_class)
-
     relationship_fields = []
 
     if exclude_pk:
@@ -376,7 +367,6 @@ def _form_for_model(model_class, exclude=[], exclude_pk=False):
                     for relationship in model_mapper.iterate_properties
                     if isinstance(relationship,
                                   sa.orm.properties.RelationshipProperty)])
-
     form = model_form(model_class, exclude=exclude,
                       converter=AdminConverter())
 
@@ -439,7 +429,6 @@ class AdminConverter(ModelConverter):
                                 'column properties currently')
 
             column = prop.columns[0]
-
             kwargs = {
                 'validators': [],
                 'filters': [],
@@ -447,10 +436,8 @@ class AdminConverter(ModelConverter):
             }
             if field_args:
                 kwargs.update(field_args)
-
             if column.nullable:
                 kwargs['validators'].append(validators.Optional())
-
             if self.use_mro:
                 types = inspect.getmro(type(column.type))
             else:
@@ -462,7 +449,6 @@ class AdminConverter(ModelConverter):
                                          col_type.__name__)
                 if type_string.startswith('sqlalchemy'):
                     type_string = type_string[11:]
-
                 if type_string in self.converters:
                     converter = self.converters[type_string]
                     break
@@ -481,7 +467,6 @@ class AdminConverter(ModelConverter):
                    len(prop.local_remote_pairs) != 1:
                 raise TypeError('Do not know how to convert multiple'
                                 '-column properties currently')
-
             elif prop.direction == sa.orm.interfaces.MANYTOMANY and \
                      len(prop.local_remote_pairs) != 2:
                 raise TypeError('Do not know how to convert multiple'
@@ -495,7 +480,6 @@ class AdminConverter(ModelConverter):
                     foreign_model.__name__,
                     query_factory=_query_factory_for(foreign_model),
                     allow_blank=local_column.nullable)
-
             if prop.direction == sa.orm.properties.MANYTOMANY:
                 return sa_fields.QuerySelectMultipleField(
                     foreign_model.__name__,
