@@ -10,6 +10,8 @@
 """
 from __future__ import absolute_import
 
+import datetime
+import time
 import inspect
 import os
 import types
@@ -386,16 +388,31 @@ def _query_factory_for(model_class):
     return query_factory
 
 
-class DateTimePickerWidget(widgets.TextInput):
+class TimeField(wtf_fields.Field):
     """
-    TextInput widget that adds a 'datetimepicker' class to the html
-    input element; this makes it easy to write a jQuery selector that
-    adds a UI widget for datetime picking.
+    A text field which stores a `time.time` matching a format.
     """
-    def __call__(self, field, **kwargs):
-        c = kwargs.pop('class', '') or kwargs.pop('class_', '')
-        kwargs['class'] = u'datetimepicker %s' % c
-        return super(DateTimePickerWidget, self).__call__(field, **kwargs)
+    widget = widgets.TextInput()
+
+    def __init__(self, label=u'', validators=None, format='%H:%M:%S', **kwargs):
+        super(TimeField, self).__init__(label, validators, **kwargs)
+        self.format = format
+
+    def _value(self):
+        if self.raw_data:
+            return u' '.join(self.raw_data)
+        else:
+            return self.data and self.data.strftime(self.format) or u''
+
+    def process_formdata(self, valuelist):
+        if valuelist:
+            time_str = u' '.join(valuelist)
+            try:
+                timetuple = time.strptime(time_str, self.format)
+                self.data = datetime.time(*timetuple[3:6])
+            except ValueError:
+                self.data = None
+                raise
 
 
 class DatePickerWidget(widgets.TextInput):
@@ -408,6 +425,30 @@ class DatePickerWidget(widgets.TextInput):
         c = kwargs.pop('class', '') or kwargs.pop('class_', '')
         kwargs['class'] = u'datepicker %s' % c
         return super(DatePickerWidget, self).__call__(field, **kwargs)
+
+
+class DateTimePickerWidget(widgets.TextInput):
+    """
+    TextInput widget that adds a 'datetimepicker' class to the html
+    input element; this makes it easy to write a jQuery selector that
+    adds a UI widget for datetime picking.
+    """
+    def __call__(self, field, **kwargs):
+        c = kwargs.pop('class', '') or kwargs.pop('class_', '')
+        kwargs['class'] = u'datetimepicker %s' % c
+        return super(DateTimePickerWidget, self).__call__(field, **kwargs)
+
+
+class TimePickerWidget(widgets.TextInput):
+    """
+    TextInput widget that adds a 'timepicker' class to the html input
+    element; this makes it easy to write a jQuery selector that adds a
+    UI widget for time picking.
+    """
+    def __call__(self, field, **kwargs):
+        c = kwargs.pop('class', '') or kwargs.pop('class_', '')
+        kwargs['class'] = u'timepicker %s' % c
+        return super(TimePickerWidget, self).__call__(field, **kwargs)
 
 
 class AdminConverter(ModelConverter):
@@ -500,3 +541,8 @@ class AdminConverter(ModelConverter):
                 return None
         field_args['widget'] = DateTimePickerWidget()
         return wtf_fields.DateTimeField(**field_args)
+
+    @converts('Time')
+    def conv_Date(self, field_args, **extra):
+        field_args['widget'] = TimePickerWidget()
+        return TimeField(**field_args)

@@ -20,12 +20,16 @@ $(function(){
         timeFormat: 'hh:mm:ss'
     });
 
+    $('input.timepicker').timepicker({
+        timeFormat: 'hh:mm:ss',
+        showSecond: true
+    });
+
     $('select[multiple="multiple"]').crossSelect({
         listWidth: 200,
         rows: 15
     });
 
-    $('#clicky').click(test);
 
 });
 
