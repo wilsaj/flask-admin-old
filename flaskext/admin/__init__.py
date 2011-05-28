@@ -163,10 +163,10 @@ def render_admin_template(*args, **kwargs):
             return render_template(*args, **kwargs)
         except jinja2.exceptions.TemplateNotFound:
             raise jinja2.exceptions.TemplateNotFound(
-                "Flask-Admin cannot find its templates. The most likely cause for this "
-                "is that setup_themes hasn't been run. See the 'Customizing "
-                "your interface' section of the Flask-Admin docs for more "
-                "info and other options.")
+                "Flask-Admin cannot find its templates. The most likely "
+                "cause for this is that setup_themes hasn't been "
+                "run. See the 'Customizing your interface' section of "
+                "the Flask-Admin docs for more info and other options.")
 
 
 @admin.route('/')
