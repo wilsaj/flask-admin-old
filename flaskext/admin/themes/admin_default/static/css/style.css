@@ -332,18 +332,28 @@ form.edit_form .jqxs input[type="button"] {
     margin-bottom: 1px;
 }
 
+form.edit_form .error {
+    color: #CA0C0C;
+    font-weight: bold;
+}
+
+form.edit_form .error input {
+    background-color: #FFB0B0;
+}
+
 #pager {
     text-align: center;
     margin-top: 0.5em;
 }
+
 #pager a, #pager .pager_curpage {
     padding: 0 0.2em;
 }
 
 #pager a:hover, #pager .pager_curpage {
-    text-decoration:none;
-    background:white;
-    color:#114477;
+    text-decoration: none;
+    background: white;
+    color: #114477;
 }
 
 
