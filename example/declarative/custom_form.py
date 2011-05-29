@@ -32,7 +32,6 @@ class User(Base):
     _password_hash = Column('password', String(80), nullable=False)
     is_active = Column(Boolean, default=True)
 
-    #constructor
     def __init__(self, username="", password="", is_active=True):
         self.username = username
         self.password = password
@@ -59,6 +58,11 @@ class User(Base):
         }
 
 
+# generate the user form class from the model, so it can be used as a mixin
+user_form_from_model = admin.model_form(User, exclude=['id'],
+                                        converter=admin.AdminConverter())
+
+
 class UserFormBase(Form):
     """
     Form for creating or editting User object (via the admin). Define
@@ -74,7 +78,7 @@ class UserFormBase(Form):
     confirm_password = PasswordField()
 
 
-class UserForm(UserFormBase, admin.model_form(User, exclude=['id'], converter=admin.AdminConverter())):
+class UserForm(UserFormBase, user_form_from_model):
     """
     User form, as a mixin of UserFormBase and the form generated from
     the User SQLAlchemy model
