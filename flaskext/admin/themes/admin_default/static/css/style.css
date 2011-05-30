@@ -294,7 +294,7 @@ form.edit_form label {
     width: 180px; /* Width of labels */
 }
 
-form.edit_form input {
+form.edit_form input, select {
     min-width: 215px;
 }
 
