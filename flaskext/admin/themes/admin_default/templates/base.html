@@ -46,7 +46,13 @@
 {% endblock left_nav %}
     </div>
     <div id="main" role="main">
+      <div id="flashed-messages">
+        {% for category, msg in get_flashed_messages(with_categories=true) %}
+          <p class="flash-{{ category }}">{{ msg }}</p>
+        {% endfor %}
+      </div>
 {% block main %}
+
 {% endblock main %}
     </div>
       <footer>
