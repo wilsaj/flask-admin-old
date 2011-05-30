@@ -234,7 +234,7 @@ def generic_model_add(model_name):
             return redirect(url_for('generic_model_list',
                                     model_name=model_name))
         else:
-            flash('There are errors, see below!', 'error')
+            flash('There was an error processing your form. This %s has not been saved.' % model_name, 'error')
             return render_admin_template(
                 'admin/add.html',
                 admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
@@ -307,7 +307,7 @@ def generic_model_edit(model_name, model_key):
             return redirect(
                 url_for('generic_model_list', model_name=model_name))
         else:
-            flash('There are errors, see below!', 'error')
+            flash('There was an error processing your form. This %s has not been saved.' % model_name, 'error')
             return render_admin_template(
                 'admin/edit.html',
                 admin_models=sorted(app.extensions['admin']['model_dict'].keys()),
