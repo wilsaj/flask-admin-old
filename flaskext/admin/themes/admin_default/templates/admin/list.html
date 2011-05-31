@@ -9,7 +9,10 @@
 {% block main %}
 
   <ul id="model_list">
-    <li><h2>{{ model_name }}</h2></li>
+    <li id="model_list_header">
+      <h2>{{ model_name }}</h2>
+      {{ render_pagination(pagination, 'generic_model_list', model_name=model_name) }}
+    </li>
     {% for model_instance in model_instances  %}
       {% set model_pk = _get_pk_value(model_instance) %}
       <li>
@@ -26,6 +29,7 @@
       </li>
     {% endfor %}
     <li>
+      {{ render_pagination(pagination, 'generic_model_list', model_name=model_name) }}
       <a title="add new {{ model_name }}" href="{{ url_for('generic_model_add', model_name=model_name) }}">
         <div class="ui-widget ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></div>
       </a>
@@ -33,5 +37,4 @@
   </ul>
 
   <!-- <div  title=".ui-icon-plus"><span class="ui-icon ui-icon-plus"></span></div> -->
-  <div id="pager">{{ render_pagination(pagination, 'generic_model_list', model_name=model_name) }}</div>
 {% endblock %}
