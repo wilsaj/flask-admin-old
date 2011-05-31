@@ -70,16 +70,12 @@ def Admin(models, admin_db_session, model_forms={},
         app.extensions = {}
     app.extensions['admin'] = {}
     app.extensions['admin']['model_dict'] = {}
-
-    if admin_db_session:
-        app.extensions['admin']['db_session'] = admin_db_session
-
-    if not hasattr(app, 'extensions'):
-        app.extensions = {}
-    app.extensions['admin'] = {}
     app.extensions['admin']['theme'] = admin_theme
     app.extensions['admin']['pagination_per_page'] = pagination_per_page
     app.extensions['admin']['db_session'] = admin_db_session
+
+    if admin_db_session:
+        app.extensions['admin']['db_session'] = admin_db_session
 
     for i in include_models:
         if i in exclude_models:
