@@ -22,6 +22,9 @@
   <script src="{{ theme_static('js/libs/modernizr-1.6.min.js')}}"></script>
 
   <!-- admin specific css -->
+  <link href="http://fonts.googleapis.com/css?family=Vollkorn&amp;subset=latin" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Merriweather:300,regular,700,900" rel="stylesheet" type="text/css" >
+  <link href="http://fonts.googleapis.com/css?family=Inconsolata:regular" rel="stylesheet" type="text/css" >
   <!-- <link rel="stylesheet" href="/static/css/jquery-ui/smoothness/jquery-ui-1.8.9.custom.css" type="text/css"/> -->
   <link rel="stylesheet" href=" {{ theme_static('css/Aristo/jquery-ui-1.8.7.custom.css') }}" type="text/css"/>
   <link rel="stylesheet" href=" {{ theme_static('css/jquery-ui/jquery.crossSelect.custom.css') }}" type="text/css"/>
@@ -46,11 +49,13 @@
 {% endblock left_nav %}
     </div>
     <div id="main" role="main">
+      {% if get_flashed_messages(with_categories=true) %}
       <div id="flashed-messages">
         {% for category, msg in get_flashed_messages(with_categories=true) %}
           <p class="flash-{{ category }}">{{ msg }}</p>
         {% endfor %}
       </div>
+      {% endif %}
 {% block main %}
 
 {% endblock main %}

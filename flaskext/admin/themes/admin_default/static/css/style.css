@@ -168,14 +168,18 @@ button {  width: auto; overflow: visible; }
  */
 
 header {
-    text-align:center;
+    text-align: left;
     background: #fafafa;
+    padding: 0 0 5px 20px;
     margin-bottom: 5px;
     border-bottom: 1px solid #CDCDCD;
 }
 
 header h1 {
     font-size: 4em;
+    font-family: 'Vollkorn', 'Georgia', serif;
+    font-weight: normal;
+    word-spacing: 0.115em;
 }
 
 header span {
@@ -192,6 +196,7 @@ div#left_nav {
     float: left;
     padding: 10px 20px 0 0;
     border-right: 1px solid #CDCDCD;
+    font-family: Georgia, serif;
 }
 
 div#left_nav h4 {
@@ -203,7 +208,6 @@ div#left_nav ul {
     margin-left: 0;
     padding: 0 0 0 4px;
     list-style-type: none;
-    font-family: Georgia, serif;
 }
 
 div#left_nav a {
@@ -221,7 +225,7 @@ div#left_nav a:hover {
 
 #main {
     float: left;
-    padding: 0 0 0 40px;
+    padding: 5px 0 0 40px;
     width: 600px;
     margin: 0px auto;
     bottom: 0px;
@@ -229,6 +233,9 @@ div#left_nav a:hover {
 
 #flashed-messages {
     min-height: 30px;
+    font-family: Georgia, serif;
+    letter-spacing: 0.082em;
+    padding: 0 0 10px 0;
 }
 
 #flashed-messages .flash-error {
@@ -247,12 +254,18 @@ div#left_nav a:hover {
 }
 
 ul#model_list h2 {
-    padding: 8px 0 4px 0 ;
+    padding: 8px 0 0 8px;
     font-size: 1.3em;
+    text-align: left;
+    font-family: Georgia, serif;
+    letter-spacing: 0.082em;
 }
 
 ul#model_list {
     list-style-type: none;
+    font-family: 'Merriweather', Georgia, serif;
+    letter-spacing: 0.022em;
+    word-spacing: 0.131em;
 }
 
 ul#model_list a {
@@ -279,11 +292,6 @@ ul#model_list > li:first-child {
     text-align: center;
 }
 
-ul#model_list li#model_list_header h2 {
-    padding: 8px 0 0 8px;
-    text-align: left;
-}
-
 ul#model_list li#model_list_header .pagination {
     margin: -2px 0 0 0;
 }
@@ -299,7 +307,8 @@ ul#model_list > li:last-child {
     text-align: center;
 }
 
-ul#model_list li .pagination {
+.pagination {
+    font-family: Georgia, serif;
 }
 
 .no-prev-next-pagination {
@@ -309,6 +318,11 @@ ul#model_list li .pagination {
 ul#model_list .ui-widget {
     float: right;
     margin: 0 0 0 2px;
+}
+
+form.edit_form {
+    font-family: Georgia, serif;
+    letter-spacing: 0.082em;
 }
 
 form.edit_form fieldset {
@@ -328,8 +342,17 @@ form.edit_form label {
     width: 180px; /* Width of labels */
 }
 
-form.edit_form input, select {
+form.edit_form input {
     min-width: 215px;
+}
+
+form.edit_form select {
+    min-width: 223px;
+}
+
+form.edit_form input[type="text"], textarea, select {
+    font-family: 'Inconsolata', mono;
+    font-size: 1.04em;
 }
 
 form.edit_form input[type="submit"], form.edit_form input[type="button"] {
@@ -369,6 +392,11 @@ form.edit_form .jqxs input[type="button"] {
 form.edit_form .error {
     color: #CA0C0C;
     font-weight: bold;
+    letter-spacing: 0.08em;
+}
+
+form.edit_form .error li {
+    padding: 0 0 0 14px;
 }
 
 form.edit_form .error input {
