@@ -60,7 +60,7 @@ class User(Base):
 
 # generate the user form class from the model, so it can be used as a mixin
 user_form_from_model = admin.model_form(User, exclude=['id'],
-                                        converter=admin.AdminConverter())
+                                        converter=admin.AdminConverter(db_session))
 
 
 class UserFormBase(Form):
@@ -87,7 +87,7 @@ class UserForm(UserFormBase, user_form_from_model):
 
 
 themes.setup_themes(app)
-admin_mod = admin.Admin(sys.modules[__name__], admin_db_session=db_session,
+admin_mod = admin.Admin(app, sys.modules[__name__], admin_db_session=db_session,
                         model_forms={'User': UserForm}, exclude_pks=True)
 app.register_module(admin_mod, url_prefix='/admin')
 

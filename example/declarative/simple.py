@@ -75,7 +75,7 @@ class Teacher(Base):
 
 
 themes.setup_themes(app)
-admin_mod = admin.Admin(sys.modules[__name__], admin_db_session=db_session,
+admin_mod = admin.Admin(app, sys.modules[__name__], db_session,
                         exclude_pks=True)
 app.register_module(admin_mod, url_prefix='/admin')
 
