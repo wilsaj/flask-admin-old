@@ -76,8 +76,18 @@ class Teacher(Base):
         return self.name
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 themes.setup_themes(app)
-admin_mod = admin.Admin(sys.modules[__name__], admin_db_session=db_session,
+admin_mod = admin.Admin(app, sys.modules[__name__], admin_db_session=db_session,
+                        admin_decorator=login_required,
                         exclude_pks=True)
 
 @app.route('/login', methods=('GET', 'POST'))
@@ -99,18 +109,6 @@ def check_password():
         return redirect(url_for('with_authentication.login', next=request.url))
 
 app.register_module(admin_mod, url_prefix='/admin')
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if g.user is None:
-            return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
-
-
-
-
 
 
 class LoginForm(Form):
