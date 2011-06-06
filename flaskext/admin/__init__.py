@@ -11,9 +11,10 @@
 from __future__ import absolute_import
 
 import datetime
-import time
+from functools import wraps
 import inspect
 import os
+import time
 import types
 
 import flask
@@ -39,7 +40,8 @@ admin = Module(__name__)
 class Admin(Module):
     def __init__(self, app, models, admin_db_session, model_forms={},
                  include_models=[], exclude_models=[], exclude_pks=False,
-                 admin_theme='admin_default', pagination_per_page=25, **kwargs):
+                 admin_theme='admin_default', pagination_per_page=25,
+                 admin_decorator=None, **kwargs):
         """This returns a module that can be registered to your flask app.
 
         The parameters are:
@@ -121,8 +123,16 @@ class Admin(Module):
                 if model in self.form_dict:
                     self.form_dict[model] = form
 
+        if not admin_decorator:
+            def admin_decorator(f):
+                @wraps(f)
+                def wrapper(*args, **kwds):
+                    return f(*args, **kwds)
+                return wrapper
+
 
         def create_index():
+            @admin_decorator
             def index():
                 """
                 Landing page view for admin module
@@ -136,6 +146,7 @@ class Admin(Module):
 
 
         def create_generic_model_list():
+            @admin_decorator
             def generic_model_list(model_name):
                 """
                 Lists instances of a given model, so they can be selected for
@@ -166,6 +177,7 @@ class Admin(Module):
 
 
         def create_generic_model_edit():
+            @admin_decorator
             def generic_model_edit(model_name, model_key):
                 """
                 Edit a particular instance of a model.
@@ -219,6 +231,7 @@ class Admin(Module):
 
 
         def create_generic_model_add():
+            @admin_decorator
             def generic_model_add(model_name):
                 """
                 Create a new instance of a model.
@@ -259,6 +272,7 @@ class Admin(Module):
 
 
         def create_generic_model_delete():
+            @admin_decorator
             def generic_model_delete(model_name, model_key):
                 """
                 Delete an instance of a model.
