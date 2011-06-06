@@ -41,8 +41,8 @@
   <h4>Models</h4>
   <ul>
     {% for model in admin_models %}
-      <li class="{{ loop.cycle('odd', 'even') }}">
-        <a href="{{ url_for('generic_model_list', model_name=model,page=1)}}">{{model}}</a>
+      <li>
+        <a href="{{ url_for('generic_model_list_%s' % func_increment, model_name=model,page=1)}}">{{model}}</a>
       </li>
     {% endfor %}
   </ul>

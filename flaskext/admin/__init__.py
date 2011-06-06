@@ -129,7 +129,9 @@ class Admin(Module):
                 """
                 return self.render_admin_template(
                     'admin/index.html',
-                    admin_models=sorted(self.model_dict.keys()))
+                    admin_models=sorted(self.model_dict.keys()),
+                    func_increment=self.func_increment)
+            index.func_name = 'index_%s' % self.func_increment
             return index
 
 
@@ -157,8 +159,11 @@ class Admin(Module):
                     _get_pk_value=_get_pk_value,
                     model_instances=pagination.items,
                     model_name=model_name,
-                    pagination=pagination)
+                    pagination=pagination,
+                    func_increment=self.func_increment)
+            generic_model_list.func_name = 'generic_model_list_%s' % self.func_increment
             return generic_model_list
+
 
         def create_generic_model_edit():
             def generic_model_edit(model_name, model_key):
@@ -187,7 +192,8 @@ class Admin(Module):
                         'admin/edit.html',
                         admin_models=sorted(self.model_dict.keys()),
                         model_instance=model_instance,
-                        model_name=model_name, form=form)
+                        model_name=model_name, form=form,
+                        func_increment=self.func_increment)
 
                 elif request.method == 'POST':
                     form = model_form(request.form, obj=model_instance)
@@ -197,14 +203,18 @@ class Admin(Module):
                         db_session.commit()
                         flash('%s updated: %s' % (model_name, model_instance), 'success')
                         return redirect(
-                            url_for('generic_model_list', model_name=model_name))
+                            url_for('generic_model_list_%s' % func_increment,
+                                    model_name=model_name))
                     else:
                         flash('There was an error processing your form. This %s has not been saved.' % model_name, 'error')
                         return self.render_admin_template(
                             'admin/edit.html',
                             admin_models=sorted(self.model_dict.keys()),
                             model_instance=model_instance,
-                            model_name=model_name, form=form)
+                            model_name=model_name, form=form,
+                            func_increment=self.func_increment)
+            generic_model_edit.func_name = 'generic_model_edit_%s' % (
+                self.func_increment)
             return generic_model_edit
 
 
@@ -233,7 +243,7 @@ class Admin(Module):
                         db_session.add(model_instance)
                         db_session.commit()
                         flash('%s added: %s' % (model_name, model_instance), 'success')
-                        return redirect(url_for('generic_model_list',
+                        return redirect(url_for('generic_model_list_%s' % self.func_increment,
                                                 model_name=model_name))
                     else:
                         flash('There was an error processing your form. This %s has not been saved.' % model_name, 'error')
@@ -241,7 +251,10 @@ class Admin(Module):
                             'admin/add.html',
                             admin_models=sorted(self.model_dict.keys()),
                             model_name=model_name,
-                            form=form)
+                            form=form,
+                            func_increment=self.func_increment)
+            generic_model_add.func_name = 'generic_model_add_%s' % (
+                self.func_increment)
             return generic_model_add
 
 
@@ -263,8 +276,11 @@ class Admin(Module):
                 db_session.delete(model_instance)
                 db_session.commit()
                 flash('%s deleted: %s' % (model_name, model_instance), 'success')
-                return redirect(url_for('generic_model_list', model_name=model_name))
-
+                return redirect(url_for(
+                    'generic_model_list_%s' % self.func_increment,
+                    model_name=model_name))
+            generic_model_delete.func_name = 'generic_model_delete_%s' % (
+                self.func_increment)
             return generic_model_delete
 
 
@@ -306,7 +322,6 @@ class Admin(Module):
                     "cause for this is that setup_themes hasn't been "
                     "run. See the 'Customizing your interface' section of "
                     "the Flask-Admin docs for more info and other options.")
-
 
 
 def default_admin_theme_loader(app):
