@@ -48,7 +48,7 @@ class Admin(Module):
             The app to associate this Admin module with
 
         `models`
-            The module containing your SQLAlchemy models
+            Either a module or an iterable containing your SQLAlchemy models
 
         `model_forms`
             A dict with model names as keys, mapped to WTForm Form objects
@@ -84,7 +84,15 @@ class Admin(Module):
             if i in exclude_models:
                 raise "'%s' is in both include_models and exclude_models" % i
 
-        #XXX: fix base handling so it will work with non-Declarative models
+        if not hasattr(app, 'extensions'):
+            app.extensions = {}
+        if not 'admin' in app.extensions:
+            app.extensions['admin']= {'func_increment': 0}
+
+        app.extensions['admin']['func_increment'] += 1
+        self.func_increment = app.extensions['admin']['func_increment']
+
+        #XXX: fix base handling so it will also work with non-Declarative models
         if type(models) == types.ModuleType:
             if include_models:
                 for model in include_models:
@@ -98,6 +106,12 @@ class Admin(Module):
                     [(k, v) for k, v in models.__dict__.items()
                      if isinstance(v, sa.ext.declarative.DeclarativeMeta)
                      and k != 'Base'])
+        else:
+            self.model_dict = dict(
+                [(model.__name__, model)
+                 for model in models
+                 if isinstance(model, sa.ext.declarative.DeclarativeMeta)
+                 and model.__name__ != 'Base'])
 
         if self.model_dict:
             self.form_dict = dict(
