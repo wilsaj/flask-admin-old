@@ -86,8 +86,8 @@ def login_required(f):
 
 
 themes.setup_themes(app)
-admin_mod = admin.Admin(app, sys.modules[__name__], admin_db_session=db_session,
-                        admin_decorator=login_required,
+admin_mod = admin.Admin(app, sys.modules[__name__], db_session,
+                        view_decorator=login_required,
                         exclude_pks=True)
 
 

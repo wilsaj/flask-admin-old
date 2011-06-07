@@ -38,10 +38,10 @@ admin = Module(__name__)
 
 
 class Admin(Module):
-    def __init__(self, app, models, admin_db_session, model_forms={},
+    def __init__(self, app, models, db_session, model_forms={},
                  include_models=[], exclude_models=[], exclude_pks=False,
-                 admin_theme='admin_default', pagination_per_page=25,
-                 admin_decorator=None, append_to_endpoints=None, **kwargs):
+                 theme='admin_default', pagination_per_page=25,
+                 view_decorator=None, append_to_endpoints=None, **kwargs):
         """This returns a module that can be registered to your flask app.
 
         The parameters are:
@@ -52,7 +52,7 @@ class Admin(Module):
         `models`
             Either a module or an iterable containing your SQLAlchemy models
 
-        `admin_db_session`
+        `db_session`
             SQLAlchemy session that has been set up and bound to an
             engine. See the documentation on using Flask with
             SQLAlchemy for more information on how to set that up.
@@ -74,7 +74,7 @@ class Admin(Module):
         `exclude_pks`
             Don't include primary keys in the rendered forms
 
-        `admin_theme`
+        `theme`
             Theme that should be used for rendering the admin module
 
         `pagination_per_page`
@@ -82,7 +82,7 @@ class Admin(Module):
             be paginated so that only this number of model instances
             are shown for a given page. Default is 25.
 
-        `admin_decorator`
+        `view_decorator`
             Each admin views will be decorated with this decorator, if
             set. In particular, you might want to set this to a
             decorator that handles authentication
@@ -99,12 +99,12 @@ class Admin(Module):
         super(Admin, self).__init__(self, __name__, **kwargs)
         self.model_dict = {}
         self.app = app
-        self.theme = admin_theme
+        self.theme = theme
         self.pagination_per_page = pagination_per_page
-        self.db_session = admin_db_session
+        self.db_session = db_session
 
-        if admin_db_session:
-            self.db_session = admin_db_session
+        if db_session:
+            self.db_session = db_session
 
         for i in include_models:
             if i in exclude_models:
@@ -145,15 +145,15 @@ class Admin(Module):
                 if model in self.form_dict:
                     self.form_dict[model] = form
 
-        if not admin_decorator:
-            def admin_decorator(f):
+        if not view_decorator:
+            def view_decorator(f):
                 @wraps(f)
                 def wrapper(*args, **kwds):
                     return f(*args, **kwds)
                 return wrapper
 
         def create_index():
-            @admin_decorator
+            @view_decorator
             def index():
                 """
                 Landing page view for admin module
@@ -165,7 +165,7 @@ class Admin(Module):
             return index
 
         def create_generic_model_list():
-            @admin_decorator
+            @view_decorator
             def generic_model_list(model_name):
                 """
                 Lists instances of a given model, so they can be selected for
@@ -195,7 +195,7 @@ class Admin(Module):
             return generic_model_list
 
         def create_generic_model_edit():
-            @admin_decorator
+            @view_decorator
             def generic_model_edit(model_name, model_key):
                 """
                 Edit a particular instance of a model.
@@ -252,7 +252,7 @@ class Admin(Module):
             return generic_model_edit
 
         def create_generic_model_add():
-            @admin_decorator
+            @view_decorator
             def generic_model_add(model_name):
                 """
                 Create a new instance of a model.
@@ -296,7 +296,7 @@ class Admin(Module):
             return generic_model_add
 
         def create_generic_model_delete():
-            @admin_decorator
+            @view_decorator
             def generic_model_delete(model_name, model_key):
                 """
                 Delete an instance of a model.
