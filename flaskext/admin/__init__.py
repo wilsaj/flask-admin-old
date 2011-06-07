@@ -131,6 +131,14 @@ class Admin(Module):
                     return f(*args, **kwds)
                 return wrapper
 
+        def rename_admin_view(f):
+            @wraps(f)
+            def wrapper(*args, **kwds):
+                return f(*args, **kwds)
+            wrapper.func_name = '%s_%s' % (wrapper.func_name,
+                                           self.func_increment)
+            return wrapper
+
         def create_index():
             @admin_decorator
             def index():
@@ -141,7 +149,6 @@ class Admin(Module):
                     'admin/index.html',
                     admin_models=sorted(self.model_dict.keys()),
                     func_increment=self.func_increment)
-            index.func_name = 'index_%s' % self.func_increment
             return index
 
         def create_generic_model_list():
@@ -172,8 +179,6 @@ class Admin(Module):
                     model_name=model_name,
                     pagination=pagination,
                     func_increment=self.func_increment)
-            generic_model_list.func_name = 'generic_model_list_%s' % (
-                self.func_increment)
             return generic_model_list
 
         def create_generic_model_edit():
@@ -231,8 +236,6 @@ class Admin(Module):
                             model_instance=model_instance,
                             model_name=model_name, form=form,
                             func_increment=self.func_increment)
-            generic_model_edit.func_name = 'generic_model_edit_%s' % (
-                self.func_increment)
             return generic_model_edit
 
         def create_generic_model_add():
@@ -277,8 +280,6 @@ class Admin(Module):
                             model_name=model_name,
                             form=form,
                             func_increment=self.func_increment)
-            generic_model_add.func_name = 'generic_model_add_%s' % (
-                self.func_increment)
             return generic_model_add
 
         def create_generic_model_delete():
@@ -306,19 +307,22 @@ class Admin(Module):
                 return redirect(url_for(
                     'generic_model_list_%s' % self.func_increment,
                     model_name=model_name))
-            generic_model_delete.func_name = 'generic_model_delete_%s' % (
-                self.func_increment)
             return generic_model_delete
 
-        self.add_url_rule('/', view_func=create_index())
+        self.add_url_rule('/', 'index_%s' % self.func_increment,
+                          view_func=create_index())
         self.add_url_rule('/list/<model_name>',
+                          'generic_model_list_%s' % self.func_increment,
                           view_func=create_generic_model_list())
         self.add_url_rule('/edit/<model_name>/<model_key>/',
+                          'generic_model_edit_%s' % self.func_increment,
                           view_func=create_generic_model_edit(),
                           methods=['GET', 'POST'])
         self.add_url_rule('/delete/<model_name>/<model_key>/',
+                          'generic_model_delete_%s' % self.func_increment,
                           view_func=create_generic_model_delete())
         self.add_url_rule('/add/<model_name>/',
+                          'generic_model_add_%s' % self.func_increment,
                           view_func=create_generic_model_add(),
                           methods=['GET', 'POST'])
 
