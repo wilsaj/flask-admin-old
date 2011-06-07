@@ -16,21 +16,21 @@
     {% for model_instance in model_instances  %}
       {% set model_pk = _get_pk_value(model_instance) %}
       <li>
-        <a href="{{ url_for('generic_model_edit_%s' % func_increment, model_name=model_name, model_key=model_pk) }}">{{ model_instance }}</a>
-        <a href="{{ url_for('generic_model_delete_%s' % func_increment, model_name=model_name, model_key=model_pk) }}" title="delete">
+        <a href="{{ url_for('generic_model_edit%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}">{{ model_instance }}</a>
+        <a href="{{ url_for('generic_model_delete%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="delete">
           <div class="ui-widget ui-state-default ui-corner-all" title="delete"><span class="ui-icon ui-icon-trash"></span></div>
         </a>        <!-- <div  title=".ui-icon-plus"><span class="ui-icon ui-icon-plus"></span></div> -->
-        <a href="{{ url_for('generic_model_edit_%s' % func_increment, model_name=model_name, model_key=model_pk) }}" title="edit">
+        <a href="{{ url_for('generic_model_edit%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="edit">
           <div class="ui-widget ui-state-default ui-corner-all" title="edit"><span class="ui-icon ui-icon-pencil"></span></div>
         </a>
         <!-- <div class="ui-widget ui-state-default ui-corner-all" title=".ui-icon-trash"><span class="ui-icon ui-icon-trash"></span></div> -->
-        <!-- <a href="{{ url_for('generic_model_edit_%s' % func_increment, model_name=model_name, model_key=model_pk) }}" title="edit" class="icon edit"/> -->
-        <!-- <a href="{{ url_for('generic_model_delete_%s' % func_increment, model_name=model_name, model_key=model_pk) }}" title="delete" class="icon delete"/></td> -->
+        <!-- <a href="{{ url_for('generic_model_edit%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="edit" class="icon edit"/> -->
+        <!-- <a href="{{ url_for('generic_model_delete%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="delete" class="icon delete"/></td> -->
       </li>
     {% endfor %}
     <li>
-      {{ render_pagination(pagination, 'generic_model_list_%s' % func_increment, model_name=model_name) }}
-      <a title="add new {{ model_name }}" href="{{ url_for('generic_model_add_%s' % func_increment, model_name=model_name) }}">
+      {{ render_pagination(pagination, 'generic_model_list_%s' % append_to_endpoints, model_name=model_name) }}
+      <a title="add new {{ model_name }}" href="{{ url_for('generic_model_add%s' % append_to_endpoints, model_name=model_name) }}">
         <div class="ui-widget ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></div>
       </a>
     </li>

@@ -41,7 +41,7 @@ class Admin(Module):
     def __init__(self, app, models, admin_db_session, model_forms={},
                  include_models=[], exclude_models=[], exclude_pks=False,
                  admin_theme='admin_default', pagination_per_page=25,
-                 admin_decorator=None, **kwargs):
+                 admin_decorator=None, append_to_endpoints=None, **kwargs):
         """This returns a module that can be registered to your flask app.
 
         The parameters are:
@@ -71,6 +71,14 @@ class Admin(Module):
 
         `admin_theme`
             Theme that should be used for rendering the admin module
+
+        `append_to_endpoints`
+            A string that will be appended to the end of each admin
+            view endpoint so that the endpoints are distinct when
+            referenced by url_for(). If you are using multiple admin
+            modules, this it is necessary to set this value to
+            something different for each admin module so the admin
+            templates can find the correct views.
         """
         super(Admin, self).__init__(self, __name__, **kwargs)
         self.model_dict = {}
@@ -86,13 +94,10 @@ class Admin(Module):
             if i in exclude_models:
                 raise "'%s' is in both include_models and exclude_models" % i
 
-        if not hasattr(app, 'extensions'):
-            app.extensions = {}
-        if not 'admin' in app.extensions:
-            app.extensions['admin'] = {'func_increment': 0}
-
-        app.extensions['admin']['func_increment'] += 1
-        self.func_increment = app.extensions['admin']['func_increment']
+        if not append_to_endpoints:
+            self.append_to_endpoints = ""
+        else:
+            self.append_to_endpoints = append_to_endpoints
 
         #XXX: fix base handling so it will work with non-Declarative models
         if type(models) == types.ModuleType:
@@ -136,7 +141,7 @@ class Admin(Module):
             def wrapper(*args, **kwds):
                 return f(*args, **kwds)
             wrapper.func_name = '%s_%s' % (wrapper.func_name,
-                                           self.func_increment)
+                                           self.append_to_endpoints)
             return wrapper
 
         def create_index():
@@ -148,7 +153,7 @@ class Admin(Module):
                 return self.render_admin_template(
                     'admin/index.html',
                     admin_models=sorted(self.model_dict.keys()),
-                    func_increment=self.func_increment)
+                    append_to_endpoints=self.append_to_endpoints)
             return index
 
         def create_generic_model_list():
@@ -178,7 +183,7 @@ class Admin(Module):
                     model_instances=pagination.items,
                     model_name=model_name,
                     pagination=pagination,
-                    func_increment=self.func_increment)
+                    append_to_endpoints=self.append_to_endpoints)
             return generic_model_list
 
         def create_generic_model_edit():
@@ -212,7 +217,7 @@ class Admin(Module):
                         admin_models=sorted(self.model_dict.keys()),
                         model_instance=model_instance,
                         model_name=model_name, form=form,
-                        func_increment=self.func_increment)
+                        append_to_endpoints=self.append_to_endpoints)
 
                 elif request.method == 'POST':
                     form = model_form(request.form, obj=model_instance)
@@ -224,7 +229,7 @@ class Admin(Module):
                         flash('%s updated: %s' % (model_name, model_instance),
                               'success')
                         return redirect(
-                            url_for('generic_model_list_%s' % func_increment,
+                            url_for('generic_model_list%s' % append_to_endpoints,
                                     model_name=model_name))
                     else:
                         flash('There was an error processing your form. '
@@ -235,7 +240,7 @@ class Admin(Module):
                             admin_models=sorted(self.model_dict.keys()),
                             model_instance=model_instance,
                             model_name=model_name, form=form,
-                            func_increment=self.func_increment)
+                            append_to_endpoints=self.append_to_endpoints)
             return generic_model_edit
 
         def create_generic_model_add():
@@ -258,7 +263,7 @@ class Admin(Module):
                         admin_models=sorted(self.model_dict.keys()),
                         model_name=model_name,
                         form=form,
-                        func_increment=self.func_increment)
+                        append_to_endpoints=self.append_to_endpoints)
                 elif request.method == 'POST':
                     form = model_form(request.form)
                     if form.validate():
@@ -268,8 +273,8 @@ class Admin(Module):
                         db_session.commit()
                         flash('%s added: %s' % (model_name, model_instance),
                               'success')
-                        return redirect(url_for('generic_model_list_%s' %
-                                                self.func_increment,
+                        return redirect(url_for('generic_model_list%s' %
+                                                self.append_to_endpoints,
                                                 model_name=model_name))
                     else:
                         flash('There was an error processing your form. This '
@@ -279,7 +284,7 @@ class Admin(Module):
                             admin_models=sorted(self.model_dict.keys()),
                             model_name=model_name,
                             form=form,
-                            func_increment=self.func_increment)
+                            append_to_endpoints=self.append_to_endpoints)
             return generic_model_add
 
         def create_generic_model_delete():
@@ -305,24 +310,24 @@ class Admin(Module):
                 flash('%s deleted: %s' % (model_name, model_instance),
                       'success')
                 return redirect(url_for(
-                    'generic_model_list_%s' % self.func_increment,
+                    'generic_model_list%s' % self.append_to_endpoints,
                     model_name=model_name))
             return generic_model_delete
 
-        self.add_url_rule('/', 'index_%s' % self.func_increment,
+        self.add_url_rule('/', 'index%s' % self.append_to_endpoints,
                           view_func=create_index())
         self.add_url_rule('/list/<model_name>',
-                          'generic_model_list_%s' % self.func_increment,
+                          'generic_model_list%s' % self.append_to_endpoints,
                           view_func=create_generic_model_list())
         self.add_url_rule('/edit/<model_name>/<model_key>/',
-                          'generic_model_edit_%s' % self.func_increment,
+                          'generic_model_edit%s' % self.append_to_endpoints,
                           view_func=create_generic_model_edit(),
                           methods=['GET', 'POST'])
         self.add_url_rule('/delete/<model_name>/<model_key>/',
-                          'generic_model_delete_%s' % self.func_increment,
+                          'generic_model_delete%s' % self.append_to_endpoints,
                           view_func=create_generic_model_delete())
         self.add_url_rule('/add/<model_name>/',
-                          'generic_model_add_%s' % self.func_increment,
+                          'generic_model_add%s' % self.append_to_endpoints,
                           view_func=create_generic_model_add(),
                           methods=['GET', 'POST'])
 

@@ -76,9 +76,9 @@ class Teacher(Base):
 
 themes.setup_themes(app)
 admin1 = admin.Admin(app, [Student, Teacher], db_session,
-                        exclude_pks=True)
+                        exclude_pks=True, append_to_endpoints="1")
 admin2 = admin.Admin(app, [Course], db_session,
-                        exclude_pks=True)
+                        exclude_pks=True, append_to_endpoints="2")
 app.register_module(admin1, url_prefix='/admin1')
 app.register_module(admin2, url_prefix='/admin2')
 
