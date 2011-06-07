@@ -248,7 +248,8 @@ class Admin(Module):
                         'admin/add.html',
                         admin_models=sorted(self.model_dict.keys()),
                         model_name=model_name,
-                        form=form)
+                        form=form,
+                        func_increment=self.func_increment)
                 elif request.method == 'POST':
                     form = model_form(request.form)
                     if form.validate():
