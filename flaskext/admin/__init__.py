@@ -52,6 +52,11 @@ class Admin(Module):
         `models`
             Either a module or an iterable containing your SQLAlchemy models
 
+        `admin_db_session`
+            SQLAlchemy session that has been set up and bound to an
+            engine. See the documentation on using Flask with
+            SQLAlchemy for more information on how to set that up.
+
         `model_forms`
             A dict with model names as keys, mapped to WTForm Form objects
             that should be used as forms for creating and editing
@@ -71,6 +76,17 @@ class Admin(Module):
 
         `admin_theme`
             Theme that should be used for rendering the admin module
+
+        `pagination_per_page`
+            If there are a lot of model instances the list view will
+            be paginated so that only this number of model instances
+            are shown for a given page. Default is 25.
+
+        `admin_decorator`
+            Each admin views will be decorated with this decorator, if
+            set. In particular, you might want to set this to a
+            decorator that handles authentication
+            (e.g. login_required).
 
         `append_to_endpoints`
             A string that will be appended to the end of each admin
