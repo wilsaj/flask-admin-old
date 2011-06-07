@@ -1,17 +1,15 @@
 <html>
   <head><title>login</title></head>
   <body>
-    <form method="POST" action=".">
-      {% for field in form %}
-        <div {% if show_error_list and field.errors %}class="error"{% endif %}>
-          {{ field.label }}
-          {{ field(**kwargs)|safe }}
-          {% if show_error_list and field.errors %}
-            <ul class="errors_list">
-              {% for error in field.errors %}<li>{{ error }}{% endfor %}
-            </ul>
-          {% endif %}
-        </div>
-      {% endfor %}
+    <form method="POST" action="">
+      <div>
+        <label for="username">username</label>
+        <input id="username" name="username" type="text" value="">
+      </div>
+      <div>
+        <label for="password">password</label>
+        <input id="passsword" name="password" type="password" value="">
+      </div>
+      <input type="submit"/>
     </form>
   </body>
