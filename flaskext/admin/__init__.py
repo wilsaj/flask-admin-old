@@ -136,14 +136,6 @@ class Admin(Module):
                     return f(*args, **kwds)
                 return wrapper
 
-        def rename_admin_view(f):
-            @wraps(f)
-            def wrapper(*args, **kwds):
-                return f(*args, **kwds)
-            wrapper.func_name = '%s_%s' % (wrapper.func_name,
-                                           self.append_to_endpoints)
-            return wrapper
-
         def create_index():
             @admin_decorator
             def index():
