@@ -89,12 +89,12 @@ class Admin(Module):
         if not hasattr(app, 'extensions'):
             app.extensions = {}
         if not 'admin' in app.extensions:
-            app.extensions['admin']= {'func_increment': 0}
+            app.extensions['admin'] = {'func_increment': 0}
 
         app.extensions['admin']['func_increment'] += 1
         self.func_increment = app.extensions['admin']['func_increment']
 
-        #XXX: fix base handling so it will also work with non-Declarative models
+        #XXX: fix base handling so it will work with non-Declarative models
         if type(models) == types.ModuleType:
             if include_models:
                 for model in include_models:
@@ -117,7 +117,8 @@ class Admin(Module):
 
         if self.model_dict:
             self.form_dict = dict(
-                [(k, _form_for_model(v, self.db_session, exclude_pk=exclude_pks))
+                [(k, _form_for_model(v, self.db_session,
+                                     exclude_pk=exclude_pks))
                  for k, v in self.model_dict.items()])
             for model, form in model_forms.items():
                 if model in self.form_dict:
@@ -129,7 +130,6 @@ class Admin(Module):
                 def wrapper(*args, **kwds):
                     return f(*args, **kwds)
                 return wrapper
-
 
         def create_index():
             @admin_decorator
@@ -144,7 +144,6 @@ class Admin(Module):
             index.func_name = 'index_%s' % self.func_increment
             return index
 
-
         def create_generic_model_list():
             @admin_decorator
             def generic_model_list(model_name):
@@ -155,13 +154,14 @@ class Admin(Module):
                 db_session = self.db_session
 
                 if not model_name in self.model_dict.keys():
-                    return "%s cannot be accessed through this admin page" % (model_name,)
+                    return "%s cannot be accessed through this admin page" % (
+                        model_name,)
                 model = self.model_dict[model_name]
                 model_instances = db_session.query(model)
                 per_page = self.pagination_per_page
                 page = int(request.args.get('page', '1'))
-                page_offset = (page - 1) * per_page
-                items = model_instances.limit(per_page).offset(page_offset).all()
+                offset = (page - 1) * per_page
+                items = model_instances.limit(per_page).offset(offset).all()
                 pagination = Pagination(model_instances, page, per_page,
                                         model_instances.count(), items)
                 return self.render_admin_template(
@@ -172,9 +172,9 @@ class Admin(Module):
                     model_name=model_name,
                     pagination=pagination,
                     func_increment=self.func_increment)
-            generic_model_list.func_name = 'generic_model_list_%s' % self.func_increment
+            generic_model_list.func_name = 'generic_model_list_%s' % (
+                self.func_increment)
             return generic_model_list
-
 
         def create_generic_model_edit():
             @admin_decorator
@@ -185,7 +185,8 @@ class Admin(Module):
                 db_session = self.db_session
 
                 if not model_name in self.model_dict.keys():
-                    return "%s cannot be accessed through this admin page" % (model_name,)
+                    return "%s cannot be accessed through this admin page" % (
+                        model_name,)
 
                 model = self.model_dict[model_name]
                 model_form = self.form_dict[model_name]
@@ -194,7 +195,8 @@ class Admin(Module):
                 pk_query_dict = {pk: model_key}
 
                 try:
-                    model_instance = db_session.query(model).filter_by(**pk_query_dict).one()
+                    model_instance = db_session.query(model).filter_by(
+                        **pk_query_dict).one()
                 except NoResultFound:
                     return "%s not found: %s" % (model_name, model_key)
 
@@ -210,15 +212,19 @@ class Admin(Module):
                 elif request.method == 'POST':
                     form = model_form(request.form, obj=model_instance)
                     if form.validate():
-                        model_instance = _populate_model_from_form(model_instance, form)
+                        model_instance = _populate_model_from_form(
+                            model_instance, form)
                         db_session.add(model_instance)
                         db_session.commit()
-                        flash('%s updated: %s' % (model_name, model_instance), 'success')
+                        flash('%s updated: %s' % (model_name, model_instance),
+                              'success')
                         return redirect(
                             url_for('generic_model_list_%s' % func_increment,
                                     model_name=model_name))
                     else:
-                        flash('There was an error processing your form. This %s has not been saved.' % model_name, 'error')
+                        flash('There was an error processing your form. '
+                              'This %s has not been saved.' % model_name,
+                              'error')
                         return self.render_admin_template(
                             'admin/edit.html',
                             admin_models=sorted(self.model_dict.keys()),
@@ -229,7 +235,6 @@ class Admin(Module):
                 self.func_increment)
             return generic_model_edit
 
-
         def create_generic_model_add():
             @admin_decorator
             def generic_model_add(model_name):
@@ -238,7 +243,8 @@ class Admin(Module):
                 """
                 db_session = self.db_session
                 if not model_name in self.model_dict.keys():
-                    return "%s cannot be accessed through this admin page" % (model_name,)
+                    return "%s cannot be accessed through this admin page" % (
+                        model_name)
                 model = self.model_dict[model_name]
                 model_form = self.form_dict[model_name]
                 model_instance = model()
@@ -253,14 +259,18 @@ class Admin(Module):
                 elif request.method == 'POST':
                     form = model_form(request.form)
                     if form.validate():
-                        model_instance = _populate_model_from_form(model_instance, form)
+                        model_instance = _populate_model_from_form(
+                            model_instance, form)
                         db_session.add(model_instance)
                         db_session.commit()
-                        flash('%s added: %s' % (model_name, model_instance), 'success')
-                        return redirect(url_for('generic_model_list_%s' % self.func_increment,
+                        flash('%s added: %s' % (model_name, model_instance),
+                              'success')
+                        return redirect(url_for('generic_model_list_%s' %
+                                                self.func_increment,
                                                 model_name=model_name))
                     else:
-                        flash('There was an error processing your form. This %s has not been saved.' % model_name, 'error')
+                        flash('There was an error processing your form. This '
+                              '%s has not been saved.' % model_name, 'error')
                         return self.render_admin_template(
                             'admin/add.html',
                             admin_models=sorted(self.model_dict.keys()),
@@ -271,7 +281,6 @@ class Admin(Module):
                 self.func_increment)
             return generic_model_add
 
-
         def create_generic_model_delete():
             @admin_decorator
             def generic_model_delete(model_name, model_key):
@@ -280,17 +289,20 @@ class Admin(Module):
                 """
                 db_session = self.db_session
                 if not model_name in self.model_dict.keys():
-                    return "%s cannot be accessed through this admin page" % (model_name,)
+                    return "%s cannot be accessed through this admin page" % (
+                        model_name,)
                 model = self.model_dict[model_name]
                 pk = _get_pk_name(model)
                 pk_query_dict = {pk: model_key}
                 try:
-                    model_instance = db_session.query(model).filter_by(**pk_query_dict).one()
+                    model_instance = db_session.query(model).filter_by(
+                        **pk_query_dict).one()
                 except NoResultFound:
                     return "%s not found: %s" % (model_name, model_key)
                 db_session.delete(model_instance)
                 db_session.commit()
-                flash('%s deleted: %s' % (model_name, model_instance), 'success')
+                flash('%s deleted: %s' % (model_name, model_instance),
+                      'success')
                 return redirect(url_for(
                     'generic_model_list_%s' % self.func_increment,
                     model_name=model_name))
@@ -298,9 +310,9 @@ class Admin(Module):
                 self.func_increment)
             return generic_model_delete
 
-
         self.add_url_rule('/', view_func=create_index())
-        self.add_url_rule('/list/<model_name>', view_func=create_generic_model_list())
+        self.add_url_rule('/list/<model_name>',
+                          view_func=create_generic_model_list())
         self.add_url_rule('/edit/<model_name>/<model_key>/',
                           view_func=create_generic_model_edit(),
                           methods=['GET', 'POST'])
@@ -309,7 +321,6 @@ class Admin(Module):
         self.add_url_rule('/add/<model_name>/',
                           view_func=create_generic_model_add(),
                           methods=['GET', 'POST'])
-
 
     def render_admin_template(self, *args, **kwargs):
         """
@@ -323,7 +334,8 @@ class Admin(Module):
                     *args, **kwargs)
             except jinja2.exceptions.TemplateNotFound:
                 if default_admin_theme_loader not in self.app.theme_manager.loaders:
-                    self.app.theme_manager.loaders.append(default_admin_theme_loader)
+                    self.app.theme_manager.loaders.append(
+                        default_admin_theme_loader)
                     self.app.theme_manager.refresh()
                 return render_theme_template(
                     self.theme,
@@ -362,7 +374,6 @@ def default_admin_theme_loader(app):
         return theme_list
     else:
         return ()
-
 
 
 def _populate_model_from_form(model_instance, form):
@@ -572,12 +583,14 @@ class AdminConverter(ModelConverter):
             if prop.direction == sa.orm.properties.MANYTOONE:
                 return sa_fields.QuerySelectField(
                     foreign_model.__name__,
-                    query_factory=_query_factory_for(foreign_model, self.db_session),
+                    query_factory=_query_factory_for(foreign_model,
+                                                     self.db_session),
                     allow_blank=local_column.nullable)
             if prop.direction == sa.orm.properties.MANYTOMANY:
                 return sa_fields.QuerySelectMultipleField(
                     foreign_model.__name__,
-                    query_factory=_query_factory_for(foreign_model, self.db_session),
+                    query_factory=_query_factory_for(foreign_model,
+                                                     self.db_session),
                     allow_blank=local_column.nullable)
 
     @converts('Date')
