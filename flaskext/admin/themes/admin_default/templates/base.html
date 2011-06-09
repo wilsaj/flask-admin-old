@@ -42,7 +42,7 @@
   <ul>
     {% for model in admin_models %}
       <li>
-        <a href="{{ url_for('generic_model_list%s' % append_to_endpoints, model_name=model,page=1)}}">{{model}}</a>
+        <a href="{{ url_for('list_view%s' % append_to_endpoints, model_name=model,page=1)}}">{{model}}</a>
       </li>
     {% endfor %}
   </ul>

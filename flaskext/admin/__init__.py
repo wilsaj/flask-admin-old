@@ -164,9 +164,9 @@ class Admin(Module):
                     append_to_endpoints=self.append_to_endpoints)
             return index
 
-        def create_generic_model_list():
+        def create_list_view():
             @view_decorator
-            def generic_model_list(model_name):
+            def list_view(model_name):
                 """
                 Lists instances of a given model, so they can be selected for
                 editing or deletion.
@@ -192,11 +192,11 @@ class Admin(Module):
                     model_name=model_name,
                     pagination=pagination,
                     append_to_endpoints=self.append_to_endpoints)
-            return generic_model_list
+            return list_view
 
-        def create_generic_model_edit():
+        def create_edit():
             @view_decorator
-            def generic_model_edit(model_name, model_key):
+            def edit(model_name, model_key):
                 """
                 Edit a particular instance of a model.
                 """
@@ -237,7 +237,7 @@ class Admin(Module):
                         flash('%s updated: %s' % (model_name, model_instance),
                               'success')
                         return redirect(
-                            url_for('generic_model_list%s' % append_to_endpoints,
+                            url_for('list_view%s' % append_to_endpoints,
                                     model_name=model_name))
                     else:
                         flash('There was an error processing your form. '
@@ -249,11 +249,11 @@ class Admin(Module):
                             model_instance=model_instance,
                             model_name=model_name, form=form,
                             append_to_endpoints=self.append_to_endpoints)
-            return generic_model_edit
+            return edit
 
-        def create_generic_model_add():
+        def create_add():
             @view_decorator
-            def generic_model_add(model_name):
+            def add(model_name):
                 """
                 Create a new instance of a model.
                 """
@@ -281,7 +281,7 @@ class Admin(Module):
                         db_session.commit()
                         flash('%s added: %s' % (model_name, model_instance),
                               'success')
-                        return redirect(url_for('generic_model_list%s' %
+                        return redirect(url_for('list_view%s' %
                                                 self.append_to_endpoints,
                                                 model_name=model_name))
                     else:
@@ -293,11 +293,11 @@ class Admin(Module):
                             model_name=model_name,
                             form=form,
                             append_to_endpoints=self.append_to_endpoints)
-            return generic_model_add
+            return add
 
-        def create_generic_model_delete():
+        def create_delete():
             @view_decorator
-            def generic_model_delete(model_name, model_key):
+            def delete(model_name, model_key):
                 """
                 Delete an instance of a model.
                 """
@@ -318,25 +318,25 @@ class Admin(Module):
                 flash('%s deleted: %s' % (model_name, model_instance),
                       'success')
                 return redirect(url_for(
-                    'generic_model_list%s' % self.append_to_endpoints,
+                    'list_view%s' % self.append_to_endpoints,
                     model_name=model_name))
-            return generic_model_delete
+            return delete
 
         self.add_url_rule('/', 'index%s' % self.append_to_endpoints,
                           view_func=create_index())
-        self.add_url_rule('/list/<model_name>',
-                          'generic_model_list%s' % self.append_to_endpoints,
-                          view_func=create_generic_model_list())
+        self.add_url_rule('/list/<model_name>/',
+                          'list_view%s' % self.append_to_endpoints,
+                          view_func=create_list_view())
         self.add_url_rule('/edit/<model_name>/<model_key>/',
-                          'generic_model_edit%s' % self.append_to_endpoints,
-                          view_func=create_generic_model_edit(),
+                          'edit%s' % self.append_to_endpoints,
+                          view_func=create_edit(),
                           methods=['GET', 'POST'])
         self.add_url_rule('/delete/<model_name>/<model_key>/',
-                          'generic_model_delete%s' % self.append_to_endpoints,
-                          view_func=create_generic_model_delete())
+                          'delete%s' % self.append_to_endpoints,
+                          view_func=create_delete())
         self.add_url_rule('/add/<model_name>/',
-                          'generic_model_add%s' % self.append_to_endpoints,
-                          view_func=create_generic_model_add(),
+                          'add%s' % self.append_to_endpoints,
+                          view_func=create_add(),
                           methods=['GET', 'POST'])
 
     def render_admin_template(self, *args, **kwargs):
