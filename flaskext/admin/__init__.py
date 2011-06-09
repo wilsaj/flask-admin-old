@@ -152,7 +152,7 @@ class Admin(Module):
                     return f(*args, **kwds)
                 return wrapper
 
-        def create_index():
+        def create_index_view():
             @view_decorator
             def index():
                 """
@@ -194,7 +194,7 @@ class Admin(Module):
                     append_to_endpoints=self.append_to_endpoints)
             return list_view
 
-        def create_edit():
+        def create_edit_view():
             @view_decorator
             def edit(model_name, model_key):
                 """
@@ -251,7 +251,7 @@ class Admin(Module):
                             append_to_endpoints=self.append_to_endpoints)
             return edit
 
-        def create_add():
+        def create_add_view():
             @view_decorator
             def add(model_name):
                 """
@@ -295,7 +295,7 @@ class Admin(Module):
                             append_to_endpoints=self.append_to_endpoints)
             return add
 
-        def create_delete():
+        def create_delete_view():
             @view_decorator
             def delete(model_name, model_key):
                 """
@@ -323,20 +323,20 @@ class Admin(Module):
             return delete
 
         self.add_url_rule('/', 'index%s' % self.append_to_endpoints,
-                          view_func=create_index())
+                          view_func=create_index_view())
         self.add_url_rule('/list/<model_name>/',
                           'list_view%s' % self.append_to_endpoints,
                           view_func=create_list_view())
         self.add_url_rule('/edit/<model_name>/<model_key>/',
                           'edit%s' % self.append_to_endpoints,
-                          view_func=create_edit(),
+                          view_func=create_edit_view(),
                           methods=['GET', 'POST'])
         self.add_url_rule('/delete/<model_name>/<model_key>/',
                           'delete%s' % self.append_to_endpoints,
-                          view_func=create_delete())
+                          view_func=create_delete_view())
         self.add_url_rule('/add/<model_name>/',
                           'add%s' % self.append_to_endpoints,
-                          view_func=create_add(),
+                          view_func=create_add_view(),
                           methods=['GET', 'POST'])
 
     def render_admin_template(self, *args, **kwargs):
