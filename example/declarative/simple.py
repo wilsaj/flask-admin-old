@@ -10,16 +10,8 @@ from sqlalchemy import Column, Integer, Text, String, Float, Time, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import ForeignKey
 
-app = Flask(__name__)
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///simple.db'
-app.config['SECRET_KEY'] = 'not secure'
-
-engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
-                                         bind=engine))
 Base = declarative_base()
-
 
 # ----------------------------------------------------------------------
 # Association tables
@@ -50,6 +42,7 @@ class Course(Base):
     # teacher = relation()
     # students = relation()
 
+
     def __repr__(self):
         return self.subject
 
@@ -74,16 +67,30 @@ class Teacher(Base):
         return self.name
 
 
-themes.setup_themes(app)
-admin_mod = admin.Admin(app, sys.modules[__name__], db_session,
-                        exclude_pks=True)
-app.register_module(admin_mod, url_prefix='/admin')
+def create_app(database_uri='sqlite://'):
+    app = Flask(__name__)
+
+    app.config['SECRET_KEY'] = 'not secure'
+
+    app.engine = create_engine(database_uri, convert_unicode=True)
+    app.db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
+                                         bind=app.engine))
+
+    themes.setup_themes(app)
+    admin_mod = admin.Admin(app, sys.modules[__name__], app.db_session,
+                            exclude_pks=True)
+    app.register_module(admin_mod, url_prefix='/admin')
+
+    Base.metadata.create_all(bind=app.engine)
+
+    @app.route('/')
+    def go_to_admin():
+        return redirect('/admin')
+
+    return app
 
 
-@app.route('/')
-def go_to_admin():
-    return redirect('/admin')
 
 if __name__ == '__main__':
-    Base.metadata.create_all(bind=engine)
+    app = create_app('sqlite:///simple.db')
     app.run(debug=True)
