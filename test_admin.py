@@ -5,6 +5,7 @@ from flaskext.testing import TestCase
 
 sys.path.append('./example/declarative/')
 import simple
+import multiple
 
 
 class SimpleTest(TestCase):
@@ -58,6 +59,26 @@ class SimpleTest(TestCase):
         rv = self.client.get('/admin/delete/Student/2/')
         self.assert_200(rv)
         assert "Student not found" in rv.data
+
+
+
+class MultipleTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = multiple.create_app('sqlite://')
+        app.db_session.commit()
+        return app
+
+    def test_admin1(self):
+        rv = self.client.get('/admin1/')
+        assert "Student" in rv.data
+        assert "Course" not in rv.data
+
+    def test_admin2(self):
+        rv = self.client.get('/admin2/')
+        assert "Student" not in rv.data
+        assert "Course" in rv.data
 
 
 
