@@ -10,16 +10,8 @@ from sqlalchemy import Column, Integer, Text, String, Float, Time, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import ForeignKey
 
-app = Flask(__name__)
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///simple.db'
-app.config['SECRET_KEY'] = 'not secure'
-
-engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
-                                         bind=engine))
 Base = declarative_base()
-
 
 # ----------------------------------------------------------------------
 # Association tables
@@ -74,14 +66,27 @@ class Teacher(Base):
         return self.name
 
 
-themes.setup_themes(app)
-admin1 = admin.Admin(app, [Student, Teacher], db_session,
-                        exclude_pks=True, append_to_endpoints="1")
-admin2 = admin.Admin(app, [Course], db_session,
-                        exclude_pks=True, append_to_endpoints="2")
-app.register_module(admin1, url_prefix='/admin1')
-app.register_module(admin2, url_prefix='/admin2')
+def create_app(database_uri='sqlite://'):
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'not secure'
+
+    app.engine = create_engine(database_uri, convert_unicode=True)
+    app.db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
+                                                 bind=app.engine))
+
+    themes.setup_themes(app)
+    admin1 = admin.Admin(app, [Student, Teacher], app.db_session,
+                         exclude_pks=True, append_to_endpoints="1")
+    admin2 = admin.Admin(app, [Course], app.db_session,
+                         exclude_pks=True, append_to_endpoints="2")
+    app.register_module(admin1, url_prefix='/admin1')
+    app.register_module(admin2, url_prefix='/admin2')
+
+    Base.metadata.create_all(bind=app.engine)
+
+    return app
+
 
 if __name__ == '__main__':
-    Base.metadata.create_all(bind=engine)
+    app = create_app('sqlite:///simple.db')
     app.run(debug=True)
