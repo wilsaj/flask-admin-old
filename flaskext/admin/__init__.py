@@ -41,7 +41,7 @@ class Admin(Module):
     def __init__(self, app, models, db_session, model_forms={},
                  include_models=[], exclude_models=[], exclude_pks=False,
                  theme='admin_default', pagination_per_page=25,
-                 view_decorator=None, append_to_endpoints=None, **kwargs):
+                 view_decorator=None, append_to_endpoints='', **kwargs):
         """This returns a module that can be registered to your flask app.
 
         The parameters are:
@@ -110,10 +110,7 @@ class Admin(Module):
             if i in exclude_models:
                 raise "'%s' is in both include_models and exclude_models" % i
 
-        if not append_to_endpoints:
-            self.append_to_endpoints = ""
-        else:
-            self.append_to_endpoints = append_to_endpoints
+        self.append_to_endpoints = append_to_endpoints
 
         #XXX: fix base handling so it will work with non-Declarative models
         if type(models) == types.ModuleType:
