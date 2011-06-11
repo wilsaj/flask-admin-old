@@ -3,17 +3,20 @@ import unittest
 
 from flaskext.testing import TestCase
 
+sys.path.append('./example/declarative/')
+import simple
+
+
 class SimpleTest(TestCase):
     TESTING = True
 
     def create_app(self):
-        sys.path.append('./example/declarative/')
-        import simple
         app = simple.create_app('sqlite://')
         teacher = simple.Teacher(name="Mrs. Jones")
-        student = simple.Student(name="Forbes Minor")
         app.db_session.add(teacher)
-        app.db_session.add(student)
+        app.db_session.add(simple.Student(name="Stewart"))
+        app.db_session.add(simple.Student(name="Mike"))
+        app.db_session.add(simple.Student(name="Jason"))
         app.db_session.add(simple.Course(subject="maths", teacher=teacher))
         app.db_session.commit()
         return app
@@ -31,19 +34,31 @@ class SimpleTest(TestCase):
         self.assert_200(rv)
 
     def test_edit(self):
-        rv = self.client.get('/admin/edit/Course/1/')
-        self.assert_200(rv)
-
-    def test_add(self):
-        rv = self.client.get('/admin/add/Course/')
-        self.assert_200(rv)
-
-    def test_delete(self):
-        rv = self.client.get('/admin/delete/Course/1/')
+        rv = self.client.post('/admin/edit/Course/1/',
+                              data=dict(students=[1]))
+        course = self.app.db_session.query(simple.Course).filter_by(id=1).one()
+        self.assertEqual(len(course.students), 1)
+        student = self.app.db_session.query(simple.Student).filter_by(id=1).one()
+        self.assertEqual(len(student.courses), 1)
         self.assert_redirects(rv, '/admin/list/Course/')
 
-        rv = self.client.get('/admin/delete/Course/1/')
+    def test_add(self):
+        self.assertEqual(self.app.db_session.query(simple.Teacher).count(), 1)
+        rv = self.client.post('/admin/add/Teacher/',
+                              data=dict(name='Mr. Kohleffel'))
+        self.assertEqual(self.app.db_session.query(simple.Teacher).count(), 2)
+        self.assert_redirects(rv, '/admin/list/Teacher/')
+
+    def test_delete(self):
+        self.assertEqual(self.app.db_session.query(simple.Student).count(), 3)
+        rv = self.client.get('/admin/delete/Student/2/')
+        self.assertEqual(self.app.db_session.query(simple.Student).count(), 2)
+        self.assert_redirects(rv, '/admin/list/Student/')
+
+        rv = self.client.get('/admin/delete/Student/2/')
         self.assert_200(rv)
+        assert "Student not found" in rv.data
+
 
 
 if __name__ == '__main__':
