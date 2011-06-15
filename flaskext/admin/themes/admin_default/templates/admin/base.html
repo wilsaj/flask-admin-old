@@ -28,26 +28,30 @@
   <!-- <link rel="stylesheet" href="/static/css/jquery-ui/smoothness/jquery-ui-1.8.9.custom.css" type="text/css"/> -->
   <link rel="stylesheet" href=" {{ theme_static('css/Aristo/jquery-ui-1.8.7.custom.css') }}" type="text/css"/>
   <link rel="stylesheet" href=" {{ theme_static('css/jquery-ui/jquery.crossSelect.custom.css') }}" type="text/css"/>
+{% block extra_head %}
+{% endblock extra_head %}
 </head>
 
 <body lang="en">
   <div class="container">
     <header>
+    {% block header %}
       <h1>Flask Admin</h1>
+    {% endblock header %}
     </header>
 
-    <div id="left_nav">
 {% block left_nav  %}
-  <h4>Models</h4>
-  <ul>
-    {% for model in admin_models %}
-      <li>
-        <a href="{{ url_for('list_view%s' % append_to_endpoints, model_name=model,page=1)}}">{{model}}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <div id="left_nav">
+    <h4>Models</h4>
+    <ul>
+      {% for model in admin_models %}
+        <li>
+          <a href="{{ url_for('list_view%s' % append_to_endpoints, model_name=model,page=1)}}">{{model}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock left_nav %}
-    </div>
     <div id="main" role="main">
       {% if get_flashed_messages(with_categories=true) %}
       <div id="flashed-messages">
