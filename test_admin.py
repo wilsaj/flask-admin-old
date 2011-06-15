@@ -4,8 +4,10 @@ import unittest
 from flaskext.testing import TestCase
 
 sys.path.append('./example/declarative/')
+sys.path.append('./example/authentication/')
 import simple
 import multiple
+import admin_decorator
 
 
 class SimpleTest(TestCase):
@@ -79,6 +81,49 @@ class MultipleTest(TestCase):
         assert "Student" not in rv.data
         assert "Course" in rv.data
 
+
+class AdminDecoratorTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        self.app = admin_decorator.create_app('sqlite://')
+        self.app.debug = True
+        return self.app
+
+    def test_add_redirect(self):
+        rv = self.client.get('/admin/add/Student/')
+        self.assert_redirects(rv, "/login/?next=http%3A%2F%2Flocalhost%2Fadmin%2Fadd%2FStudent%2F")
+
+    def test_delete_redirect(self):
+        rv = self.client.get('/admin/delete/Student/1/')
+        self.assert_redirects(rv, "/login/?next=http%3A%2F%2Flocalhost%2Fadmin%2Fdelete%2FStudent%2F1%2F")
+
+    def test_edit_redirect(self):
+        rv = self.client.get('/admin/edit/Student/1/')
+        self.assert_redirects(rv, "/login/?next=http%3A%2F%2Flocalhost%2Fadmin%2Fedit%2FStudent%2F1%2F")
+
+    def test_index_redirect(self):
+        rv = self.client.get('/admin/')
+        self.assert_redirects(rv, "/login/?next=http%3A%2F%2Flocalhost%2Fadmin%2F")
+
+    def test_list_redirect(self):
+        rv = self.client.get('/admin/list/Student/')
+        self.assert_redirects(rv, "/login/?next=http%3A%2F%2Flocalhost%2Fadmin%2Flist%2FStudent%2F")
+
+    def test_login_logout(self):
+        rv = self.client.post('/login/',
+                             data=dict(username='test',
+                                       password='test'))
+        self.assert_redirects(rv, '/admin/')
+
+        rv = self.client.get('/admin/')
+        self.assert200(rv)
+
+        rv = self.client.get('/logout/')
+        self.assert_redirects(rv, '/')
+
+        rv = self.client.get('/admin/')
+        self.assert_redirects(rv, "/login/?next=http%3A%2F%2Flocalhost%2Fadmin%2F")
 
 
 if __name__ == '__main__':
