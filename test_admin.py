@@ -67,7 +67,6 @@ class MultipleTest(TestCase):
 
     def create_app(self):
         app = multiple.create_app('sqlite://')
-        app.db_session.commit()
         return app
 
     def test_admin1(self):
