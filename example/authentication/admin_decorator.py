@@ -94,7 +94,7 @@ def create_app(database_uri='sqlite://'):
     def login():
         if request.form.get('username', None):
             session['user'] = request.form['username']
-            return redirect(request.args['next'])
+            return redirect(request.args.get('next', url_for('flaskext.admin.index')))
         else:
             if request.method == 'POST':
                 return themes.render_theme_template("auth", "login.html",
