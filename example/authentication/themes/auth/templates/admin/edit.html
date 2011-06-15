@@ -1,0 +1,32 @@
+{% extends theme("admin/extra_base.html") %}
+
+{% block title %}
+Editing {{model_name}}
+{% endblock %}
+
+{% block main %}
+
+<form class="edit_form" method="POST" action="">
+  <fieldset>
+    <legend>
+      Editing {{model_name}}
+    </legend>
+
+    {% from theme("_formhelpers.html") import render_field %}
+      <ul>
+        {% for field in form %}
+          <li>
+            {{ render_field(field) }}
+          </li>
+        {% endfor %}
+        {{ form.csrf }}
+      </ul>
+
+      <input type="submit" value="Submit" class="button"/>
+      <input type="button" value="Cancel" class="button"
+               onclick="javascript:window.location = '{{ url_for('list_view%s' % append_to_endpoints, model_name=model_name) }}'" />
+    </div>
+  </fieldset>
+</form>
+
+{% endblock %}

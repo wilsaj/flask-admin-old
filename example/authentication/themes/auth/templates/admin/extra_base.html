@@ -1,0 +1,8 @@
+{% extends theme("admin/base.html") %}
+{% block header %}
+  <h1>Flask Admin</h1>
+  {% if session['user'] %}
+    <p>logged in as: {{ session['user'] }} <a href="{{ url_for('.logout')}}">log out</a> </p>
+  {% endif %}
+{% endblock header %}
+

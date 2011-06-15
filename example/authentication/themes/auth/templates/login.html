@@ -1,6 +1,9 @@
-<html>
-  <head><title>login</title></head>
-  <body>
+{% extends theme("admin/extra_base.html") %}
+
+{% block left_nav %}
+{% endblock left_nav %}
+
+{% block main %}
     <form method="POST" action="">
       <div>
         <label for="username">username</label>
@@ -12,4 +15,4 @@
       </div>
       <input type="submit"/>
     </form>
-  </body>
+{% endblock main %}

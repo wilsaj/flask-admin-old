@@ -70,7 +70,7 @@ class Teacher(Base):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not 'user' in session:
+        if 'user' not in session:
             return redirect(url_for('.login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
@@ -79,22 +79,28 @@ def login_required(f):
 def create_app(database_uri='sqlite://'):
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'not secure'
+    app.config['THEME_PATHS'] = './themes/'
     app.engine = create_engine(database_uri, convert_unicode=True)
     db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False, bind=app.engine))
 
     themes.setup_themes(app)
     admin_mod = admin.Admin(app, sys.modules[__name__], db_session,
+                            theme='auth',
                             view_decorator=login_required,
                             exclude_pks=True)
 
     @app.route('/login', methods=('GET', 'POST'))
     def login():
-        if 'username' in request.form and 'password' in request.form:
+        if request.form.get('username', None):
             session['user'] = request.form['username']
             return redirect(request.args['next'])
         else:
-            return render_template("login.html")
+            if request.method == 'POST':
+                return themes.render_theme_template("auth", "login.html",
+                                                    bad_login=True)
+            else:
+                return themes.render_theme_template("auth", "login.html")
 
     @app.route('/logout')
     def logout():

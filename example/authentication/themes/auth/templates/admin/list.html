@@ -1,0 +1,40 @@
+{% extends theme("admin/extra_base.html") %}
+{% from theme("admin/_paginationhelpers.html") import render_pagination %}
+
+{% block title %}
+{{model_name}}
+{% endblock %}
+
+
+{% block main %}
+
+  <ul id="model_list">
+    <li id="model_list_header">
+      <h2>{{ model_name }}</h2>
+      {{ render_pagination(pagination, 'list_view%s' % append_to_endpoints, model_name=model_name) }}
+    </li>
+    {% for model_instance in model_instances  %}
+      {% set model_pk = _get_pk_value(model_instance) %}
+      <li>
+        <a href="{{ url_for('edit%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}">{{ model_instance }}</a>
+        <a href="{{ url_for('delete%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="delete">
+          <div class="ui-widget ui-state-default ui-corner-all" title="delete"><span class="ui-icon ui-icon-trash"></span></div>
+        </a>        <!-- <div  title=".ui-icon-plus"><span class="ui-icon ui-icon-plus"></span></div> -->
+        <a href="{{ url_for('edit%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="edit">
+          <div class="ui-widget ui-state-default ui-corner-all" title="edit"><span class="ui-icon ui-icon-pencil"></span></div>
+        </a>
+        <!-- <div class="ui-widget ui-state-default ui-corner-all" title=".ui-icon-trash"><span class="ui-icon ui-icon-trash"></span></div> -->
+        <!-- <a href="{{ url_for('edit%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="edit" class="icon edit"/> -->
+        <!-- <a href="{{ url_for('delete%s' % append_to_endpoints, model_name=model_name, model_key=model_pk) }}" title="delete" class="icon delete"/></td> -->
+      </li>
+    {% endfor %}
+    <li>
+      {{ render_pagination(pagination, 'list_view%s' % append_to_endpoints, model_name=model_name) }}
+      <a title="add new {{ model_name }}" href="{{ url_for('add%s' % append_to_endpoints, model_name=model_name) }}">
+        <div class="ui-widget ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></div>
+      </a>
+    </li>
+  </ul>
+
+  <!-- <div  title=".ui-icon-plus"><span class="ui-icon ui-icon-plus"></span></div> -->
+{% endblock %}
