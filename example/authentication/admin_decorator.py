@@ -77,9 +77,9 @@ def login_required(f):
 
 
 def create_app(database_uri='sqlite://'):
-    app = Flask(__name__)
+    app = Flask('admin_decorator')
     app.config['SECRET_KEY'] = 'not secure'
-    app.config['THEME_PATHS'] = './themes/'
+
     app.engine = create_engine(database_uri, convert_unicode=True)
     db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False, bind=app.engine))
