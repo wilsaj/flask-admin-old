@@ -90,7 +90,7 @@ def create_app(database_uri='sqlite://'):
                             view_decorator=login_required,
                             exclude_pks=True)
 
-    @app.route('/login', methods=('GET', 'POST'))
+    @app.route('/login/', methods=('GET', 'POST'))
     def login():
         if request.form.get('username', None):
             session['user'] = request.form['username']
@@ -102,7 +102,7 @@ def create_app(database_uri='sqlite://'):
             else:
                 return themes.render_theme_template("auth", "login.html")
 
-    @app.route('/logout')
+    @app.route('/logout/')
     def logout():
         del session['user']
         return redirect('/')
@@ -111,7 +111,7 @@ def create_app(database_uri='sqlite://'):
 
     @app.route('/')
     def go_to_admin():
-        return redirect('/admin')
+        return redirect('/admin/')
 
     return app
 
