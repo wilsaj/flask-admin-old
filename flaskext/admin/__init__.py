@@ -340,9 +340,10 @@ class Admin(Module):
             except jinja2.exceptions.TemplateNotFound:
                 raise jinja2.exceptions.TemplateNotFound(
                     "Flask-Admin cannot find its templates. The most likely "
-                    "cause for this is that setup_themes hasn't been "
-                    "run. See the 'Customizing your interface' section of "
-                    "the Flask-Admin docs for more info and other options.")
+                    "cause for this is that setup_themes has not been "
+                    "run for your app. See the docs or examples for how to "
+                    "do that.")
+
 
 
 def default_admin_theme_loader(app):
