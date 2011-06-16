@@ -7,7 +7,7 @@ sys.path.append('./example/declarative/')
 sys.path.append('./example/authentication/')
 import simple
 import multiple
-import admin_decorator
+import view_decorator
 
 
 class SimpleTest(TestCase):
@@ -86,7 +86,7 @@ class AdminDecoratorTest(TestCase):
     TESTING = True
 
     def create_app(self):
-        self.app = admin_decorator.create_app('sqlite://')
+        self.app = view_decorator.create_app('sqlite://')
         self.app.debug = True
         return self.app
 
