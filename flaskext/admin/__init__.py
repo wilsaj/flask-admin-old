@@ -39,13 +39,14 @@ admin = Module(__name__)
 
 class Admin(Module):
     def __init__(self, app, models, db_session, model_forms={},
-                 include_models=[], exclude_models=[], exclude_pks=False,
-                 theme='admin_default', pagination_per_page=25,
-                 view_decorator=None, append_to_endpoints='', **kwargs):
-        """This returns a module that can be registered to your flask app.
+                 exclude_pks=False, theme='admin_default',
+                 pagination_per_page=25, view_decorator=None,
+                 append_to_endpoints='', **kwargs):
+        """This returns a module that can be registered to your flask
+        app. Additional parameters will be passed to the module
+        constructor.
 
         The parameters are:
-
         `app`
             The app to associate this Admin module with
 
@@ -61,15 +62,6 @@ class Admin(Module):
             A dict with model names as keys, mapped to WTForm Form objects
             that should be used as forms for creating and editing
             instances of these models
-
-        `include_models`
-            An iterable of model names that should be available to be
-            manipulated with the admin module. If this is present, then
-            models not included won't be available to the admin module.
-
-        `exclude_models`
-            An iterable of model names that should not be available to
-            the admin module
 
         `exclude_pks`
             Don't include primary keys in the rendered forms
@@ -106,26 +98,14 @@ class Admin(Module):
         if db_session:
             self.db_session = db_session
 
-        for i in include_models:
-            if i in exclude_models:
-                raise "'%s' is in both include_models and exclude_models" % i
-
         self.append_to_endpoints = append_to_endpoints
 
         #XXX: fix base handling so it will work with non-Declarative models
         if type(models) == types.ModuleType:
-            if include_models:
-                for model in include_models:
-                    module_dict = models.__dict__
-                    if model in module_dict and \
-                           isinstance(module_dict[model],
-                                      sa.ext.declarative.DeclarativeMeta):
-                        self.model_dict[model] = module_dict[model]
-            else:
-                self.model_dict = dict(
-                    [(k, v) for k, v in models.__dict__.items()
-                     if isinstance(v, sa.ext.declarative.DeclarativeMeta)
-                     and k != 'Base'])
+            self.model_dict = dict(
+                [(k, v) for k, v in models.__dict__.items()
+                 if isinstance(v, sa.ext.declarative.DeclarativeMeta)
+                 and k != 'Base'])
         else:
             self.model_dict = dict(
                 [(model.__name__, model)
