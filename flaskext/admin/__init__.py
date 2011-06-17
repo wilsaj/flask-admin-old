@@ -93,7 +93,7 @@ class Admin(Module):
         something different for each admin module so the admin
         templates can find the correct views.
     """
-    def __init__(self, app, models, db_session, model_forms={},
+    def __init__(self, app, models, db_session, model_forms=None,
                  exclude_pks=False, theme='admin_default',
                  pagination_per_page=25, view_decorator=None,
                  append_to_endpoints='', **kwargs):
@@ -106,6 +106,9 @@ class Admin(Module):
 
         if db_session:
             self.db_session = db_session
+
+        if not model_forms:
+            model_forms = {}
 
         self.append_to_endpoints = append_to_endpoints
 
