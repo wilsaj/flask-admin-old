@@ -2,7 +2,8 @@
 Flask-Admin
 -----------
 
-Description goes here...
+Flask-Admin is a Flask extension module that aims to be a flexible,
+customizable web-based interface to your datastore.
 
 Links
 `````
@@ -18,11 +19,11 @@ from setuptools import setup
 setup(
     name='Flask-Admin',
     version='0.1',
-    url='<enter URL here>',
+    url='https://github.com/wilsaj/',
     license='BSD',
-    author='wilsaj',
-    author_email='wilson.andrew.j+flaskadmin@gmail.com',
-    description='Flask admin!',
+    author='Andy Wilson',
+    author_email='wilson.andrew.j@gmail.com',
+    description='Flask extenstion module that provides an admin interface',
     long_description=__doc__,
     packages=['flaskext'],
     namespace_packages=['flaskext'],
