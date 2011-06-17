@@ -6,20 +6,16 @@
 
 Flask-Admin
 ===========
-
 .. module:: flaskext.admin
 
 Flask-Admin aims to be a flexible, customizable web-based interface to
-your datastore. It isn't there yet.
-
-At the moment, Flask-Admin only works with SQLAlchemy declarative
-models.
+your datastore. It's not quite there yet. At the moment, Flask-Admin
+only works with SQLAlchemy declarative models.
 
 
-Usage
------
-
-A typical usage looks something like this::
+How to use it
+-------------
+Typical usage looks something like this::
 
     from flask import Flask
     from flaskext import themes
@@ -40,16 +36,45 @@ Where my_models is a module containing SQLAlchemy declarative models
 which have been created either using Flask-SQLAlchemy extension or
 with SQLAlchemy's declarative pattern.
 
+Note: You must run ``themes.setup_themes()`` on your app in order for
+the admin views to have access to the templates and static files that
+ship with Flask-Admin.
 
-Customizing the Admin interface
--------------------------------
 
+Customizing your Admin
+----------------------
 Currently, the best way to customize the admin interface is to copy
 the 'admin_default' theme from flaskext/admin/themes/ and edit the
-files accordingly.
+files accordingly. See the example in
+`examples/authentication/view_decorator.py` for an example of how that
+might work.
 
 
--------------
+Endpoints for Flask-Admin views
+-------------------------------
+If you want to refer to views in Flask-Admin, the following endpoints
+are available:
+
+`url_for('flaskext.admin.index')`
+    returns the url for the index view
+
+`url_for('flaskext.admin.list_view', model_name='some_model')`
+    returns the list view for a given model
+
+`url_for('flaskext.admin.edit', model_name='some_model', model_key=primary_key)`
+    returns the url for the page used for editing a specific model
+    instance
+
+`url_for('flaskext.admin.add', model_name='some_model')`
+    returns the url for the adding a new model instance
+
+`url_for('flaskext.admin.delete', model_name='some_model', model_key=primary_key)`
+    returns the url for the page used for deleting a specific model
+    instance
+
+
+API
+---
 
 .. autoclass:: Admin
 
