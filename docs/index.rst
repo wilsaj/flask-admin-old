@@ -44,10 +44,8 @@ You must run ``themes.setup_themes()`` on your app in order for the
 admin views to have access to the templates and static files that ship
 with Flask-Admin.
 
-Also, your model classes must be able to initialize themselves (to
-execute __init__) without any arguments. For example...
-
-This works::
+Also, your model classes must be able to be initialized without any
+arguments. For example, this works::
 
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -70,8 +68,8 @@ But this doesn't work::
             self.username = username
             self.email = email
 
-Because Flask-Admin needs to be able execute a statement like
-``new_user = User()``.
+Because Flask-Admin needs to be able execute ``User()`` without any
+arguments passed to it.
 
 
 
