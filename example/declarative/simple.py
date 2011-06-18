@@ -77,7 +77,7 @@ def create_app(database_uri='sqlite://'):
                                          bind=app.engine))
 
     themes.setup_themes(app)
-    admin_mod = admin.Admin(app, sys.modules[__name__], app.db_session,
+    admin_mod = admin.Admin(app, (Course, Student, Teacher), app.db_session,
                             exclude_pks=True)
     app.register_module(admin_mod, url_prefix='/admin')
 

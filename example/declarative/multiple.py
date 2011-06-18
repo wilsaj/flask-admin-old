@@ -75,9 +75,9 @@ def create_app(database_uri='sqlite://'):
                                                  bind=app.engine))
 
     themes.setup_themes(app)
-    admin1 = admin.Admin(app, [Student, Teacher], app.db_session,
+    admin1 = admin.Admin(app, (Student, Teacher), app.db_session,
                          exclude_pks=True, append_to_endpoints="1")
-    admin2 = admin.Admin(app, [Course], app.db_session,
+    admin2 = admin.Admin(app, (Course,), app.db_session,
                          exclude_pks=True, append_to_endpoints="2")
     app.register_module(admin1, url_prefix='/admin1')
     app.register_module(admin2, url_prefix='/admin2')

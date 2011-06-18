@@ -87,7 +87,7 @@ class UserForm(UserFormBase, user_form_from_model):
 
 
 themes.setup_themes(app)
-admin_mod = admin.Admin(app, sys.modules[__name__], db_session,
+admin_mod = admin.Admin(app, (User), db_session,
                         model_forms={'User': UserForm}, exclude_pks=True)
 app.register_module(admin_mod, url_prefix='/admin')
 
