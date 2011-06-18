@@ -110,6 +110,17 @@ are available:
     instance
 
 
+.. note::
+
+  You can use the ``append_to_endpoints`` argument in the Admin
+  constructor, in which case each of the view endpoints will have this
+  value appended to the end of them. For example if
+  ``append_to_endpoints="_my_admin"``, then the endpoint for the index
+  becomes ``'flaskext.admin.index_my_admin'``. This is absolutely
+  necessary if you are going to use multiple admin modules within the
+  same app.
+
+
 API
 ---
 
