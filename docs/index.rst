@@ -36,9 +36,43 @@ Where my_models is a module containing SQLAlchemy declarative models
 which have been created either using Flask-SQLAlchemy extension or
 with SQLAlchemy's declarative pattern.
 
-Note: You must run ``themes.setup_themes()`` on your app in order for
-the admin views to have access to the templates and static files that
-ship with Flask-Admin.
+
+Some Important Notes
+--------------------
+
+You must run ``themes.setup_themes()`` on your app in order for the
+admin views to have access to the templates and static files that ship
+with Flask-Admin.
+
+Also, your model classes must be able to initialize themselves (to
+execute __init__) without any arguments. For example...
+
+This works::
+
+    class User(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        username = db.Column(db.String(80), unique=True)
+        email = db.Column(db.String(120), unique=True)
+
+        def __init__(self, username=None, email=None):
+            self.username = username
+            self.email = email
+
+
+But this doesn't work::
+
+    class User(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        username = db.Column(db.String(80), unique=True)
+        email = db.Column(db.String(120), unique=True)
+
+        def __init__(self, username, email):
+            self.username = username
+            self.email = email
+
+Because Flask-Admin needs to be able execute a statement like
+``new_user = User()``.
+
 
 
 Customizing your Admin
