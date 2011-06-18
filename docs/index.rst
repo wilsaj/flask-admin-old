@@ -73,8 +73,8 @@ But this doesn't work::
             self.username = username
             self.email = email
 
-Because Flask-Admin needs to be able execute ``User()`` without any
-arguments passed to it.
+Because Flask-Admin needs to be able to instantiate a new ``User()``
+without any arguments passed to it.
 
 
 
