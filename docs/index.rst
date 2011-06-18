@@ -12,6 +12,11 @@ Flask-Admin aims to be a flexible, customizable web-based interface to
 your datastore. It's not quite there yet. At the moment, Flask-Admin
 only works with SQLAlchemy declarative models.
 
+.. warning::
+  The Flask-Admin extension is still under heavy development. Until an
+  initial release, everything is subject to change. Feedback is very
+  welcome!
+
 
 How to use it
 -------------
