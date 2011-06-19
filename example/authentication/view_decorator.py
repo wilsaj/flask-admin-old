@@ -85,7 +85,7 @@ def create_app(database_uri='sqlite://'):
         autocommit=False, autoflush=False, bind=app.engine))
 
     themes.setup_themes(app)
-    admin_mod = admin.Admin(app, sys.modules[__name__], db_session,
+    admin_mod = admin.Admin(app, (Course, Student, Teacher), db_session,
                             theme='auth',
                             view_decorator=login_required,
                             exclude_pks=True)

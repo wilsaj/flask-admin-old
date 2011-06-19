@@ -1,3 +1,4 @@
 Flask-Admin
 
-Description goes here
+Flask-Admin is a Flask extension module that aims to be a flexible,
+customizable web-based interface to your datastore.

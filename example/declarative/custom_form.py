@@ -10,7 +10,7 @@ from sqlalchemy import Boolean, Column, Integer, Text, String, Float, Time
 from sqlalchemy.orm import synonym
 from werkzeug import check_password_hash, generate_password_hash
 from wtforms import Form, validators
-from wtforms.fields import TextField, PasswordField
+from wtforms.fields import BooleanField, TextField, PasswordField
 
 
 app = Flask(__name__)
@@ -58,12 +58,7 @@ class User(Base):
         }
 
 
-# generate the user form class from the model, so it can be used as a mixin
-user_form_from_model = admin.model_form(User, exclude=['id'],
-                                        converter=admin.AdminConverter(db_session))
-
-
-class UserFormBase(Form):
+class UserForm(Form):
     """
     Form for creating or editting User object (via the admin). Define
     any handling of fields here. This form class also has precedence
@@ -76,18 +71,11 @@ class UserFormBase(Form):
                              [validators.optional(),
                               validators.equal_to('confirm_password')])
     confirm_password = PasswordField()
-
-
-class UserForm(UserFormBase, user_form_from_model):
-    """
-    User form, as a mixin of UserFormBase and the form generated from
-    the User SQLAlchemy model
-    """
-    pass
+    is_active = BooleanField(default=True)
 
 
 themes.setup_themes(app)
-admin_mod = admin.Admin(app, sys.modules[__name__], db_session,
+admin_mod = admin.Admin(app, (User,), db_session,
                         model_forms={'User': UserForm}, exclude_pks=True)
 app.register_module(admin_mod, url_prefix='/admin')
 

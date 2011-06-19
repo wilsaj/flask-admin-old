@@ -160,6 +160,17 @@ button {  width: auto; overflow: visible; }
 .ie7 img { -ms-interpolation-mode: bicubic; }
 
 
+/*
+* timepicker css
+* see copyright notice and licensing terms in:
+*   ../js/libs/jquery-ui-timepicker-addon.js
+*/
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+
 
 /**
  * Primary styles
