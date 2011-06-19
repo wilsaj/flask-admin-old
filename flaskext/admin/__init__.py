@@ -34,9 +34,6 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
-admin = Module(__name__)
-
-
 class Admin(Module):
     """
     Returns a module that provides the admin interface views. The
