@@ -33,8 +33,8 @@ class Course(db.Model):
 
     teacher = db.relationship('Teacher', backref='courses')
     students = db.relationship('Student',
-                            secondary=course_student_association_table,
-                            backref='courses')
+                               secondary=course_student_association_table,
+                               backref='courses')
     # teacher = relation()
     # students = relation()
 
@@ -63,12 +63,9 @@ class Teacher(db.Model):
 
 db.create_all()
 
-themes.setup_themes(app)
-admin_mod = admin.Admin(app, (Course, Student, Teacher),
-                        db_session=db.session,
-                        exclude_pks=True)
-app.register_module(admin_mod, url_prefix='/admin')
-
+admin_blueprint = admin.create_admin_blueprint(
+    app, (Course, Student, Teacher), db.session, exclude_pks=True)
+app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
 @app.route('/')
 def go_to_admin():
