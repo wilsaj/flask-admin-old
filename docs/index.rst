@@ -42,10 +42,6 @@ with SQLAlchemy's declarative pattern.
 Some Important Notes
 --------------------
 
-You must run ``themes.setup_themes()`` on your app in order for the
-admin views to have access to the templates and static files that ship
-with Flask-Admin.
-
 Also, your model classes must be able to be initialized without any
 arguments. For example, this works::
 
