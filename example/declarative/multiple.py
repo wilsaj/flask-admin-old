@@ -73,17 +73,14 @@ def create_app(database_uri='sqlite://'):
     app.engine = create_engine(database_uri, convert_unicode=True)
     app.db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
                                                  bind=app.engine))
-
-    themes.setup_themes(app)
-    admin1 = admin.Admin(app, (Student, Teacher), app.db_session,
-                         exclude_pks=True, append_to_endpoints="1")
-    admin2 = admin.Admin(app, (Course,), app.db_session,
-                         exclude_pks=True, append_to_endpoints="2")
-    app.register_module(admin1, url_prefix='/admin1')
-    app.register_module(admin2, url_prefix='/admin2')
-
+    admin_blueprint1 = admin.create_admin_blueprint(
+        app, (Student, Teacher), app.db_session, name='admin1',
+        exclude_pks=True)
+    admin_blueprint2 = admin.create_admin_blueprint(
+        app, (Course,), app.db_session, name='admin2', exclude_pks=True)
+    app.register_blueprint(admin_blueprint1, url_prefix='/admin1')
+    app.register_blueprint(admin_blueprint2, url_prefix='/admin2')
     Base.metadata.create_all(bind=app.engine)
-
     return app
 
 
