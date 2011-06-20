@@ -82,7 +82,7 @@ class MultipleTest(TestCase):
         assert "Course" in rv.data
 
 
-class AdminDecoratorTest(TestCase):
+class ViewDecoratorTest(TestCase):
     TESTING = True
 
     def create_app(self):
