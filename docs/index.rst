@@ -87,33 +87,31 @@ Endpoints for Flask-Admin views
 If you want to refer to views in Flask-Admin, the following endpoints
 are available:
 
-`url_for('flaskext.admin.index')`
+`url_for('admin.index')`
     returns the url for the index view
 
-`url_for('flaskext.admin.list_view', model_name='some_model')`
+`url_for('admin.list_view', model_name='some_model')`
     returns the list view for a given model
 
-`url_for('flaskext.admin.edit', model_name='some_model', model_key=primary_key)`
+`url_for('admin.edit', model_name='some_model', model_key=primary_key)`
     returns the url for the page used for editing a specific model
     instance
 
-`url_for('flaskext.admin.add', model_name='some_model')`
+`url_for('admin.add', model_name='some_model')`
     returns the url for the adding a new model instance
 
-`url_for('flaskext.admin.delete', model_name='some_model', model_key=primary_key)`
+`url_for('admin.delete', model_name='some_model', model_key=primary_key)`
     returns the url for the page used for deleting a specific model
     instance
 
 
 .. note::
 
-  You can use the ``append_to_endpoints`` argument in the Admin
-  constructor, in which case each of the view endpoints will have this
-  value appended to the end of them. For example if
-  ``append_to_endpoints="_my_admin"``, then the endpoint for the index
-  becomes ``'flaskext.admin.index_my_admin'``. This is absolutely
-  necessary if you are going to use multiple admin modules within the
-  same app.
+  You can use the ``name`` argument in the create_admin_blueprint()
+  call to change the name of the blueprint. For example if
+  ``name="my_named_admin"``, then the endpoint for the index becomes
+  ``'my_named_admin.index'``. This is absolutely necessary if you are
+  going to use multiple distinct admin blueprints within the same app.
 
 
 API
