@@ -84,17 +84,15 @@ def create_app(database_uri='sqlite://'):
     db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False, bind=app.engine))
 
-    themes.setup_themes(app)
-    admin_mod = admin.Admin(app, (Course, Student, Teacher), db_session,
-                            theme='auth',
-                            view_decorator=login_required,
-                            exclude_pks=True)
+    admin_blueprint = admin.create_admin_blueprint(
+        app, (Course, Student, Teacher), db_session, exclude_pks=True,
+        view_decorator=login_required)
 
-    @app.route('/login/', methods=('GET', 'POST'))
+    @admin_blueprint.route('/login/', methods=('GET', 'POST'))
     def login():
         if request.form.get('username', None):
             session['user'] = request.form['username']
-            return redirect(request.args.get('next', url_for('flaskext.admin.index')))
+            return redirect(request.args.get('next', url_for('admin.index')))
         else:
             if request.method == 'POST':
                 return themes.render_theme_template("auth", "login.html",
@@ -102,16 +100,16 @@ def create_app(database_uri='sqlite://'):
             else:
                 return themes.render_theme_template("auth", "login.html")
 
-    @app.route('/logout/')
+    @admin_blueprint.route('/logout/')
     def logout():
         del session['user']
         return redirect('/')
 
-    app.register_module(admin_mod, url_prefix='/admin')
-
     @app.route('/')
     def go_to_admin():
         return redirect('/admin/')
+
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
     return app
 
