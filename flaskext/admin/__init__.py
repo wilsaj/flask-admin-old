@@ -21,8 +21,6 @@ import flask
 from flask import (current_app, flash, g, Module, render_template,
                    redirect, request, session, url_for)
 from flaskext.sqlalchemy import Pagination
-from flaskext import themes
-from flaskext.themes import render_theme_template
 import jinja2.exceptions
 import sqlalchemy as sa
 import sqlalchemy.ext.declarative
@@ -97,7 +95,6 @@ def create_admin_blueprint(
 
     admin_blueprint.model_dict = {}
     admin_blueprint.app = app
-    admin_blueprint.theme = theme
     admin_blueprint.pagination_per_page = pagination_per_page
     admin_blueprint.db_session = db_session
 
