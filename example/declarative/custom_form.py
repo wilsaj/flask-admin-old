@@ -74,11 +74,10 @@ class UserForm(Form):
     is_active = BooleanField(default=True)
 
 
-themes.setup_themes(app)
-admin_mod = admin.Admin(app, (User,), db_session,
-                        model_forms={'User': UserForm}, exclude_pks=True)
-app.register_module(admin_mod, url_prefix='/admin')
-
+admin_blueprint = admin.create_admin_blueprint(
+    app, (User,), db_session, model_forms={'User': UserForm},
+    exclude_pks=True)
+app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
 @app.route('/')
 def go_to_admin():
