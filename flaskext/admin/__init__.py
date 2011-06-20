@@ -35,12 +35,12 @@ from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
 def create_admin_blueprint(
-    app, models, db_session, model_forms=None, exclude_pks=False,
+    app, models, db_session, name='admin', model_forms=None, exclude_pks=False,
     theme='admin_default', pagination_per_page=25,
-    view_decorator=None, append_to_endpoints='', **kwargs):
+    view_decorator=None, **kwargs):
 
     admin_blueprint = flask.Blueprint(
-        'admin', 'admin',
+        name, name,
         static_folder=os.path.join(_get_admin_extension_dir(), 'static'),
         template_folder=os.path.join(_get_admin_extension_dir(), 'templates'))
 
@@ -55,8 +55,6 @@ def create_admin_blueprint(
 
     if not model_forms:
         model_forms = {}
-
-    admin_blueprint.append_to_endpoints = append_to_endpoints
 
     #XXX: fix base handling so it will work with non-Declarative models
     if type(models) == types.ModuleType:
@@ -95,8 +93,7 @@ def create_admin_blueprint(
             """
             return render_template(
                 'admin/index.html',
-                admin_models=sorted(admin_blueprint.model_dict.keys()),
-                append_to_endpoints=admin_blueprint.append_to_endpoints)
+                admin_models=sorted(admin_blueprint.model_dict.keys()))
         return index
 
     def create_list_view():
@@ -125,8 +122,7 @@ def create_admin_blueprint(
                 _get_pk_value=_get_pk_value,
                 model_instances=pagination.items,
                 model_name=model_name,
-                pagination=pagination,
-                append_to_endpoints=admin_blueprint.append_to_endpoints)
+                pagination=pagination)
         return list_view
 
     def create_edit_view():
@@ -159,8 +155,7 @@ def create_admin_blueprint(
                     'admin/edit.html',
                     admin_models=sorted(admin_blueprint.model_dict.keys()),
                     model_instance=model_instance,
-                    model_name=model_name, form=form,
-                    append_to_endpoints=admin_blueprint.append_to_endpoints)
+                    model_name=model_name, form=form)
 
             elif request.method == 'POST':
                 form = model_form(request.form, obj=model_instance)
@@ -172,7 +167,7 @@ def create_admin_blueprint(
                     flash('%s updated: %s' % (model_name, model_instance),
                           'success')
                     return redirect(
-                        url_for('.list_view%s' % append_to_endpoints,
+                        url_for('.list_view',
                                 model_name=model_name))
                 else:
                     flash('There was an error processing your form. '
@@ -182,8 +177,7 @@ def create_admin_blueprint(
                         'admin/edit.html',
                         admin_models=sorted(admin_blueprint.model_dict.keys()),
                         model_instance=model_instance,
-                        model_name=model_name, form=form,
-                        append_to_endpoints=admin_blueprint.append_to_endpoints)
+                        model_name=model_name, form=form)
         return edit
 
     def create_add_view():
@@ -205,8 +199,7 @@ def create_admin_blueprint(
                     'admin/add.html',
                     admin_models=sorted(admin_blueprint.model_dict.keys()),
                     model_name=model_name,
-                    form=form,
-                    append_to_endpoints=admin_blueprint.append_to_endpoints)
+                    form=form)
             elif request.method == 'POST':
                 form = model_form(request.form)
                 if form.validate():
@@ -216,8 +209,7 @@ def create_admin_blueprint(
                     db_session.commit()
                     flash('%s added: %s' % (model_name, model_instance),
                           'success')
-                    return redirect(url_for('.list_view%s' %
-                                            admin_blueprint.append_to_endpoints,
+                    return redirect(url_for('.list_view',
                                             model_name=model_name))
                 else:
                     flash('There was an error processing your form. This '
@@ -226,8 +218,7 @@ def create_admin_blueprint(
                         'admin/add.html',
                         admin_models=sorted(admin_blueprint.model_dict.keys()),
                         model_name=model_name,
-                        form=form,
-                        append_to_endpoints=admin_blueprint.append_to_endpoints)
+                        form=form)
         return add
 
     def create_delete_view():
@@ -253,24 +244,24 @@ def create_admin_blueprint(
             flash('%s deleted: %s' % (model_name, model_instance),
                   'success')
             return redirect(url_for(
-                '.list_view%s' % admin_blueprint.append_to_endpoints,
+                '.list_view',
                 model_name=model_name))
         return delete
 
-    admin_blueprint.add_url_rule('/', 'index%s' % admin_blueprint.append_to_endpoints,
+    admin_blueprint.add_url_rule('/', 'index',
                       view_func=create_index_view())
     admin_blueprint.add_url_rule('/list/<model_name>/',
-                      'list_view%s' % admin_blueprint.append_to_endpoints,
+                      'list_view',
                       view_func=create_list_view())
     admin_blueprint.add_url_rule('/edit/<model_name>/<model_key>/',
-                      'edit%s' % admin_blueprint.append_to_endpoints,
+                      'edit',
                       view_func=create_edit_view(),
                       methods=['GET', 'POST'])
     admin_blueprint.add_url_rule('/delete/<model_name>/<model_key>/',
-                      'delete%s' % admin_blueprint.append_to_endpoints,
+                      'delete',
                       view_func=create_delete_view())
     admin_blueprint.add_url_rule('/add/<model_name>/',
-                      'add%s' % admin_blueprint.append_to_endpoints,
+                      'add',
                       view_func=create_add_view(),
                       methods=['GET', 'POST'])
 
