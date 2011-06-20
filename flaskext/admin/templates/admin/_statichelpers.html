@@ -1,0 +1,3 @@
+{% macro static(some_file) %}
+{{ url_for('.static', filename=some_file) }}
+{% endmacro %}
