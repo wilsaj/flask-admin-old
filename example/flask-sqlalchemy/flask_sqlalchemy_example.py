@@ -2,8 +2,7 @@ import sys
 
 from flask import Flask
 from flaskext.sqlalchemy import SQLAlchemy
-from flaskext import themes
-from flaskext.admin import Admin
+from flaskext import admin
 
 from datetime import datetime
 
@@ -60,11 +59,9 @@ class Category(db.Model):
 
 db.create_all()
 
-
-themes.setup_themes(app)
-admin_mod = Admin(app, (User, Post, Category),
-                  db.session, exclude_pks=True)
-app.register_module(admin_mod, url_prefix='/admin')
+admin_blueprint = admin.create_admin_blueprint(
+    app, (User, Post, Category), db.session, exclude_pks=True)
+app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
 if __name__ == '__main__':
     app.run(debug=True)
