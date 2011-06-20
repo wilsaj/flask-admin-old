@@ -73,9 +73,11 @@ without any arguments passed to it.
 
 Customizing your Admin
 ----------------------
-Currently, the best way to customize the admin interface is to copy
-the 'admin_default' theme from flaskext/admin/themes/ and edit the
-files accordingly. See the example in
+
+Using the Flask blueprints makes customizing the admin interface
+really easy. For the file(s) you want to change, just override them by
+creating them the themes and static directories of your app. Refer to
+the Flask blueprint documentation for more and see the example in
 `examples/authentication/view_decorator.py` for an example of how that
 might work.
 
