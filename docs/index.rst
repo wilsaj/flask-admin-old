@@ -117,5 +117,5 @@ are available:
 API
 ---
 
-.. autoclass:: Admin
+.. autofunction:: create_admin_blueprint
 
