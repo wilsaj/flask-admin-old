@@ -13,14 +13,6 @@ from wtforms import Form, validators
 from wtforms.fields import BooleanField, TextField, PasswordField
 
 
-app = Flask(__name__)
-
-SQLALCHEMY_DATABASE_URI = 'sqlite:///custom_form.db'
-app.config['SECRET_KEY'] = 'not secure'
-
-engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
-                                         bind=engine))
 Base = declarative_base()
 
 
@@ -74,15 +66,26 @@ class UserForm(Form):
     is_active = BooleanField(default=True)
 
 
-admin_blueprint = admin.create_admin_blueprint(
-    app, (User,), db_session, model_forms={'User': UserForm},
-    exclude_pks=True)
-app.register_blueprint(admin_blueprint, url_prefix='/admin')
+def create_app(database_uri='sqlite://'):
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'not secure'
+    engine = create_engine(database_uri, convert_unicode=True)
+    db_session = scoped_session(sessionmaker(
+        autocommit=False, autoflush=False,
+        bind=engine))
+    admin_blueprint = admin.create_admin_blueprint(
+        app, (User,), db_session, model_forms={'User': UserForm},
+        exclude_pks=True)
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    Base.metadata.create_all(bind=engine)
 
-@app.route('/')
-def go_to_admin():
-    return redirect('/admin')
+    @app.route('/')
+    def go_to_admin():
+        return redirect('/admin')
+
+    return app
+
 
 if __name__ == '__main__':
-    Base.metadata.create_all(bind=engine)
+    app = create_app('sqlite:///simple.db')
     app.run(debug=True)
