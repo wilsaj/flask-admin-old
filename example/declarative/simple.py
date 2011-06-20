@@ -69,18 +69,14 @@ class Teacher(Base):
 
 def create_app(database_uri='sqlite://'):
     app = Flask(__name__)
-
     app.config['SECRET_KEY'] = 'not secure'
-
     app.engine = create_engine(database_uri, convert_unicode=True)
-    app.db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
-                                         bind=app.engine))
-
-    themes.setup_themes(app)
-    admin_mod = admin.Admin(app, (Course, Student, Teacher), app.db_session,
-                            exclude_pks=True)
-    app.register_module(admin_mod, url_prefix='/admin')
-
+    app.db_session = scoped_session(sessionmaker(
+        autocommit=False, autoflush=False,
+        bind=app.engine))
+    admin_blueprint = admin.create_admin_blueprint(
+        app, (Course, Student, Teacher), app.db_session, exclude_pks=True)
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
     Base.metadata.create_all(bind=app.engine)
 
     @app.route('/')
@@ -88,7 +84,6 @@ def create_app(database_uri='sqlite://'):
         return redirect('/admin')
 
     return app
-
 
 
 if __name__ == '__main__':
