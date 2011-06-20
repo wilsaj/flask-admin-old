@@ -5,10 +5,7 @@ from flaskext.sqlalchemy import SQLAlchemy
 from flaskext import themes
 from flaskext import admin
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flask_sqlalchemy_example2.db'
-app.config['SECRET_KEY'] = 'not secure'
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 # ----------------------------------------------------------------------
 # Association tables
@@ -27,7 +24,8 @@ class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=False)
+    teacher_id = db.Column(db.Integer,
+                           db.ForeignKey('teacher.id'), nullable=False)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
 
@@ -61,15 +59,24 @@ class Teacher(db.Model):
     def __repr__(self):
         return self.name
 
-db.create_all()
 
-admin_blueprint = admin.create_admin_blueprint(
-    app, (Course, Student, Teacher), db.session, exclude_pks=True)
-app.register_blueprint(admin_blueprint, url_prefix='/admin')
+def create_app(database_uri='sqlite://'):
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
+    app.config['SECRET_KEY'] = 'not secure'
+    db.init_app(app)
 
-@app.route('/')
-def go_to_admin():
-    return redirect('/admin')
+    admin_blueprint = admin.create_admin_blueprint(
+        app, (Course, Student, Teacher), db.session, exclude_pks=True)
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    db.create_all(app=app)
+
+    @app.route('/')
+    def go_to_admin():
+        return redirect('/admin')
+    return app
+
 
 if __name__ == '__main__':
+    app = create_app('sqlite:///simple.db')
     app.run(debug=True)
