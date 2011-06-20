@@ -23,19 +23,16 @@ How to use it
 Typical usage looks something like this::
 
     from flask import Flask
-    from flaskext import themes
-    from flaskext.admin import Admin
+    from flaskext import admin
     from my_app import my_models
 
     app = Flask(__name__)
 
     from my_app.database import db_session
 
-    themes.setup_themes(app)
-    admin_mod = Admin(app, my_models, db_session,
-                      exclude_pks=True)
-    app.register_module(admin_mod, url_prefix='/admin')
-
+    admin_blueprint = admin.create_admin_blueprint(
+         app, (Course, Student, Teacher), app.db_session, exclude_pks=True)
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
 Where my_models is a module containing SQLAlchemy declarative models
 which have been created either using Flask-SQLAlchemy extension or
