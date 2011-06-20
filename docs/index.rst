@@ -41,7 +41,7 @@ Typical usage looks something like this::
     from my_app.database import db_session
 
     admin_blueprint = admin.create_admin_blueprint(
-         app, (Course, Student, Teacher), app.db_session, exclude_pks=True)
+         app, (Course, Student, Teacher), db_session, exclude_pks=True)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
 Where my_models is a module containing SQLAlchemy declarative models
