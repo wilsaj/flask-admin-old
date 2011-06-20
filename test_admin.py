@@ -41,7 +41,8 @@ class SimpleTest(TestCase):
                               data=dict(students=[1]))
         course = self.app.db_session.query(simple.Course).filter_by(id=1).one()
         self.assertEqual(len(course.students), 1)
-        student = self.app.db_session.query(simple.Student).filter_by(id=1).one()
+        student = self.app.db_session.\
+                  query(simple.Student).filter_by(id=1).one()
         self.assertEqual(len(student.courses), 1)
         self.assert_redirects(rv, '/admin/list/Course/')
 
@@ -61,7 +62,6 @@ class SimpleTest(TestCase):
         rv = self.client.get('/admin/delete/Student/2/')
         self.assert_200(rv)
         assert "Student not found" in rv.data
-
 
 
 class MultipleTest(TestCase):
