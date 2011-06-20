@@ -8,6 +8,7 @@ sys.path.append('./example/authentication/')
 import simple
 import multiple
 import view_decorator
+import custom_form
 
 
 class SimpleTest(TestCase):
@@ -125,6 +126,21 @@ class ViewDecoratorTest(TestCase):
         rv = self.client.get('/admin/')
         self.assert_redirects(rv, "/admin/login/?next=http%3A%2F%2Flocalhost%2Fadmin%2F")
 
+
+class CustomFormTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = custom_form.create_app('sqlite://')
+        return app
+
+    def test_custom_form(self):
+        rv = self.client.get('/admin/add/User/')
+        assert "User name" in rv.data
+        assert "Change Password"  in rv.data
+        assert "Confirm Password"  in rv.data
+        assert "Is Active"  in rv.data
+        assert "_password_hash" not in rv.data
 
 if __name__ == '__main__':
     unittest.main()
