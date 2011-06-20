@@ -13,9 +13,19 @@ your datastore. It's not quite there yet. At the moment, Flask-Admin
 only works with SQLAlchemy declarative models.
 
 .. warning::
-  The Flask-Admin extension is still under heavy development. Until an
-  initial release, everything is subject to change. Feedback is very
-  welcome!
+  Flask-Admin is still under heavy development. Until the initial
+  release, everything is subject to change. Feedback is appreciated!
+
+.. note::
+  Flask-Admin uses of blueprints, which are an upcoming Flask feature
+  that allow a greater degree of flexibility and customization. This
+  means Flask-Admin will not work with any version below Flask 0.7,
+  which is soon to be released. The initial Flask-Admin 0.1 release
+  will probably follow shortly after the Flask 0.7 release. If you
+  want to try out Flask-Admin early, make sure you are running the
+  `blueprints branch`_ of the Flask development version.
+
+  .. _blueprints branch: https://github.com/mitsuhiko/flask/tree/blueprints
 
 
 How to use it
