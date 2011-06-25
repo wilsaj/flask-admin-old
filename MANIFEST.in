@@ -1,0 +1,2 @@
+recursive-include flaskext/admin/templates *
+recursive-include flaskext/admin/static *

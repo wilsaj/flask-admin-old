@@ -27,6 +27,7 @@ setup(
     long_description=__doc__,
     packages=['flaskext'],
     namespace_packages=['flaskext'],
+    include_package_data=True,
     zip_safe=False,
     platforms='any',
     install_requires=[
