@@ -1,7 +1,6 @@
 import sys
 
 from flask import Flask,  redirect
-from flaskext import themes
 from flaskext import admin
 from sqlalchemy import create_engine, Table
 from sqlalchemy.orm import scoped_session, sessionmaker

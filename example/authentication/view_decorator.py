@@ -2,7 +2,6 @@ from functools import wraps
 import sys
 
 from flask import Flask, g, redirect, render_template, request, session, url_for
-from flaskext import themes
 from flaskext import admin
 from sqlalchemy import create_engine, Table
 from sqlalchemy.orm import scoped_session, sessionmaker

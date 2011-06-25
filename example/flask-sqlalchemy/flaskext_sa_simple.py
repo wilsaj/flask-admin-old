@@ -2,7 +2,6 @@ import sys
 
 from flask import Flask,  redirect
 from flaskext.sqlalchemy import SQLAlchemy
-from flaskext import themes
 from flaskext import admin
 
 db = SQLAlchemy()
