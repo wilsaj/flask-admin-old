@@ -150,6 +150,9 @@ class FlaskSQLAlchemySimpleTest(SimpleTest):
 
     def create_app(self):
         app = flaskext_sa_simple.create_app('sqlite://')
+
+        # set app.db_session to the db.session so the SimpleTest tests
+        # will work
         app.db_session = flaskext_sa_simple.db.session
 
         # need to grab a request context since we use db.init_app() in
