@@ -32,7 +32,7 @@ setup(
     platforms='any',
     install_requires=[
         'Flask>=0.7dev',
-        'Flask-SQLAlchemy',
+        'Flask-SQLAlchemy>=0.12dev',
         'Flask-WTF',
     ],
     classifiers=[
