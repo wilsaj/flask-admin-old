@@ -11,7 +11,7 @@ import multiple
 import view_decorator
 import custom_form
 import flaskext_sa_simple
-
+import flask_sqlalchemy_example
 
 class SimpleTest(TestCase):
     TESTING = True
@@ -163,6 +163,19 @@ class FlaskSQLAlchemySimpleTest(SimpleTest):
             flaskext_sa_simple.db.session.add(flaskext_sa_simple.Course(subject="maths", teacher=teacher))
             flaskext_sa_simple.db.session.commit()
         return app
+
+
+class FlaskSQLAlchemyExampleTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = flask_sqlalchemy_example.create_app('sqlite://')
+        return app
+
+    def test_index(self):
+        # just make sure the app is initialized and works
+        rv = self.client.get('/admin/')
+        self.assert_200(rv)
 
 
 if __name__ == '__main__':

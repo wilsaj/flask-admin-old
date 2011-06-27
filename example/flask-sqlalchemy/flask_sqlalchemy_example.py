@@ -6,11 +6,7 @@ from flaskext import admin
 
 from datetime import datetime
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flask_sqlalchemy_example.db'
-app.config['SECRET_KEY'] = 'seeeeecret'
-db = SQLAlchemy(app)
-
+db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,11 +53,22 @@ class Category(db.Model):
     def __repr__(self):
         return '<Category %r>' % self.name
 
-db.create_all()
+def create_app(database_uri='sqlite://'):
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
+    app.config['SECRET_KEY'] = 'seeeeecret'
 
-admin_blueprint = admin.create_admin_blueprint(
-    app, (User, Post, Category), db.session, exclude_pks=True)
-app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    db.init_app(app)
+    admin_blueprint = admin.create_admin_blueprint(
+        app, (User, Post, Category), db.session, exclude_pks=True)
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    db.create_all(app=app)
+
+    @app.route('/')
+    def go_to_admin():
+        return redirect('/admin')
+    return app
 
 if __name__ == '__main__':
+    app = create_app('sqlite:///flask_sqlalchemy_example.db')
     app.run(debug=True)
