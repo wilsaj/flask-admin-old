@@ -5,10 +5,12 @@ from flaskext.testing import TestCase
 
 sys.path.append('./example/declarative/')
 sys.path.append('./example/authentication/')
+sys.path.append('./example/flask-sqlalchemy/')
 import simple
 import multiple
 import view_decorator
 import custom_form
+import flaskext_sa_simple
 
 
 class SimpleTest(TestCase):
@@ -141,6 +143,27 @@ class CustomFormTest(TestCase):
         assert "Confirm Password"  in rv.data
         assert "Is Active"  in rv.data
         assert "_password_hash" not in rv.data
+
+
+class FlaskSQLAlchemySimpleTest(SimpleTest):
+    TESTING = True
+
+    def create_app(self):
+        app = flaskext_sa_simple.create_app('sqlite://')
+        app.db_session = flaskext_sa_simple.db.session
+
+        # need to grab a request context since we use db.init_app() in
+        # our application
+        with app.test_request_context():
+            teacher = flaskext_sa_simple.Teacher(name="Mrs. Jones")
+            flaskext_sa_simple.db.session.add(teacher)
+            flaskext_sa_simple.db.session.add(flaskext_sa_simple.Student(name="Stewart"))
+            flaskext_sa_simple.db.session.add(flaskext_sa_simple.Student(name="Mike"))
+            flaskext_sa_simple.db.session.add(flaskext_sa_simple.Student(name="Jason"))
+            flaskext_sa_simple.db.session.add(flaskext_sa_simple.Course(subject="maths", teacher=teacher))
+            flaskext_sa_simple.db.session.commit()
+        return app
+
 
 if __name__ == '__main__':
     unittest.main()
