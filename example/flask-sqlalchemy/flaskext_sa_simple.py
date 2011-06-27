@@ -10,7 +10,7 @@ db = SQLAlchemy()
 # Association tables
 # ----------------------------------------------------------------------
 course_student_association_table = db.Table(
-    'course_student_association_table',
+    'course_student_association',
     db.Column('student_id', db.Integer, db.ForeignKey('student.id')),
     db.Column('course_id', db.Integer, db.ForeignKey('course.id')))
 
