@@ -3,15 +3,15 @@ import unittest
 
 from flaskext.testing import TestCase
 
-sys.path.append('./example/declarative/')
-sys.path.append('./example/authentication/')
-sys.path.append('./example/flask-sqlalchemy/')
-import simple
-import multiple
-import view_decorator
-import custom_form
-import flaskext_sa_simple
-import flask_sqlalchemy_example
+sys.path.append('./example/')
+
+from example.declarative import simple
+from example.declarative import multiple
+from example.declarative import custom_form
+from example.authentication import view_decorator
+from example.flask_sqlalchemy import flaskext_sa_simple
+from example.flask_sqlalchemy import flask_sqlalchemy_example
+
 
 class SimpleTest(TestCase):
     TESTING = True
