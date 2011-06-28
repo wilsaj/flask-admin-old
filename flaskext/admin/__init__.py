@@ -33,7 +33,7 @@ from wtforms.ext.sqlalchemy import fields as sa_fields
 
 
 def create_admin_blueprint(
-    app, models, db_session, name='admin', model_forms=None, exclude_pks=False,
+    models, db_session, name='admin', model_forms=None, exclude_pks=False,
     pagination_per_page=25, view_decorator=None, **kwargs):
     """
     Returns a blueprint that provides the admin interface views. The
@@ -42,9 +42,6 @@ def create_admin_blueprint(
     blueprint constructor.
 
     The parameters are:
-
-    `app`
-        The app that this admin blueprint will be associated with.
 
     `models`
         Either a module or an iterable that contains the SQLAlchemy
@@ -94,7 +91,6 @@ def create_admin_blueprint(
         **kwargs)
 
     model_dict = {}
-    admin_blueprint.app = app
     admin_blueprint.pagination_per_page = pagination_per_page
     admin_blueprint.db_session = db_session
 

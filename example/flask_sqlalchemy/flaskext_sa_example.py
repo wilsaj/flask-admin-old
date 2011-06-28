@@ -8,6 +8,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
@@ -53,6 +54,7 @@ class Category(db.Model):
     def __repr__(self):
         return '<Category %r>' % self.name
 
+
 def create_app(database_uri='sqlite://'):
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
@@ -60,7 +62,7 @@ def create_app(database_uri='sqlite://'):
 
     db.init_app(app)
     admin_blueprint = admin.create_admin_blueprint(
-        app, (User, Post, Category), db.session, exclude_pks=True)
+        (User, Post, Category), db.session, exclude_pks=True)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     db.create_all(app=app)
 

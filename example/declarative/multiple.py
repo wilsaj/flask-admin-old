@@ -73,10 +73,10 @@ def create_app(database_uri='sqlite://'):
     app.db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
                                                  bind=app.engine))
     admin_blueprint1 = admin.create_admin_blueprint(
-        app, (Student, Teacher), app.db_session, name='admin1',
+        (Student, Teacher), app.db_session, name='admin1',
         exclude_pks=True)
     admin_blueprint2 = admin.create_admin_blueprint(
-        app, (Course,), app.db_session, name='admin2', exclude_pks=True)
+        (Course,), app.db_session, name='admin2', exclude_pks=True)
     app.register_blueprint(admin_blueprint1, url_prefix='/admin1')
     app.register_blueprint(admin_blueprint2, url_prefix='/admin2')
     Base.metadata.create_all(bind=app.engine)
