@@ -94,10 +94,10 @@ def create_app(database_uri='sqlite://'):
             return redirect(request.args.get('next', url_for('admin.index')))
         else:
             if request.method == 'POST':
-                return themes.render_theme_template("auth", "login.html",
-                                                    bad_login=True)
+                return render_template("login.html",
+                                       bad_login=True)
             else:
-                return themes.render_theme_template("auth", "login.html")
+                return render_template("login.html")
 
     @admin_blueprint.route('/logout/')
     def logout():
