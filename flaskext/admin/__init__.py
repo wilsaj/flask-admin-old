@@ -91,7 +91,6 @@ def create_admin_blueprint(
         **kwargs)
 
     model_dict = {}
-    admin_blueprint.pagination_per_page = pagination_per_page
     admin_blueprint.db_session = db_session
 
     if not model_forms:
@@ -151,7 +150,7 @@ def create_admin_blueprint(
                     model_name,)
             model = model_dict[model_name]
             model_instances = db_session.query(model)
-            per_page = admin_blueprint.pagination_per_page
+            per_page = pagination_per_page
             page = int(request.args.get('page', '1'))
             offset = (page - 1) * per_page
             items = model_instances.limit(per_page).offset(offset).all()
