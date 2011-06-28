@@ -53,12 +53,13 @@ def create_admin_blueprint(
         engine. See the documentation on using Flask with SQLAlchemy
         for more information on how to set that up.
 
-    `name` Specify the name for your blueprint. The name of the
-        blueprint preceeds the view names of the endpoints, if for
-        example you want to refer to the views using ``url_for()``. If
-        you are using multiple admin blueprints, it is necessary to
-        set this value to something different for each admin module so
-        the admin templates can find the correct views.
+    `name`
+        Specify the name for your blueprint. The name of the blueprint
+        preceeds the view names of the endpoints, if for example you
+        want to refer to the views using ``url_for()``. If you are
+        using multiple admin blueprints, it is necessary to set this
+        value to something different for each admin module so the
+        admin templates can find the correct views.
 
     `model_forms`
         A dict with model names as keys, mapped to WTForm Form objects
