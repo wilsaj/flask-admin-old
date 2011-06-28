@@ -93,7 +93,7 @@ def create_admin_blueprint(
         template_folder=os.path.join(_get_admin_extension_dir(), 'templates'),
         **kwargs)
 
-    admin_blueprint.model_dict = {}
+    model_dict = {}
     admin_blueprint.app = app
     admin_blueprint.pagination_per_page = pagination_per_page
     admin_blueprint.db_session = db_session
@@ -103,22 +103,22 @@ def create_admin_blueprint(
 
     #XXX: fix base handling so it will work with non-Declarative models
     if type(models) == types.ModuleType:
-        admin_blueprint.model_dict = dict(
+        model_dict = dict(
             [(k, v) for k, v in models.__dict__.items()
              if isinstance(v, sa.ext.declarative.DeclarativeMeta)
              and k != 'Base'])
     else:
-        admin_blueprint.model_dict = dict(
+        model_dict = dict(
             [(model.__name__, model)
              for model in models
              if isinstance(model, sa.ext.declarative.DeclarativeMeta)
              and model.__name__ != 'Base'])
 
-    if admin_blueprint.model_dict:
+    if model_dict:
         admin_blueprint.form_dict = dict(
             [(k, _form_for_model(v, admin_blueprint.db_session,
                                  exclude_pk=exclude_pks))
-             for k, v in admin_blueprint.model_dict.items()])
+             for k, v in model_dict.items()])
         for model, form in model_forms.items():
             if model in admin_blueprint.form_dict:
                 admin_blueprint.form_dict[model] = form
@@ -138,7 +138,7 @@ def create_admin_blueprint(
             """
             return render_template(
                 'admin/index.html',
-                admin_models=sorted(admin_blueprint.model_dict.keys()))
+                admin_models=sorted(model_dict.keys()))
         return index
 
     def create_list_view():
@@ -150,10 +150,10 @@ def create_admin_blueprint(
             """
             db_session = admin_blueprint.db_session
 
-            if not model_name in admin_blueprint.model_dict.keys():
+            if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
-            model = admin_blueprint.model_dict[model_name]
+            model = model_dict[model_name]
             model_instances = db_session.query(model)
             per_page = admin_blueprint.pagination_per_page
             page = int(request.args.get('page', '1'))
@@ -163,7 +163,7 @@ def create_admin_blueprint(
                                     model_instances.count(), items)
             return render_template(
                 'admin/list.html',
-                admin_models=sorted(admin_blueprint.model_dict.keys()),
+                admin_models=sorted(model_dict.keys()),
                 _get_pk_value=_get_pk_value,
                 model_instances=pagination.items,
                 model_name=model_name,
@@ -178,11 +178,11 @@ def create_admin_blueprint(
             """
             db_session = admin_blueprint.db_session
 
-            if not model_name in admin_blueprint.model_dict.keys():
+            if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
 
-            model = admin_blueprint.model_dict[model_name]
+            model = model_dict[model_name]
             model_form = admin_blueprint.form_dict[model_name]
 
             pk = _get_pk_name(model)
@@ -198,7 +198,7 @@ def create_admin_blueprint(
                 form = model_form(obj=model_instance)
                 return render_template(
                     'admin/edit.html',
-                    admin_models=sorted(admin_blueprint.model_dict.keys()),
+                    admin_models=sorted(model_dict.keys()),
                     model_instance=model_instance,
                     model_name=model_name, form=form)
 
@@ -220,7 +220,7 @@ def create_admin_blueprint(
                           'error')
                     return render_template(
                         'admin/edit.html',
-                        admin_models=sorted(admin_blueprint.model_dict.keys()),
+                        admin_models=sorted(model_dict.keys()),
                         model_instance=model_instance,
                         model_name=model_name, form=form)
         return edit
@@ -232,17 +232,17 @@ def create_admin_blueprint(
             Create a new instance of a model.
             """
             db_session = admin_blueprint.db_session
-            if not model_name in admin_blueprint.model_dict.keys():
+            if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
-            model = admin_blueprint.model_dict[model_name]
+            model = model_dict[model_name]
             model_form = admin_blueprint.form_dict[model_name]
             model_instance = model()
             if request.method == 'GET':
                 form = model_form()
                 return render_template(
                     'admin/add.html',
-                    admin_models=sorted(admin_blueprint.model_dict.keys()),
+                    admin_models=sorted(model_dict.keys()),
                     model_name=model_name,
                     form=form)
             elif request.method == 'POST':
@@ -261,7 +261,7 @@ def create_admin_blueprint(
                           '%s has not been saved.' % model_name, 'error')
                     return render_template(
                         'admin/add.html',
-                        admin_models=sorted(admin_blueprint.model_dict.keys()),
+                        admin_models=sorted(model_dict.keys()),
                         model_name=model_name,
                         form=form)
         return add
@@ -273,10 +273,10 @@ def create_admin_blueprint(
             Delete an instance of a model.
             """
             db_session = admin_blueprint.db_session
-            if not model_name in admin_blueprint.model_dict.keys():
+            if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
-            model = admin_blueprint.model_dict[model_name]
+            model = model_dict[model_name]
             pk = _get_pk_name(model)
             pk_query_dict = {pk: model_key}
             try:
