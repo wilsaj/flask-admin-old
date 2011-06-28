@@ -90,7 +90,6 @@ class ViewDecoratorTest(TestCase):
 
     def create_app(self):
         self.app = view_decorator.create_app('sqlite://')
-        self.app.debug = True
         return self.app
 
     def test_add_redirect(self):
