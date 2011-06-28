@@ -63,7 +63,7 @@ def create_admin_blueprint(
     `model_forms`
         A dict with model names as keys, mapped to WTForm Form objects
         that should be used as forms for creating and editing
-        instances of these models
+        instances of these models.
 
     `exclude_pks`
         Set this to True if you don't want to include primary keys in
