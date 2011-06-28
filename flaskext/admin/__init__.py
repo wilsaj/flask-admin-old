@@ -118,6 +118,8 @@ def create_admin_blueprint(
             if model in admin_blueprint.form_dict:
                 admin_blueprint.form_dict[model] = form
 
+    # if no view decorator was assigned, let view_decorator be a dummy
+    # decorator that doesn't really do anything
     if not view_decorator:
         def view_decorator(f):
             @wraps(f)
