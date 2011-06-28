@@ -91,7 +91,6 @@ def create_admin_blueprint(
         **kwargs)
 
     model_dict = {}
-    admin_blueprint.db_session = db_session
 
     if not model_forms:
         model_forms = {}
@@ -111,7 +110,7 @@ def create_admin_blueprint(
 
     if model_dict:
         admin_blueprint.form_dict = dict(
-            [(k, _form_for_model(v, admin_blueprint.db_session,
+            [(k, _form_for_model(v, db_session,
                                  exclude_pk=exclude_pks))
              for k, v in model_dict.items()])
         for model, form in model_forms.items():
@@ -143,8 +142,6 @@ def create_admin_blueprint(
             Lists instances of a given model, so they can be selected for
             editing or deletion.
             """
-            db_session = admin_blueprint.db_session
-
             if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
@@ -171,8 +168,6 @@ def create_admin_blueprint(
             """
             Edit a particular instance of a model.
             """
-            db_session = admin_blueprint.db_session
-
             if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
@@ -226,7 +221,6 @@ def create_admin_blueprint(
             """
             Create a new instance of a model.
             """
-            db_session = admin_blueprint.db_session
             if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
@@ -267,7 +261,6 @@ def create_admin_blueprint(
             """
             Delete an instance of a model.
             """
-            db_session = admin_blueprint.db_session
             if not model_name in model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
