@@ -10,7 +10,7 @@ from example.declarative import multiple
 from example.declarative import custom_form
 from example.authentication import view_decorator
 from example.flask_sqlalchemy import flaskext_sa_simple
-from example.flask_sqlalchemy import flask_sqlalchemy_example
+from example.flask_sqlalchemy import flaskext_sa_example
 
 
 class SimpleTest(TestCase):
@@ -172,7 +172,7 @@ class FlaskSQLAlchemyExampleTest(TestCase):
     TESTING = True
 
     def create_app(self):
-        app = flask_sqlalchemy_example.create_app('sqlite://')
+        app = flaskext_sa_example.create_app('sqlite://')
         return app
 
     def test_index(self):
