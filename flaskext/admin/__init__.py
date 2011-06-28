@@ -98,9 +98,6 @@ def create_admin_blueprint(
     admin_blueprint.pagination_per_page = pagination_per_page
     admin_blueprint.db_session = db_session
 
-    if db_session:
-        admin_blueprint.db_session = db_session
-
     if not model_forms:
         model_forms = {}
 
