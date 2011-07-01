@@ -39,7 +39,7 @@ with SQLAlchemy's declarative pattern.
 Some Important Notes
 --------------------
 
-Also, your model classes must be able to be initialized without any
+Your model classes must be able to be initialized without any
 arguments. For example, this works::
 
     class User(db.Model):
@@ -104,8 +104,8 @@ are available:
 
 .. note::
 
-  You can use the ``name`` argument in the create_admin_blueprint()
-  call to change the name of the blueprint. For example if
+  You can use the ``name`` argument in ``create_admin_blueprint()`` to
+  set the name of the blueprint. For example if
   ``name="my_named_admin"``, then the endpoint for the index becomes
   ``'my_named_admin.index'``. This is absolutely necessary if you are
   going to use multiple distinct admin blueprints within the same app.
