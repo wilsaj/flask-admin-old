@@ -19,7 +19,7 @@ from setuptools import setup
 setup(
     name='Flask-Admin',
     version='0.1',
-    url='https://github.com/wilsaj/',
+    url='https://github.com/wilsaj/flask-admin/',
     license='BSD',
     author='Andy Wilson',
     author_email='wilson.andrew.j@gmail.com',
