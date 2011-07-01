@@ -31,7 +31,7 @@ setup(
     zip_safe=False,
     platforms='any',
     install_requires=[
-        'Flask>=0.7dev',
+        'Flask>=0.7',
         'Flask-SQLAlchemy>=0.12dev',
         'Flask-WTF',
     ],
