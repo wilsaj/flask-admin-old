@@ -13,74 +13,103 @@ your datastore. It's not quite there yet. At the moment, Flask-Admin
 only works with SQLAlchemy declarative models.
 
 .. note::
-  Flask-Admin will only work with versions of Flask 0.7 or above.
+   Flask-Admin will only work with versions of Flask 0.7 or above.
 
-How to use it
--------------
-Typical usage looks something like this::
+How it works
+------------
 
-    from flask import Flask
-    from flaskext import admin
-    from my_app import my_models
+Create some SQLAlchemy declarative models using `SQLAlchemy` or
+`Flask-SQLAlchemy`::
 
-    app = Flask(__name__)
+    engine = create_engine('sqlite://', convert_unicode=True)
+    Base = declarative_base(bind=engine)
 
-    from my_app.database import db_session
+    class Person(object):
+        id = Column(Integer, primary_key=True)
+        name = Column(String(120), unique=True)
+
+        def __repr__(self):
+            return self.name
+
+    class Student(Base, Person):
+        __tablename__ = 'student'
+
+    class Teacher(Base, Person):
+        __tablename__ = 'teacher'
+
+.. note::
+   The __repr__ method of your model class will be used to describe
+   specific instances of your models, instances and making them a
+   models in the list view. If you don't set it, the default __repr__
+   method will look something like `<__main__.Student object at
+   0x1bb1490>`, which is usually not so useful.
+
+
+Then create a blueprint using those models and your sqlalchemy
+session::
+
+    db_session = scoped_session(sessionmaker(
+        autocommit=False, autoflush=False,
+        bind=engine))
 
     admin_blueprint = admin.create_admin_blueprint(
-         app, (Course, Student, Teacher), db_session, exclude_pks=True)
+         (Student, Teacher), db_session, exclude_pks=True)
+
+The first argument to ``create_admin_blueprint`` can have two forms:
+it can either be some python iterable like a list or tuple, or it can
+be a python module that contains your models. The second argument is
+the sqlalchemy session that will be used to access the
+database. Setting exclude_pks argument to True tells Flask-Admin to
+not expose primary keys for your models. This is often a good idea
+because changing a primary key changes the nature of foreign key
+relationships.
+
+Next, register this blueprint on your Flask app::
+
+    app = Flask(__name__)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
-Where my_models is a module containing SQLAlchemy declarative models
-which have been created either using Flask-SQLAlchemy extension or
-with SQLAlchemy's declarative pattern.
+Now the admin interface is set up. If you are running the app with the
+built-in development server via ``app.run()``, then it would be
+available at http://localhost:5000/admin . See the `examples`
+directory of the flask-admin source code for some applications that
+that demonstrate ideas of how to configure the admin.
 
 
-Some Important Notes
---------------------
+A note on __init__
+------------------
 
 Your model classes must be able to be initialized without any
-arguments. For example, this works::
+arguments. For example, this works because the name argument is
+optional::
 
-    class User(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(80), unique=True)
-        email = db.Column(db.String(120), unique=True)
+    class Person(Base):
+        id = Column(Integer, primary_key=True)
+        name = Column(String(120), unique=True)
 
-        def __init__(self, username=None, email=None):
-            self.username = username
-            self.email = email
+        def __init__(self, name=None):
+            self.name = name
 
-
-But this doesn't work::
-
-    class User(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(80), unique=True)
-        email = db.Column(db.String(120), unique=True)
-
-        def __init__(self, username, email):
-            self.username = username
-            self.email = email
-
-Because Flask-Admin needs to be able to instantiate a new ``User()``
-without any arguments passed to it.
+        def __repr__(self):
+            return self.name
 
 
+But the following will not work because in this latter case, the
+__init__ method of ``User()`` `requires` a name::
 
-Customizing your Admin
-----------------------
+    class Person(Base):
+        id = Column(Integer, primary_key=True)
+        name = Column(String(120), unique=True)
 
-Using the Flask blueprints makes customizing the admin interface
-really easy. For the file(s) you want to change, just override them by
-creating them the themes and static directories of your app. Refer to
-the Flask blueprint documentation for more and see the example in
-`examples/authentication/view_decorator.py` for an example of how that
-might work.
+        def __init__(self, name):
+            self.name = name
+
+        def __repr__(self):
+            return self.name
 
 
-Endpoints for Flask-Admin views
--------------------------------
+Flask-Admin Endpoints
+---------------------
 If you want to refer to views in Flask-Admin, the following endpoints
 are available:
 
@@ -107,8 +136,102 @@ are available:
   You can use the ``name`` argument in ``create_admin_blueprint()`` to
   set the name of the blueprint. For example if
   ``name="my_named_admin"``, then the endpoint for the index becomes
-  ``'my_named_admin.index'``. This is absolutely necessary if you are
-  going to use multiple distinct admin blueprints within the same app.
+  ``'my_named_admin.index'``. This is necessary if you are going to
+  use multiple distinct admin blueprints within the same app.
+
+
+Custom Templates and Static Files
+---------------------------------
+
+Using Flask blueprints makes customizing the admin interface really
+easy. Just override the file(s) you'd like to change, by creating them
+in the templates and/or static directories of your app. Refer to the
+documentation on Flask blueprints for more. There is also an example
+of this in `examples/authentication/view_decorator.py`
+
+
+Custom Forms
+------------
+
+Flask-Admin uses the WTForms library to automatically generate the
+form that will be used to add a new instance of a model or edit an
+existing model instance. There may be cases where the automatically
+generated form isn't what you want, so you can also create a custom
+form for Flask-Admin to use for a given model.
+
+For example, consider the following model of a User that stores hashed
+passwords::
+
+    Base = declarative_base()
+
+    class User(Base):
+        __tablename__ = 'user'
+
+        id = Column(Integer, primary_key=True)
+        username = Column(String(80), unique=True)
+        _password_hash = Column('password', String(80), nullable=False)
+        is_active = Column(Boolean, default=True)
+
+        def __init__(self, username="", password="", is_active=True):
+            self.username = username
+            self.password = password
+            self.is_active = is_active
+
+        def check_password(self, password):
+            return check_password_hash(self.pw_hash, password)
+
+        @property
+        def password(self):
+            return self._password_hash
+
+        @password.setter
+        def password(self, password):
+            self._password_hash = generate_password_hash(password)
+
+        password = synonym('_password_hash', descriptor=password)
+
+        def __repr__(self):
+            return self.username
+
+
+To allow this model to be used with a typical password and
+confirmation field form, you could create the following form::
+
+    class UserForm(Form):
+        """
+        Form for creating or editting User object (via the admin). Define
+        any handling of fields here. This form class also has precedence
+        when rendering forms to a webpage, so the model-generated fields
+        will come after it.
+        """
+        username = TextField(u'User name',
+                             [validators.required(),
+                              validators.length(max=80)])
+        password = PasswordField('Change Password',
+                                 [validators.optional(),
+                                  validators.equal_to('confirm_password')])
+        confirm_password = PasswordField()
+        is_active = BooleanField(default=True)
+
+
+And just use the model_forms argument when calling
+``create_admin_blueprint`` to associate this form with the User
+model::
+
+    admin_blueprint = admin.create_admin_blueprint(
+        (User,), db_session, model_forms={'User': UserForm})
+
+Now the UserForm will be used for editing and adding a new user. If
+the form passes the validation checks, then password will propagate to
+the User model and will be hashed and stored the password in the
+database.
+
+
+.. note::
+   Due to the way that forms are generated, the order of input fields
+   is difficult to control. This is something that is expected to
+   improve in future versions, but for now a custom form is also the
+   only way to specify the order of form fields.
 
 
 API
