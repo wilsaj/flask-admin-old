@@ -32,8 +32,11 @@ setup(
     platforms='any',
     install_requires=[
         'Flask>=0.7',
-        'Flask-SQLAlchemy>=0.12dev',
         'Flask-WTF',
+    ],
+    test_suite='test_admin.suite',
+    test_requires=[
+        'Flask-SQLAlchemy>=0.12',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

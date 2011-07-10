@@ -228,5 +228,18 @@ class ExcludePKsFalseTest(TestCase):
         assert "Id" in rv.data
 
 
+def suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(SimpleTest))
+    suite.addTest(unittest.makeSuite(MultipleTest))
+    suite.addTest(unittest.makeSuite(ViewDecoratorTest))
+    suite.addTest(unittest.makeSuite(CustomFormTest))
+    suite.addTest(unittest.makeSuite(FlaskSQLAlchemySimpleTest))
+    suite.addTest(unittest.makeSuite(FlaskSQLAlchemyExampleTest))
+    suite.addTest(unittest.makeSuite(ExcludePKsTrueTest))
+    suite.addTest(unittest.makeSuite(ExcludePKsFalseTest))
+    return suite
+
+
 if __name__ == '__main__':
     unittest.main()
