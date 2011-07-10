@@ -35,7 +35,7 @@ setup(
         'Flask-WTF',
     ],
     test_suite='test_admin.suite',
-    test_requires=[
+    tests_require=[
         'Flask-SQLAlchemy>=0.12',
     ],
     classifiers=[
