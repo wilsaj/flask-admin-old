@@ -1,6 +1,10 @@
 import sys
 import unittest
 
+from flask import Flask
+import sqlalchemy as sa
+
+from flaskext import admin
 from flaskext.testing import TestCase
 
 sys.path.append('./example/')
@@ -178,6 +182,52 @@ class FlaskSQLAlchemyExampleTest(TestCase):
         # just make sure the app is initialized and works
         rv = self.client.get('/admin/')
         self.assert_200(rv)
+
+
+class ExcludePKsTrueTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = Flask(__name__)
+        app.config['SECRET_KEY'] = 'not secure'
+        engine = sa.create_engine('sqlite://', convert_unicode=True)
+        app.db_session = sa.orm.scoped_session(sa.orm.sessionmaker(
+            autocommit=False, autoflush=False,
+            bind=engine))
+        admin_blueprint = admin.create_admin_blueprint(
+            (simple.Course, simple.Student, simple.Teacher),
+            app.db_session,
+            exclude_pks=True)
+        app.register_blueprint(admin_blueprint, url_prefix='/admin')
+        simple.Base.metadata.create_all(bind=engine)
+        return app
+
+    def test_exclude(self):
+        rv = self.client.get('/admin/add/Student/')
+        assert "Id" not in rv.data
+
+
+class ExcludePKsFalseTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = Flask(__name__)
+        app.config['SECRET_KEY'] = 'not secure'
+        engine = sa.create_engine('sqlite://', convert_unicode=True)
+        app.db_session = sa.orm.scoped_session(sa.orm.sessionmaker(
+            autocommit=False, autoflush=False,
+            bind=engine))
+        admin_blueprint = admin.create_admin_blueprint(
+            (simple.Course, simple.Student, simple.Teacher),
+            app.db_session,
+            exclude_pks=False)
+        app.register_blueprint(admin_blueprint, url_prefix='/admin')
+        simple.Base.metadata.create_all(bind=engine)
+        return app
+
+    def test_exclude(self):
+        rv = self.client.get('/admin/add/Student/')
+        assert "Id" in rv.data
 
 
 if __name__ == '__main__':
