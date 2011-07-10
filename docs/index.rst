@@ -146,10 +146,12 @@ Custom Templates and Static Files
 ---------------------------------
 
 Using Flask blueprints makes customizing the admin interface really
-easy. Just override the file(s) you'd like to change, by creating them
-in the templates and/or static directories of your app. Refer to the
-documentation on Flask blueprints for more. There is also an example
-of this in `examples/authentication/view_decorator.py`
+easy. Flask-Admin comes with a default set of templates and static
+files. You can customize as much of the interface as you'd like by
+just overriding any files you'd like to change. To do this, just
+create them in the templates and/or static directories of your
+app. Refer to the documentation on Flask blueprints for more. There is
+also an example of this in `examples/authentication/view_decorator.py`
 
 
 Custom Forms
