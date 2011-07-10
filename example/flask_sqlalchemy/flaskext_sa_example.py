@@ -62,7 +62,7 @@ def create_app(database_uri='sqlite://'):
 
     db.init_app(app)
     admin_blueprint = admin.create_admin_blueprint(
-        (User, Post, Category), db.session, exclude_pks=True)
+        (User, Post, Category), db.session)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     db.create_all(app=app)
 

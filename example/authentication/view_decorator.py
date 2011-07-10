@@ -84,7 +84,7 @@ def create_app(database_uri='sqlite://'):
         autocommit=False, autoflush=False, bind=app.engine))
 
     admin_blueprint = admin.create_admin_blueprint(
-        (Course, Student, Teacher), db_session, exclude_pks=True,
+        (Course, Student, Teacher), db_session,
         view_decorator=login_required)
 
     @admin_blueprint.route('/login/', methods=('GET', 'POST'))

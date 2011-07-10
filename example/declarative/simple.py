@@ -73,7 +73,7 @@ def create_app(database_uri='sqlite://'):
         autocommit=False, autoflush=False,
         bind=engine))
     admin_blueprint = admin.create_admin_blueprint(
-        (Course, Student, Teacher), app.db_session, exclude_pks=True)
+        (Course, Student, Teacher), app.db_session)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     Base.metadata.create_all(bind=engine)
 
