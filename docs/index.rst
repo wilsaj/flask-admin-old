@@ -39,10 +39,11 @@ Create some SQLAlchemy declarative models using `SQLAlchemy` or
 
 .. note::
    The __repr__ method of your model class will be used to describe
-   specific instances of your models, instances and making them a
-   models in the list view. If you don't set it, the default __repr__
-   method will look something like `<__main__.Student object at
-   0x1bb1490>`, which is usually not so useful.
+   specific instances of your models models in things like the list
+   view. If you don't set it the default __repr__ method will look
+   something like `<__main__.Student object at 0x1bb1490>`, which
+   won't be very useful for distinguishing which model instance is
+   which.
 
 
 Then create a blueprint using those models and your sqlalchemy
