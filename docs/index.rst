@@ -55,16 +55,18 @@ session::
         bind=engine))
 
     admin_blueprint = admin.create_admin_blueprint(
-         (Student, Teacher), db_session, exclude_pks=True)
+         (Student, Teacher), db_session)
 
 The first argument to ``create_admin_blueprint`` can have two forms:
 it can either be some python iterable like a list or tuple, or it can
 be a python module that contains your models. The second argument is
-the sqlalchemy session that will be used to access the
-database. Setting exclude_pks argument to True tells Flask-Admin to
-not expose primary keys for your models. This is often a good idea
-because changing a primary key changes the nature of foreign key
-relationships.
+the sqlalchemy session that will be used to access the database. By
+default, Flask-Admin will not expose the primary keys of your
+models. This is usually a good idea if you are using a primary key
+that doesn't have any meaning outside of the database, like an
+auto-incrementing integer, because changing a primary key changes the
+nature of foreign key relationships. If you want to expose primary
+key, set ``exclude_pks=False`` in the ``create_admin_blueprint`` call.
 
 Next, register this blueprint on your Flask app::
 

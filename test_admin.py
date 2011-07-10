@@ -196,13 +196,12 @@ class ExcludePKsTrueTest(TestCase):
             bind=engine))
         admin_blueprint = admin.create_admin_blueprint(
             (simple.Course, simple.Student, simple.Teacher),
-            app.db_session,
-            exclude_pks=True)
+            app.db_session, exclude_pks=True)
         app.register_blueprint(admin_blueprint, url_prefix='/admin')
         simple.Base.metadata.create_all(bind=engine)
         return app
 
-    def test_exclude(self):
+    def test_exclude_pks(self):
         rv = self.client.get('/admin/add/Student/')
         assert "Id" not in rv.data
 
@@ -219,13 +218,12 @@ class ExcludePKsFalseTest(TestCase):
             bind=engine))
         admin_blueprint = admin.create_admin_blueprint(
             (simple.Course, simple.Student, simple.Teacher),
-            app.db_session,
-            exclude_pks=False)
+            app.db_session, exclude_pks=False)
         app.register_blueprint(admin_blueprint, url_prefix='/admin')
         simple.Base.metadata.create_all(bind=engine)
         return app
 
-    def test_exclude(self):
+    def test_exclude_pks(self):
         rv = self.client.get('/admin/add/Student/')
         assert "Id" in rv.data
 
