@@ -25,18 +25,24 @@ Create some SQLAlchemy declarative models using `SQLAlchemy` or
     engine = create_engine('sqlite://', convert_unicode=True)
     Base = declarative_base(bind=engine)
 
-    class Person(object):
+    class Student(Base):
+        __tablename__ = 'student'
+
         id = Column(Integer, primary_key=True)
         name = Column(String(120), unique=True)
 
         def __repr__(self):
             return self.name
 
-    class Student(Base, Person):
-        __tablename__ = 'student'
-
-    class Teacher(Base, Person):
+   class Teacher(Base):
         __tablename__ = 'teacher'
+
+        id = Column(Integer, primary_key=True)
+        name = Column(String(120), unique=True)
+
+        def __repr__(self):
+            return self.name
+
 
 .. note::
    The __repr__ method of your model class will be used to describe
