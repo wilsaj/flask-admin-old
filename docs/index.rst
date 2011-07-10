@@ -9,8 +9,9 @@ Flask-Admin
 .. module:: flaskext.admin
 
 Flask-Admin aims to be a flexible, customizable web-based interface to
-your datastore. It's not quite there yet. At the moment, Flask-Admin
-only works with SQLAlchemy declarative models.
+your datastore. Currently, Flask-Admin only works with SQLAlchemy
+declarative models but support for additional datastores will be added
+in future versions.
 
 .. note::
    Flask-Admin will only work with versions of Flask 0.7 or above.
