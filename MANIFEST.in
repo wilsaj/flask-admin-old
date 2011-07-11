@@ -1,6 +1,5 @@
-recursive-include flaskext/admin/templates *
-recursive-include flaskext/admin/static *
 include LICENSE *.py
+recursive-include flaskext/admin/ *
 recursive-include docs *
 recursive-exclude docs *.pyc
 recursive-exclude docs *.pyo
