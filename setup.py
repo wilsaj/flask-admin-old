@@ -33,7 +33,7 @@ setup(
     install_requires=[
         'Flask>=0.7',
         'Flask-WTF',
-        'SQLAlchemy',
+        'Flask-SQLAlchemy',
     ],
     test_suite='test_admin.suite',
     tests_require=[
