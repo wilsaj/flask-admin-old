@@ -257,6 +257,12 @@ database.
    only way to specify the order of form fields.
 
 
+Current Limitations
+-------------------
+
+Flask-Admin does not support multiple-column primary keys.
+
+
 API
 ---
 
