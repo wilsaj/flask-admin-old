@@ -1,6 +1,6 @@
 import sys
 
-from flask import Flask
+from flask import Flask, redirect
 from flaskext.sqlalchemy import SQLAlchemy
 from flaskext import admin
 
