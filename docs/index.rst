@@ -22,6 +22,9 @@ How it works
 Create some SQLAlchemy declarative models using `SQLAlchemy` or
 `Flask-SQLAlchemy`::
 
+    from sqlalchemy import create_engine, Column, Integer, String
+    from sqlalchemy.ext.declarative import declarative_base
+
     engine = create_engine('sqlite://', convert_unicode=True)
     Base = declarative_base(bind=engine)
 
@@ -55,6 +58,8 @@ Create some SQLAlchemy declarative models using `SQLAlchemy` or
 
 Then create a blueprint using those models and your sqlalchemy
 session::
+
+    from sqlalchemy.orm import scoped_session, sessionmaker
 
     db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False,
@@ -174,6 +179,9 @@ form for Flask-Admin to use for a given model.
 For example, consider the following model of a User that stores hashed
 passwords::
 
+    from sqlalchemy import Boolean, Column, Integer, String
+    from sqlalchemy.ext.declarative import declarative_base
+
     Base = declarative_base()
 
     class User(Base):
@@ -208,6 +216,9 @@ passwords::
 
 To allow this model to be used with a typical password and
 confirmation field form, you could create the following form::
+
+    from wtforms import Form, validators
+    from wtforms.fields import BooleanField, TextField, PasswordField
 
     class UserForm(Form):
         """
