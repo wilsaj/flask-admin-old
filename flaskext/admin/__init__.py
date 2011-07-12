@@ -56,10 +56,11 @@ def create_admin_blueprint(
     `name`
         Specify the name for your blueprint. The name of the blueprint
         preceeds the view names of the endpoints, if for example you
-        want to refer to the views using ``url_for()``. If you are
-        using multiple admin blueprints, it is necessary to set this
-        value to something different for each admin module so the
-        admin templates can find the correct views.
+        want to refer to the views using :func:`flask.url_for()`. If
+        you are using more than one admin blueprint from within the
+        same app, it is necessary to set this value to something
+        different for each admin module so the admin blueprints will
+        have distinct endpoints.
 
     `model_forms`
         A dict with model names as keys, mapped to WTForm Form objects
