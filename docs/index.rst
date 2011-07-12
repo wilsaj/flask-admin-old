@@ -95,8 +95,8 @@ A note on __init__
 ------------------
 
 Your model classes must be able to be initialized without any
-arguments. For example, this works because the name argument is
-optional::
+arguments. For example, this works because name is a keyword argument,
+and therefore is optional::
 
     class Person(Base):
         id = Column(Integer, primary_key=True)
@@ -109,8 +109,8 @@ optional::
             return self.name
 
 
-But the following will not work because in this latter case, the
-__init__ method of ``User()`` `requires` a name::
+But the following will not work because in this case, the __init__
+method of ``User()`` `requires` a name::
 
     class Person(Base):
         id = Column(Integer, primary_key=True)
