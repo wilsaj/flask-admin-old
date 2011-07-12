@@ -5,7 +5,7 @@ from flaskext import admin
 from sqlalchemy import create_engine, Table
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, Text, String, Float, Time, Enum
+from sqlalchemy import Column, Integer, String, Time
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import ForeignKey
 
