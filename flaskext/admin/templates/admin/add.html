@@ -15,9 +15,11 @@
     {% from "_formhelpers.html" import render_field %}
       <ul>
         {% for field in form %}
-          <li>
-            {{ render_field(field) }}
-          </li>
+          {% if field.name != 'csrf': %}
+            <li>
+              {{ render_field(field) }}
+            </li>
+          {% endif %}
         {% endfor %}
         {{ form.csrf }}
       </ul>
