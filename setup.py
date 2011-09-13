@@ -38,6 +38,7 @@ setup(
     test_suite='test_admin.suite',
     tests_require=[
         'Flask-SQLAlchemy>=0.12',
+        'Flask-Testing',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
