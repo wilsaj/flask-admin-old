@@ -65,7 +65,7 @@ class Teacher(Base):
         return self.name
 
 
-def create_app(database_uri='sqlite://'):
+def create_app(database_uri='sqlite://', pagination=25):
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'not secure'
     engine = create_engine(database_uri, convert_unicode=True)
@@ -73,7 +73,8 @@ def create_app(database_uri='sqlite://'):
         autocommit=False, autoflush=False,
         bind=engine))
     admin_blueprint = admin.create_admin_blueprint(
-        (Course, Student, Teacher), app.db_session)
+        (Course, Student, Teacher), app.db_session,
+        list_view_pagination=pagination)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     Base.metadata.create_all(bind=engine)
 

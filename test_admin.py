@@ -228,6 +228,36 @@ class ExcludePKsFalseTest(TestCase):
         assert "Id" in rv.data
 
 
+class SmallPaginationTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = simple.create_app('sqlite://', pagination=25)
+        for i in range(500):
+            app.db_session.add(simple.Student(name="Student%s" % i))
+        app.db_session.commit()
+        return app
+
+    def test_low_list_view_pagination(self):
+        rv = self.client.get('/admin/list/Student/?page=1')
+        assert '<a href="/admin/list/Student/?page=2">></a>' in rv.data
+
+
+class LargePaginationTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = simple.create_app('sqlite://', pagination=1000)
+        for i in range(50):
+            app.db_session.add(simple.Student(name="Student%s" % i))
+        app.db_session.commit()
+        return app
+
+    def test_high_list_view_pagination(self):
+        rv = self.client.get('/admin/list/Student/')
+        assert '<a href="/admin/list/Student/?page=2">></a>' not in rv.data
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(SimpleTest))
@@ -238,6 +268,8 @@ def suite():
     suite.addTest(unittest.makeSuite(FlaskSQLAlchemyExampleTest))
     suite.addTest(unittest.makeSuite(ExcludePKsTrueTest))
     suite.addTest(unittest.makeSuite(ExcludePKsFalseTest))
+    suite.addTest(unittest.makeSuite(SmallPaginationTest))
+    suite.addTest(unittest.makeSuite(LargePaginationTest))
     return suite
 
 
