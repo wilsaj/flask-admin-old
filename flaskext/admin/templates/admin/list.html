@@ -11,7 +11,7 @@
   <ul id="model_list">
     <li id="model_list_header">
       <h2>{{ model_name }}</h2>
-      {{ render_pagination(pagination, 'list_view', model_name=model_name) }}
+      {{ render_pagination(pagination, '.list_view', model_name=model_name) }}
     </li>
     {% for model_instance in model_instances  %}
       {% set model_pk = _get_pk_value(model_instance) %}
@@ -29,7 +29,7 @@
       </li>
     {% endfor %}
     <li>
-      {{ render_pagination(pagination, 'list_view', model_name=model_name) }}
+      {{ render_pagination(pagination, '.list_view', model_name=model_name) }}
       <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}">
         <div class="ui-widget ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></div>
       </a>
