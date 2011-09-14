@@ -190,14 +190,16 @@ def create_admin_blueprint(
 
             if request.method == 'GET':
                 form = model_form(obj=model_instance)
+                has_file_field = filter(lambda field: isinstance(field, wtf_fields.FileField), form)
                 return render_template(
                     'admin/edit.html',
                     admin_models=sorted(model_dict.keys()),
                     model_instance=model_instance,
-                    model_name=model_name, form=form)
+                    model_name=model_name, form=form, has_file_field=has_file_field)
 
             elif request.method == 'POST':
                 form = model_form(request.form, obj=model_instance)
+                has_file_field = filter(lambda field: isinstance(field, wtf_fields.FileField), form)
                 if form.validate():
                     model_instance = _populate_model_from_form(
                         model_instance, form)
@@ -216,7 +218,7 @@ def create_admin_blueprint(
                         'admin/edit.html',
                         admin_models=sorted(model_dict.keys()),
                         model_instance=model_instance,
-                        model_name=model_name, form=form)
+                        model_name=model_name, form=form, has_file_field=has_file_field)
         return edit
 
     def create_add_view():
