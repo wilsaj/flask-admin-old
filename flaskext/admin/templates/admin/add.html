@@ -15,15 +15,9 @@
     {% from "_formhelpers.html" import render_field %}
       <ul>
         {% for field in form %}
-          {% if field.type == 'HiddenField': %}
-            {% if field.name != 'csrf': %}
-              {{ field }}
-            {% endif %}
-            {% else: %}
-              <li>
-                {{ render_field(field) }}
-              </li>
-          {% endif %}
+          <li>
+            {{ render_field(field) }}
+          </li>
         {% endfor %}
         {{ form.csrf }}
       </ul>
