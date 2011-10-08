@@ -76,7 +76,7 @@ def login_required(f):
 
 
 def create_app(database_uri='sqlite://'):
-    app = Flask('view_decorator')
+    app = Flask(__name__)
     app.config['SECRET_KEY'] = 'not secure'
 
     app.engine = create_engine(database_uri, convert_unicode=True)

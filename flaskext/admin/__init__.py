@@ -87,7 +87,7 @@ def create_admin_blueprint(
     """
 
     admin_blueprint = flask.Blueprint(
-        name, name,
+        name, 'flaskext.admin',
         static_folder=os.path.join(_get_admin_extension_dir(), 'static'),
         template_folder=os.path.join(_get_admin_extension_dir(), 'templates'),
         **kwargs)
