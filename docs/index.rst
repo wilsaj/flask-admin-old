@@ -58,6 +58,7 @@ or `Flask-SQLAlchemy`_. For example::
 Then create a blueprint using those models and your sqlalchemy
 session::
 
+    from flask.ext import admin
     from sqlalchemy.orm import scoped_session, sessionmaker
 
     db_session = scoped_session(sessionmaker(
