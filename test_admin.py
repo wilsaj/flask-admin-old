@@ -4,8 +4,8 @@ import unittest
 from flask import Flask
 import sqlalchemy as sa
 
-from flaskext import admin
-from flaskext.testing import TestCase
+from flask.ext import admin
+from flask.ext.testing import TestCase
 
 sys.path.append('./example/')
 

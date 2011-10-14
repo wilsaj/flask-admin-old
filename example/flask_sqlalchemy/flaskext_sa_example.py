@@ -1,6 +1,6 @@
 from flask import Flask, redirect
+from flask.ext import admin
 from flaskext.sqlalchemy import SQLAlchemy
-from flaskext import admin
 
 from datetime import datetime
 
