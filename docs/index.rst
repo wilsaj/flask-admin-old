@@ -14,7 +14,12 @@ Flask-Admin only works with SQLAlchemy declarative models but support
 for additional datastores will be added in future versions.
 
 .. note::
-   Flask-Admin will only work with versions of Flask 0.7 or above.
+
+   Flask-Admin will only work with versions of Flask 0.7 or above. As
+   of Flask-Admin version 0.2.x, Flask-Admin uses the new extension
+   namespace so if you are using Flask 0.7, you will need to use the
+   `extension compatability module`_.
+
 
 How it works
 ------------
@@ -283,3 +288,4 @@ API
 .. _Flask-SQLAlchemy: http://packages.python.org/Flask-SQLAlchemy/
 .. _example directory: https://github.com/wilsaj/flask-admin/tree/master/example
 .. _view decorator example: https://github.com/wilsaj/flask-admin/tree/master/example/authentication/view_decorator.py
+.. _extension compatability module: http://flask.pocoo.org/docs/extensions/#flask-before-0-8
