@@ -18,7 +18,7 @@ from setuptools import setup
 
 setup(
     name='Flask-Admin',
-    version='0.2.0',
+    version='0.2.1',
     url='https://github.com/wilsaj/flask-admin/',
     license='BSD',
     author='Andy Wilson',
