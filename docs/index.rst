@@ -24,8 +24,8 @@ for additional datastores will be added in future versions.
 How it works
 ------------
 
-First, create some SQLAlchemy declarative models using `SQLAlchemy`_
-or `Flask-SQLAlchemy`_. For example::
+First create some SQLAlchemy declarative models using `SQLAlchemy`_ or
+`Flask-SQLAlchemy`_. For example::
 
     from sqlalchemy import create_engine, Column, Integer, String
     from sqlalchemy.ext.declarative import declarative_base
@@ -84,7 +84,7 @@ auto-incrementing integer, because changing a primary key changes the
 nature of foreign key relationships. If you want to expose the primary
 key, set ``exclude_pks=False`` in the :func:`create_admin_blueprint()` call.
 
-Next, register this blueprint on your Flask app::
+Then register this blueprint on your Flask app::
 
     app = Flask(__name__)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
