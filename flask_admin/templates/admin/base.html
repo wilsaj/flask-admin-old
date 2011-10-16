@@ -27,7 +27,7 @@
   <link href="http://fonts.googleapis.com/css?family=Merriweather:300,regular,700,900" rel="stylesheet" type="text/css" >
   <link href="http://fonts.googleapis.com/css?family=Inconsolata:regular" rel="stylesheet" type="text/css" >
   <link rel="stylesheet" href="{{ static('css/Aristo/jquery-ui-1.8.7.custom.css') }}" type="text/css"/>
-  <link rel="stylesheet" href="{{ static('css/jquery-ui/jquery.crossSelect.custom.css') }}" type="text/css"/>
+  <link rel="stylesheet" href=" {{ static('css/chosen.css') }}?v=1">
 {% block extra_head %}
 {% endblock extra_head %}
 </head>
@@ -76,7 +76,7 @@
     <!-- add jquery ui stuff -->
     <script src="{{ static('js/libs/jquery-ui-1.8.9.custom.min.js') }}" type="text/javascript"></script>
     <script src="{{ static('js/libs/jquery-ui-timepicker-addon.js') }}" type="text/javascript"></script>
-    <script src="{{ static('js/libs/jQuery.crossSelect-0.5.js') }}" type="text/javascript"></script>
+    <script src="{{ static('js/libs/chosen.jquery.min.js') }}" type="text/javascript"></script>
 
     <!-- scripts concatenated and minified via ant build script-->
     <script src="{{ static('js/plugins.js') }}"></script>
