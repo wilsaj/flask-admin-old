@@ -97,13 +97,13 @@ http://trentrichardson.com/Impromptu/MIT-LICENSE.txt
 
 
 ------------------------------------------------------------------------
-crossSelect - A jQuery Plugin to make multiple select boxes more
-              intuitive
 
-// Dual licensed under the MIT and GPL licenses.
+Chosen, a Select Box Enhancer for jQuery and Protoype
+by Patrick Filler for Harvest
 
-Copyright (C) 2009 Rhys Evans
-http://wheresrhys.co.uk/resources/
+Available for use under the MIT License
+
+Copyright (c) 2011 by Harvest
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
