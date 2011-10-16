@@ -37,8 +37,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 This distribution of Flask-Admin includes code from a number of open
 source projects. Listed below are the licenses and attributions for
 those projects. The source code of these projects containing copyright
-notices and more information can be found in the
-flaskext/admin/themes/admin_default/static/ directory.
+notices and more information can be found in the flask_admin/static/
+directory.
+
 
 
 ------------------------------------------------------------------------
