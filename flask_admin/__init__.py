@@ -551,6 +551,6 @@ class AdminConverter(ModelConverter):
         return wtf_fields.DateTimeField(**field_args)
 
     @converts('Time')
-    def conv_Date(self, field_args, **extra):
+    def conv_Time(self, field_args, **extra):
         field_args['widget'] = TimePickerWidget()
         return TimeField(**field_args)
