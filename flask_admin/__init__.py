@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-    flaskext.admin
+    flask.ext.admin
     ~~~~~~~~~~~~~~
 
-    Description of the module goes here...
+    Flask-Admin is a Flask extension module that aims to be a
+    flexible, customizable web-based interface to your datastore.
 
     :copyright: (c) 2011 by wilsaj.
     :license: BSD, see LICENSE for more details.
