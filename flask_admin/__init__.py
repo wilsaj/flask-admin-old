@@ -18,16 +18,12 @@ import time
 import types
 
 import flask
-from flask import (current_app, flash, g, Module, render_template,
-                   redirect, request, session, url_for)
+from flask import flash, render_template, redirect, request, url_for
 from flaskext.sqlalchemy import Pagination
-import jinja2.exceptions
 import sqlalchemy as sa
-import sqlalchemy.ext.declarative
 from sqlalchemy.orm.exc import NoResultFound
 from wtforms import widgets, validators
 from wtforms import fields as wtf_fields
-from wtforms.form import Form
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
