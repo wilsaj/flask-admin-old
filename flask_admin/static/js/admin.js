@@ -19,6 +19,17 @@ $(function(){
         showSecond: true
     });
 
-    // if select object has more than a few elements, use a cross select
-    $('.edit_form select').chosen({no_results_text: "No selection made yet."});
+    function getLabelFor(id){
+        return $('label[for="'+id+'"]').text();
+    };
+
+    $('.edit_form select')
+        .attr('data-placeholder', (
+            function(index, attr){
+                if (!attr){
+                    return 'Choose a '+getLabelFor(this.id)+'...';
+                }
+            }))
+        .chosen({no_results_text: "No results matched"});
+
 });
