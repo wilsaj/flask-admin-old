@@ -8,6 +8,7 @@ $(function(){
     $('input.datepicker').datepicker({
         dateFormat: 'yy-mm-dd'
     });
+
     $('input.datetimepicker').datetimepicker({
         showSecond: true,
         dateFormat: 'yy-mm-dd',
@@ -19,10 +20,28 @@ $(function(){
         showSecond: true
     });
 
-    // if select object has more than a few elements, use a cross select
-    $('select[multiple="multiple"]').filter(function (index) {
-        return this.length > 9;
-    }).crossSelect({
-        listWidth: 200,
-        rows: 15});
+    function getLabelFor(id){
+        return $('label[for="'+id+'"]').text();
+    };
+
+    $('.edit_form select:empty')
+        .add($('.edit_form select > option[value="__None"]:only-child').parent())
+        .attr('data-placeholder', (
+            function(index, attr){
+                if (!attr){
+                    return 'No '+getLabelFor(this.id)+' available to choose';
+                }
+            }))
+        .attr('disabled', 'disabled')
+        .append('<option value="__None"></option>');
+
+    $('.edit_form select')
+        .attr('data-placeholder', (
+            function(index, attr){
+                if (!attr){
+                    return 'Choose a '+getLabelFor(this.id)+'...';
+                }
+            }))
+        .chosen({no_results_text: "No results matched",
+                 allow_single_deselect: true});
 });

@@ -353,12 +353,16 @@ form.edit_form label {
     width: 180px; /* Width of labels */
 }
 
+form.edit_form .chzn-drop input {
+    min-width: 0px;
+}
+
 form.edit_form input {
-    min-width: 215px;
+    min-width: 250px;
 }
 
 form.edit_form select {
-    min-width: 223px;
+    min-width: 258px;
 }
 
 form.edit_form input[type="text"], textarea, select {
