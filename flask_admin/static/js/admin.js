@@ -8,6 +8,7 @@ $(function(){
     $('input.datepicker').datepicker({
         dateFormat: 'yy-mm-dd'
     });
+
     $('input.datetimepicker').datetimepicker({
         showSecond: true,
         dateFormat: 'yy-mm-dd',
@@ -24,6 +25,7 @@ $(function(){
     };
 
     $('.edit_form select:empty')
+        .add($('.edit_form select > option[value="__None"]:only-child').parent())
         .attr('data-placeholder', (
             function(index, attr){
                 if (!attr){
