@@ -39,8 +39,6 @@ class Course(Base):
     students = relationship('Student',
                             secondary=course_student_association_table,
                             backref='courses')
-    # teacher = relation()
-    # students = relation()
 
     def __repr__(self):
         return self.subject
