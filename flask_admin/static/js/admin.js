@@ -40,6 +40,6 @@ $(function(){
                     return 'Choose a '+getLabelFor(this.id)+'...';
                 }
             }))
-        .chosen({no_results_text: "No results matched"});
-
+        .chosen({no_results_text: "No results matched",
+                 allow_single_deselect: true});
 });
