@@ -25,15 +25,16 @@ $(function(){
     };
 
     $('.edit_form select:empty')
-        .add($('.edit_form select > option[value="__None"]:only-child').parent())
+        .append('<option value="__None"></option>');
+
+    $('.edit_form select > option[value="__None"]:only-child').parent()
+        .attr('disabled', 'disabled')
         .attr('data-placeholder', (
             function(index, attr){
                 if (!attr){
                     return 'No '+getLabelFor(this.id)+' available to choose';
                 }
-            }))
-        .attr('disabled', 'disabled')
-        .append('<option value="__None"></option>');
+            }));
 
     $('.edit_form select')
         .attr('data-placeholder', (
