@@ -23,6 +23,16 @@ $(function(){
         return $('label[for="'+id+'"]').text();
     };
 
+    $('.edit_form select:empty')
+        .attr('data-placeholder', (
+            function(index, attr){
+                if (!attr){
+                    return 'No '+getLabelFor(this.id)+' available to choose';
+                }
+            }))
+        .attr('disabled', 'disabled')
+        .append('<option value="__None"></option>');
+
     $('.edit_form select')
         .attr('data-placeholder', (
             function(index, attr){
