@@ -28,6 +28,10 @@ from wtforms import fields as wtf_fields
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
+from flask.ext.admin.sqlalchemy import (SQLAlchemyAdminDatastore,
+                                        _get_pk_value, _get_pk_name,
+                                        _populate_model_from_form)
+
 
 def create_admin_blueprint(
     models, db_session, name='admin', model_forms=None, exclude_pks=True,
@@ -89,32 +93,7 @@ def create_admin_blueprint(
         template_folder=os.path.join(_get_admin_extension_dir(), 'templates'),
         **kwargs)
 
-    model_dict = {}
-
-    if not model_forms:
-        model_forms = {}
-
-    #XXX: fix base handling so it will work with non-Declarative models
-    if type(models) == types.ModuleType:
-        model_dict = dict(
-            [(k, v) for k, v in models.__dict__.items()
-             if isinstance(v, sa.ext.declarative.DeclarativeMeta)
-             and k != 'Base'])
-    else:
-        model_dict = dict(
-            [(model.__name__, model)
-             for model in models
-             if isinstance(model, sa.ext.declarative.DeclarativeMeta)
-             and model.__name__ != 'Base'])
-
-    if model_dict:
-        admin_blueprint.form_dict = dict(
-            [(k, _form_for_model(v, db_session,
-                                 exclude_pk=exclude_pks))
-             for k, v in model_dict.items()])
-        for model, form in model_forms.items():
-            if model in admin_blueprint.form_dict:
-                admin_blueprint.form_dict[model] = form
+    datastore = SQLAlchemyAdminDatastore(models, db_session, model_forms, exclude_pks)
 
     # if no view decorator was assigned, let view_decorator be a dummy
     # decorator that doesn't really do anything
@@ -133,7 +112,7 @@ def create_admin_blueprint(
             """
             return render_template(
                 'admin/index.html',
-                admin_models=sorted(model_dict.keys()))
+                admin_models=sorted(datastore.model_dict.keys()))
         return index
 
     def create_list_view():
@@ -143,10 +122,10 @@ def create_admin_blueprint(
             Lists instances of a given model, so they can be selected for
             editing or deletion.
             """
-            if not model_name in model_dict.keys():
+            if not model_name in datastore.model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
-            model = model_dict[model_name]
+            model = datastore.model_dict[model_name]
             model_instances = db_session.query(model)
             per_page = list_view_pagination
             page = int(request.args.get('page', '1'))
@@ -156,7 +135,7 @@ def create_admin_blueprint(
                                     model_instances.count(), items)
             return render_template(
                 'admin/list.html',
-                admin_models=sorted(model_dict.keys()),
+                admin_models=sorted(datastore.model_dict.keys()),
                 _get_pk_value=_get_pk_value,
                 model_instances=pagination.items,
                 model_name=model_name,
@@ -169,12 +148,12 @@ def create_admin_blueprint(
             """
             Edit a particular instance of a model.
             """
-            if not model_name in model_dict.keys():
+            if not model_name in datastore.model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
 
-            model = model_dict[model_name]
-            model_form = admin_blueprint.form_dict[model_name]
+            model = datastore.model_dict[model_name]
+            model_form = datastore.form_dict[model_name]
 
             pk = _get_pk_name(model)
             pk_query_dict = {pk: model_key}
@@ -190,7 +169,7 @@ def create_admin_blueprint(
                 has_file_field = filter(lambda field: isinstance(field, wtf_fields.FileField), form)
                 return render_template(
                     'admin/edit.html',
-                    admin_models=sorted(model_dict.keys()),
+                    admin_models=sorted(datastore.model_dict.keys()),
                     model_instance=model_instance,
                     model_name=model_name, form=form, has_file_field=has_file_field)
 
@@ -213,7 +192,7 @@ def create_admin_blueprint(
                           'error')
                     return render_template(
                         'admin/edit.html',
-                        admin_models=sorted(model_dict.keys()),
+                        admin_models=sorted(datastore.model_dict.keys()),
                         model_instance=model_instance,
                         model_name=model_name, form=form, has_file_field=has_file_field)
         return edit
@@ -224,17 +203,17 @@ def create_admin_blueprint(
             """
             Create a new instance of a model.
             """
-            if not model_name in model_dict.keys():
+            if not model_name in datastore.model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
-            model = model_dict[model_name]
-            model_form = admin_blueprint.form_dict[model_name]
+            model = datastore.model_dict[model_name]
+            model_form = datastore.form_dict[model_name]
             model_instance = model()
             if request.method == 'GET':
                 form = model_form()
                 return render_template(
                     'admin/add.html',
-                    admin_models=sorted(model_dict.keys()),
+                    admin_models=sorted(datastore.model_dict.keys()),
                     model_name=model_name,
                     form=form)
             elif request.method == 'POST':
@@ -253,7 +232,7 @@ def create_admin_blueprint(
                           '%s has not been saved.' % model_name, 'error')
                     return render_template(
                         'admin/add.html',
-                        admin_models=sorted(model_dict.keys()),
+                        admin_models=sorted(datastore.model_dict.keys()),
                         model_name=model_name,
                         form=form)
         return add
@@ -264,10 +243,10 @@ def create_admin_blueprint(
             """
             Delete an instance of a model.
             """
-            if not model_name in model_dict.keys():
+            if not model_name in datastore.model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
-            model = model_dict[model_name]
+            model = datastore.model_dict[model_name]
             pk = _get_pk_name(model)
             pk_query_dict = {pk: model_key}
             try:

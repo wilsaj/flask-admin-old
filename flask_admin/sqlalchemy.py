@@ -21,10 +21,42 @@ from flask import flash, render_template, redirect, request, url_for
 from flaskext.sqlalchemy import Pagination
 import sqlalchemy as sa
 from sqlalchemy.orm.exc import NoResultFound
-from wtforms import widgets, validators
-from wtforms import fields as wtf_fields
+from wtforms import widgets
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
+
+from .wtforms import *
+
+
+class SQLAlchemyAdminDatastore(object):
+    def __init__(self, models, db_session, model_forms=None, exclude_pks=True):
+        self.model_dict = {}
+        self.model_forms = model_forms
+
+        if not self.model_forms:
+            self.model_forms = {}
+
+        #XXX: fix base handling so it will work with non-Declarative models
+        if type(models) == types.ModuleType:
+            self.model_dict = dict(
+                [(k, v) for k, v in models.__dict__.items()
+                 if isinstance(v, sa.ext.declarative.DeclarativeMeta)
+                 and k != 'Base'])
+        else:
+            self.model_dict = dict(
+                [(model.__name__, model)
+                 for model in models
+                 if isinstance(model, sa.ext.declarative.DeclarativeMeta)
+                 and model.__name__ != 'Base'])
+
+        if self.model_dict:
+            self.form_dict = dict(
+                [(k, _form_for_model(v, db_session,
+                                     exclude_pk=exclude_pks))
+                 for k, v in self.model_dict.items()])
+            for model, form in self.model_forms.items():
+                if model in self.form_dict:
+                    self.form_dict[model] = form
 
 
 def _populate_model_from_form(model_instance, form):

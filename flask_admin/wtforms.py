@@ -7,6 +7,10 @@
     :copyright: (c) 2011 by wilsaj.
     :license: BSD, see LICENSE for more details.
 """
+from __future__ import absolute_import
+
+from wtforms import fields as wtf_fields
+from wtforms import widgets, validators
 
 
 class TimeField(wtf_fields.Field):
