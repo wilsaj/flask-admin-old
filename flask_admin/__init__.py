@@ -112,7 +112,7 @@ def create_admin_blueprint(
             """
             return render_template(
                 'admin/index.html',
-                admin_models=sorted(datastore.model_dict.keys()))
+                admin_models=datastore.model_names())
         return index
 
     def create_list_view():
@@ -135,7 +135,7 @@ def create_admin_blueprint(
                                     model_instances.count(), items)
             return render_template(
                 'admin/list.html',
-                admin_models=sorted(datastore.model_dict.keys()),
+                admin_models=datastore.model_names(),
                 _get_pk_value=_get_pk_value,
                 model_instances=pagination.items,
                 model_name=model_name,
@@ -169,7 +169,7 @@ def create_admin_blueprint(
                 has_file_field = filter(lambda field: isinstance(field, wtf_fields.FileField), form)
                 return render_template(
                     'admin/edit.html',
-                    admin_models=sorted(datastore.model_dict.keys()),
+                    admin_models=datastore.model_names(),
                     model_instance=model_instance,
                     model_name=model_name, form=form, has_file_field=has_file_field)
 
@@ -192,7 +192,7 @@ def create_admin_blueprint(
                           'error')
                     return render_template(
                         'admin/edit.html',
-                        admin_models=sorted(datastore.model_dict.keys()),
+                        admin_models=datastore.model_names(),
                         model_instance=model_instance,
                         model_name=model_name, form=form, has_file_field=has_file_field)
         return edit
@@ -213,7 +213,7 @@ def create_admin_blueprint(
                 form = model_form()
                 return render_template(
                     'admin/add.html',
-                    admin_models=sorted(datastore.model_dict.keys()),
+                    admin_models=datastore.model_names(),
                     model_name=model_name,
                     form=form)
             elif request.method == 'POST':
@@ -232,7 +232,7 @@ def create_admin_blueprint(
                           '%s has not been saved.' % model_name, 'error')
                     return render_template(
                         'admin/add.html',
-                        admin_models=sorted(datastore.model_dict.keys()),
+                        admin_models=datastore.model_names(),
                         model_name=model_name,
                         form=form)
         return add

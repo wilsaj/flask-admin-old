@@ -58,6 +58,12 @@ class SQLAlchemyAdminDatastore(object):
                 if model in self.form_dict:
                     self.form_dict[model] = form
 
+    def model_names(self):
+        """
+        Returns a list of model names available in the datastore.
+        """
+        return sorted(self.model_dict.keys())
+
 
 def _populate_model_from_form(model_instance, form):
     """
