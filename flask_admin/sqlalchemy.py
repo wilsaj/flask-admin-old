@@ -76,6 +76,12 @@ class SQLAlchemyAdminDatastore(object):
         return Pagination(model_instances, page, per_page,
                           model_instances.count(), items)
 
+    def key_from_model(self, model):
+        """
+        Returns a key, given a model.
+        """
+        return _get_pk_name(model)
+
 
 def _populate_model_from_form(model_instance, form):
     """

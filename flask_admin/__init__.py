@@ -131,7 +131,7 @@ def create_admin_blueprint(
             return render_template(
                 'admin/list.html',
                 admin_models=datastore.model_names(),
-                _get_pk_value=_get_pk_value,
+                key_from_model=datastore.key_from_model,
                 model_name=model_name,
                 pagination=pagination)
         return list_view
@@ -149,7 +149,7 @@ def create_admin_blueprint(
             model = datastore.model_dict[model_name]
             model_form = datastore.form_dict[model_name]
 
-            pk = _get_pk_name(model)
+            pk = datastore.key_from_model(model)
             pk_query_dict = {pk: model_key}
 
             try:
@@ -241,7 +241,7 @@ def create_admin_blueprint(
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
             model = datastore.model_dict[model_name]
-            pk = _get_pk_name(model)
+            pk = datastore.key_from_model(model)
             pk_query_dict = {pk: model_key}
             try:
                 model_instance = db_session.query(model).filter_by(
