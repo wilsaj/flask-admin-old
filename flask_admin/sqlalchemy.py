@@ -59,6 +59,22 @@ class SQLAlchemyAdminDatastore(object):
                 if model in self.form_dict:
                     self.form_dict[model] = form
 
+    def get_model_instance(self, model_name, model_key):
+        """
+        Returns a model instance, if one exists, that matches
+        model_name and model_key. Returns None if no such model
+        instance exists.
+        """
+        model = self.model_from_name(model_name)
+        pk = self.key_name_from_model(model)
+        pk_query_dict = {pk: model_key}
+
+        try:
+            return self.db_session.query(model).filter_by(
+                **pk_query_dict).one()
+        except NoResultFound:
+            return None
+
     def model_names(self):
         """
         Returns a list of model names available in the datastore.

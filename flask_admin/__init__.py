@@ -146,16 +146,11 @@ def create_admin_blueprint(
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
 
-            model = datastore.model_from_name(model_name)
             model_form = datastore.form_from_name(model_name)
+            model_instance = datastore.get_model_instance(model_name,
+                                                          model_key)
 
-            pk = datastore.key_from_model(model)
-            pk_query_dict = {pk: model_key}
-
-            try:
-                model_instance = db_session.query(model).filter_by(
-                    **pk_query_dict).one()
-            except NoResultFound:
+            if not model_instance:
                 return "%s not found: %s" % (model_name, model_key)
 
             if request.method == 'GET':
