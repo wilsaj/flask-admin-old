@@ -82,6 +82,12 @@ class SQLAlchemyAdminDatastore(object):
         """
         return _get_pk_name(model)
 
+    def model_from_name(self, model_name):
+        """
+        Returns a model, given a model name.
+        """
+        return self.model_dict[model_name]
+
 
 def _populate_model_from_form(model_instance, form):
     """
