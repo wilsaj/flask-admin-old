@@ -122,7 +122,7 @@ def create_admin_blueprint(
             Lists instances of a given model, so they can be selected for
             editing or deletion.
             """
-            if not model_name in datastore.model_dict.keys():
+            if not model_name in datastore.model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
             model = datastore.model_dict[model_name]
