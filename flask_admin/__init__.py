@@ -147,7 +147,7 @@ def create_admin_blueprint(
                     model_name,)
 
             model = datastore.model_from_name(model_name)
-            model_form = datastore.form_dict[model_name]
+            model_form = datastore.form_from_name(model_name)
 
             pk = datastore.key_from_model(model)
             pk_query_dict = {pk: model_key}
@@ -201,7 +201,7 @@ def create_admin_blueprint(
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
             model = datastore.model_from_name(model_name)
-            model_form = datastore.form_dict[model_name]
+            model_form = datastore.form_from_name(model_name)
             model_instance = model()
             if request.method == 'GET':
                 form = model_form()
