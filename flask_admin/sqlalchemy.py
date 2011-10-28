@@ -32,6 +32,7 @@ class SQLAlchemyAdminDatastore(object):
     def __init__(self, models, db_session, model_forms=None, exclude_pks=True):
         self.model_dict = {}
         self.model_forms = model_forms
+        self.db_session = db_session
 
         if not self.model_forms:
             self.model_forms = {}
@@ -63,6 +64,17 @@ class SQLAlchemyAdminDatastore(object):
         Returns a list of model names available in the datastore.
         """
         return sorted(self.model_dict.keys())
+
+    def pagination_models(self, model_name, page, per_page=25):
+        """
+        Returns a pagination object for the list view.
+        """
+        model = self.model_dict[model_name]
+        model_instances = self.db_session.query(model)
+        offset = (page - 1) * per_page
+        items = model_instances.limit(per_page).offset(offset).all()
+        return Pagination(model_instances, page, per_page,
+                          model_instances.count(), items)
 
 
 def _populate_model_from_form(model_instance, form):

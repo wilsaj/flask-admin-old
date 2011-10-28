@@ -20,7 +20,6 @@ import types
 
 import flask
 from flask import flash, render_template, redirect, request, url_for
-from flaskext.sqlalchemy import Pagination
 import sqlalchemy as sa
 from sqlalchemy.orm.exc import NoResultFound
 from wtforms import widgets, validators
@@ -125,19 +124,14 @@ def create_admin_blueprint(
             if not model_name in datastore.model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
-            model = datastore.model_dict[model_name]
-            model_instances = db_session.query(model)
             per_page = list_view_pagination
             page = int(request.args.get('page', '1'))
-            offset = (page - 1) * per_page
-            items = model_instances.limit(per_page).offset(offset).all()
-            pagination = Pagination(model_instances, page, per_page,
-                                    model_instances.count(), items)
+            pagination = datastore.pagination_models(model_name, page,
+                                                     per_page)
             return render_template(
                 'admin/list.html',
                 admin_models=datastore.model_names(),
                 _get_pk_value=_get_pk_value,
-                model_instances=pagination.items,
                 model_name=model_name,
                 pagination=pagination)
         return list_view

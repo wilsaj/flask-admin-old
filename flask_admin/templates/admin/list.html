@@ -13,7 +13,7 @@
       <h2>{{ model_name }}</h2>
       {{ render_pagination(pagination, '.list_view', model_name=model_name) }}
     </li>
-    {% for model_instance in model_instances  %}
+    {% for model_instance in pagination.items  %}
       {% set model_pk = _get_pk_value(model_instance) %}
       <li>
         <a href="{{ url_for('.edit', model_name=model_name, model_key=model_pk) }}">{{ model_instance }}</a>
