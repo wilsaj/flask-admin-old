@@ -94,9 +94,9 @@ class SQLAlchemyAdminDatastore(object):
 
     def key_from_model(self, model):
         """
-        Returns a key, given a model.
+        Returns a key value, given a model.
         """
-        return _get_pk_name(model)
+        return _get_pk_value(model)
 
     def model_from_name(self, model_name):
         """
