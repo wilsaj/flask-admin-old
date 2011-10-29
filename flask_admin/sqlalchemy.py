@@ -66,7 +66,7 @@ class SQLAlchemyAdminDatastore(object):
         instance exists.
         """
         model = self.model_from_name(model_name)
-        pk = self.key_name_from_model(model)
+        pk = _get_pk_name(model)
         pk_query_dict = {pk: model_key}
 
         try:
