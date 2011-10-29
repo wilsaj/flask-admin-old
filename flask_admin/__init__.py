@@ -235,16 +235,11 @@ def create_admin_blueprint(
             if not model_name in datastore.model_dict.keys():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
-            model = datastore.model_from_name(model_name)
-            pk = datastore.key_from_model(model)
-            pk_query_dict = {pk: model_key}
-            try:
-                model_instance = db_session.query(model).filter_by(
-                    **pk_query_dict).one()
-            except NoResultFound:
+            model_instance = datastore.delete_model_instance(model_name,
+                                                             model_key)
+            if not model_instance:
                 return "%s not found: %s" % (model_name, model_key)
-            db_session.delete(model_instance)
-            db_session.commit()
+
             flash('%s deleted: %s' % (model_name, model_instance),
                   'success')
             return redirect(url_for(

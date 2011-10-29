@@ -59,6 +59,18 @@ class SQLAlchemyAdminDatastore(object):
                 if model in self.form_dict:
                     self.form_dict[model] = form
 
+    def delete_model_instance(self, model_name, model_key):
+        """
+        Deletes a model instance. Returns True if model instance was
+        successfully deleted, returns False otherwise.
+        """
+        model_instance = self.get_model_instance(model_name, model_key)
+        if not model_instance:
+            return False
+        self.db_session.delete(model_instance)
+        self.db_session.commit()
+        return True
+
     def get_model_instance(self, model_name, model_key):
         """
         Returns a model instance, if one exists, that matches
