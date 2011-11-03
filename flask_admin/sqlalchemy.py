@@ -88,7 +88,7 @@ class SQLAlchemyDatastore(object):
         model_name and model_key. Returns None if no such model
         instance exists.
         """
-        model_class = self.model_from_name(model_name)
+        model_class = self.get_model_class(model_name)
         pk = _get_pk_name(model_class)
         pk_query_dict = {pk: model_key}
 
@@ -97,6 +97,12 @@ class SQLAlchemyDatastore(object):
                 **pk_query_dict).one()
         except NoResultFound:
             return None
+
+    def get_model_class(self, model_name):
+        """
+        Returns a model class, given a model name.
+        """
+        return self.model_classes[model_name]
 
     def get_model_key(self, model_instance):
         """
@@ -109,12 +115,6 @@ class SQLAlchemyDatastore(object):
         Returns a list of model names available in the datastore.
         """
         return self.model_classes.keys()
-
-    def model_from_name(self, model_name):
-        """
-        Returns a model, given a model name.
-        """
-        return self.model_classes[model_name]
 
     def form_from_name(self, model_name):
         """

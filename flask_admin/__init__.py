@@ -194,7 +194,7 @@ def create_admin_blueprint(
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
-            model_class = datastore.model_from_name(model_name)
+            model_class = datastore.get_model_class(model_name)
             model_form = datastore.form_from_name(model_name)
             model_instance = model_class()
             if request.method == 'GET':
