@@ -116,7 +116,7 @@ class SQLAlchemyDatastore(object):
         """
         return self.model_classes.keys()
 
-    def form_from_name(self, model_name):
+    def get_model_form(self, model_name):
         """
         Returns a form, given a model name.
         """
