@@ -77,12 +77,12 @@ class SQLAlchemyAdminDatastore(object):
         model_name and model_key. Returns None if no such model
         instance exists.
         """
-        model = self.model_from_name(model_name)
-        pk = _get_pk_name(model)
+        model_class = self.model_from_name(model_name)
+        pk = _get_pk_name(model_class)
         pk_query_dict = {pk: model_key}
 
         try:
-            return self.db_session.query(model).filter_by(
+            return self.db_session.query(model_class).filter_by(
                 **pk_query_dict).one()
         except NoResultFound:
             return None
@@ -104,11 +104,11 @@ class SQLAlchemyAdminDatastore(object):
         return Pagination(model_instances, page, per_page,
                           model_instances.count(), items)
 
-    def key_from_model(self, model):
+    def key_from_model(self, model_instance):
         """
         Returns a key value, given a model.
         """
-        return _get_pk_value(model)
+        return _get_pk_value(model_instance)
 
     def model_from_name(self, model_name):
         """
@@ -135,8 +135,8 @@ class SQLAlchemyAdminDatastore(object):
 
 def _get_pk_value(model_instance):
     """
-    Return the primary key value for a given model_instance
-    instance. Assumes single primary key.
+    Return the primary key value for a given model instance. Assumes
+    single primary key.
     """
     return getattr(model_instance, _get_pk_name(model_instance))
 
