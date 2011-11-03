@@ -59,6 +59,17 @@ class SQLAlchemyDatastore(object):
                 if model_name in self.form_dict:
                     self.form_dict[model_name] = form
 
+    def create_model_pagination(self, model_name, page, per_page=25):
+        """
+        Returns a pagination object for the list view.
+        """
+        model_class = self.model_classes[model_name]
+        model_instances = self.db_session.query(model_class)
+        offset = (page - 1) * per_page
+        items = model_instances.limit(per_page).offset(offset).all()
+        return Pagination(model_instances, page, per_page,
+                          model_instances.count(), items)
+
     def delete_model_instance(self, model_name, model_key):
         """
         Deletes a model instance. Returns True if model instance was
@@ -98,17 +109,6 @@ class SQLAlchemyDatastore(object):
         Returns a list of model names available in the datastore.
         """
         return self.model_classes.keys()
-
-    def model_pagination(self, model_name, page, per_page=25):
-        """
-        Returns a pagination object for the list view.
-        """
-        model_class = self.model_classes[model_name]
-        model_instances = self.db_session.query(model_class)
-        offset = (page - 1) * per_page
-        items = model_instances.limit(per_page).offset(offset).all()
-        return Pagination(model_instances, page, per_page,
-                          model_instances.count(), items)
 
     def model_from_name(self, model_name):
         """
