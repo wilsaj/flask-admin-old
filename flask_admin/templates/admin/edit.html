@@ -6,7 +6,7 @@ Editing {{model_name}}
 
 {% block main %}
 
-<form class="edit_form" method="POST" action=""{% if has_file_field: %} enctype="multipart/form-data"{% endif %}>
+<form class="edit_form" method="POST" action=""{% if form._has_file_field %} enctype="multipart/form-data"{% endif %}>
   <fieldset>
     <legend>
       Editing {{model_name}}

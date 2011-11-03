@@ -27,6 +27,7 @@ from wtforms import fields as wtf_fields
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
+from flask.ext.admin.wtforms import has_file_field
 from flask.ext.admin.sqlalchemy import (SQLAlchemyAdminDatastore,
                                         _get_pk_value, _get_pk_name,
                                         _populate_model_from_form)
@@ -155,16 +156,16 @@ def create_admin_blueprint(
 
             if request.method == 'GET':
                 form = model_form(obj=model_instance)
-                has_file_field = filter(lambda field: isinstance(field, wtf_fields.FileField), form)
+                form._has_file_field = has_file_field(form)
                 return render_template(
                     'admin/edit.html',
                     admin_models=datastore.model_names(),
                     model_instance=model_instance,
-                    model_name=model_name, form=form, has_file_field=has_file_field)
+                    model_name=model_name, form=form)
 
             elif request.method == 'POST':
                 form = model_form(request.form, obj=model_instance)
-                has_file_field = filter(lambda field: isinstance(field, wtf_fields.FileField), form)
+                form._has_file_field = has_file_field(form)
                 if form.validate():
                     model_instance = _populate_model_from_form(
                         model_instance, form)
@@ -183,7 +184,7 @@ def create_admin_blueprint(
                         'admin/edit.html',
                         admin_models=datastore.model_names(),
                         model_instance=model_instance,
-                        model_name=model_name, form=form, has_file_field=has_file_field)
+                        model_name=model_name, form=form)
         return edit
 
     def create_add_view():
@@ -200,6 +201,7 @@ def create_admin_blueprint(
             model_instance = model()
             if request.method == 'GET':
                 form = model_form()
+                form._has_file_field = has_file_field(form)
                 return render_template(
                     'admin/add.html',
                     admin_models=datastore.model_names(),
@@ -207,6 +209,7 @@ def create_admin_blueprint(
                     form=form)
             elif request.method == 'POST':
                 form = model_form(request.form)
+                form._has_file_field = has_file_field(form)
                 if form.validate():
                     model_instance = _populate_model_from_form(
                         model_instance, form)

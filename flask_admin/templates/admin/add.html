@@ -7,7 +7,7 @@
 
 {% block main %}
 
-<form class="edit_form" method="POST">
+<form class="edit_form" method="POST" {% if form._has_file_field %} enctype="multipart/form-data"{% endif %}>
   <fieldset>
     <legend>
       Adding a new {{model_name}}

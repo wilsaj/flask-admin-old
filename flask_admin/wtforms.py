@@ -76,3 +76,14 @@ class TimePickerWidget(widgets.TextInput):
         kwargs['class'] = u'timepicker %s' % c
         return super(TimePickerWidget, self).__call__(field, **kwargs)
 
+
+def has_file_field(form):
+    """
+    Test whether or not a form has a FileField in it. This is used to
+    know whether or not we need to set enctype to multipart/form-data.
+    """
+    for field in form:
+        if isinstance(field, wtf_fields.FileField):
+            return True
+
+    return False
