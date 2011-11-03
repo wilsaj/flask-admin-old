@@ -30,7 +30,7 @@ from flask.ext.admin.wtforms import *
 
 class SQLAlchemyAdminDatastore(object):
     def __init__(self, models, db_session, model_forms=None, exclude_pks=True):
-        self.model_dict = {}
+        self.model_classes = {}
         self.model_forms = model_forms
         self.db_session = db_session
 
@@ -39,25 +39,25 @@ class SQLAlchemyAdminDatastore(object):
 
         #XXX: fix base handling so it will work with non-Declarative models
         if type(models) == types.ModuleType:
-            self.model_dict = dict(
+            self.model_classes = dict(
                 [(k, v) for k, v in models.__dict__.items()
                  if isinstance(v, sa.ext.declarative.DeclarativeMeta)
                  and k != 'Base'])
         else:
-            self.model_dict = dict(
+            self.model_classes = dict(
                 [(model.__name__, model)
                  for model in models
                  if isinstance(model, sa.ext.declarative.DeclarativeMeta)
                  and model.__name__ != 'Base'])
 
-        if self.model_dict:
+        if self.model_classes:
             self.form_dict = dict(
                 [(k, _form_for_model(v, db_session,
                                      exclude_pk=exclude_pks))
-                 for k, v in self.model_dict.items()])
             for model, form in self.model_forms.items():
                 if model in self.form_dict:
                     self.form_dict[model] = form
+                 for k, v in self.model_classes.items()])
 
     def delete_model_instance(self, model_name, model_key):
         """
@@ -91,14 +91,14 @@ class SQLAlchemyAdminDatastore(object):
         """
         Returns a list of model names available in the datastore.
         """
-        return sorted(self.model_dict.keys())
+        return sorted(self.model_classes.keys())
 
     def model_pagination(self, model_name, page, per_page=25):
         """
         Returns a pagination object for the list view.
         """
-        model = self.model_dict[model_name]
-        model_instances = self.db_session.query(model)
+        model_class = self.model_classes[model_name]
+        model_instances = self.db_session.query(model_class)
         offset = (page - 1) * per_page
         items = model_instances.limit(per_page).offset(offset).all()
         return Pagination(model_instances, page, per_page,
@@ -114,7 +114,7 @@ class SQLAlchemyAdminDatastore(object):
         """
         Returns a model, given a model name.
         """
-        return self.model_dict[model_name]
+        return self.model_classes[model_name]
 
     def form_from_name(self, model_name):
         """
