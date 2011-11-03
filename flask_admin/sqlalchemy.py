@@ -28,7 +28,7 @@ from wtforms.ext.sqlalchemy import fields as sa_fields
 from flask.ext.admin.wtforms import *
 
 
-class SQLAlchemyAdminDatastore(object):
+class SQLAlchemyDatastore(object):
     def __init__(self, models, db_session, model_forms=None, exclude_pks=True):
         self.model_classes = {}
         self.model_forms = model_forms

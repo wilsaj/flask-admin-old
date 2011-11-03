@@ -28,7 +28,7 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 from flask.ext.admin.wtforms import has_file_field
-from flask.ext.admin.sqlalchemy import SQLAlchemyAdminDatastore
+from flask.ext.admin.sqlalchemy import SQLAlchemyDatastore
 
 
 def create_admin_blueprint(
@@ -91,7 +91,7 @@ def create_admin_blueprint(
         template_folder=os.path.join(_get_admin_extension_dir(), 'templates'),
         **kwargs)
 
-    datastore = SQLAlchemyAdminDatastore(models, db_session, model_forms, exclude_pks)
+    datastore = SQLAlchemyDatastore(models, db_session, model_forms, exclude_pks)
 
     # if no view decorator was assigned, let view_decorator be a dummy
     # decorator that doesn't really do anything
