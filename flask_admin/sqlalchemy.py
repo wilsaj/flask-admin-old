@@ -64,14 +64,14 @@ class SQLAlchemyAdminDatastore(object):
         Deletes a model instance. Returns True if model instance was
         successfully deleted, returns False otherwise.
         """
-        model_instance = self.get_model_instance(model_name, model_key)
+        model_instance = self.find_model_instance(model_name, model_key)
         if not model_instance:
             return False
         self.db_session.delete(model_instance)
         self.db_session.commit()
         return True
 
-    def get_model_instance(self, model_name, model_key):
+    def find_model_instance(self, model_name, model_key):
         """
         Returns a model instance, if one exists, that matches
         model_name and model_key. Returns None if no such model

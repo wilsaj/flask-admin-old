@@ -146,8 +146,8 @@ def create_admin_blueprint(
                     model_name,)
 
             model_form = datastore.form_from_name(model_name)
-            model_instance = datastore.get_model_instance(model_name,
-                                                          model_key)
+            model_instance = datastore.find_model_instance(model_name,
+                                                           model_key)
 
             if not model_instance:
                 return "%s not found: %s" % (model_name, model_key)
