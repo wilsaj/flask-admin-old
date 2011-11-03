@@ -163,7 +163,7 @@ def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
     QuerySelectField for foreign keys.
     """
     if not exclude:
-        exclude=[]
+        exclude = []
 
     model_mapper = sa.orm.class_mapper(model_class)
     relationship_fields = []
