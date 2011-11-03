@@ -110,7 +110,7 @@ def create_admin_blueprint(
             """
             return render_template(
                 'admin/index.html',
-                admin_models=datastore.model_names())
+                model_names=datastore.model_names())
         return index
 
     def create_list_view():
@@ -129,7 +129,7 @@ def create_admin_blueprint(
                                                     per_page)
             return render_template(
                 'admin/list.html',
-                admin_models=datastore.model_names(),
+                model_names=datastore.model_names(),
                 key_from_model=datastore.key_from_model,
                 model_name=model_name,
                 pagination=pagination)
@@ -157,7 +157,7 @@ def create_admin_blueprint(
                 form._has_file_field = has_file_field(form)
                 return render_template(
                     'admin/edit.html',
-                    admin_models=datastore.model_names(),
+                    model_names=datastore.model_names(),
                     model_instance=model_instance,
                     model_name=model_name, form=form)
 
@@ -180,7 +180,7 @@ def create_admin_blueprint(
                           'error')
                     return render_template(
                         'admin/edit.html',
-                        admin_models=datastore.model_names(),
+                        model_names=datastore.model_names(),
                         model_instance=model_instance,
                         model_name=model_name, form=form)
         return edit
@@ -202,7 +202,7 @@ def create_admin_blueprint(
                 form._has_file_field = has_file_field(form)
                 return render_template(
                     'admin/add.html',
-                    admin_models=datastore.model_names(),
+                    model_names=datastore.model_names(),
                     model_name=model_name,
                     form=form)
             elif request.method == 'POST':
@@ -222,7 +222,7 @@ def create_admin_blueprint(
                           '%s has not been saved.' % model_name, 'error')
                     return render_template(
                         'admin/add.html',
-                        admin_models=datastore.model_names(),
+                        model_names=datastore.model_names(),
                         model_name=model_name,
                         form=form)
         return add
