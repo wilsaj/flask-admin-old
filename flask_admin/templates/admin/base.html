@@ -44,7 +44,7 @@
   <div id="left_nav">
     <h4>Models</h4>
     <ul>
-      {% for model in model_names %}
+      {% for model in model_names|sort %}
         <li>
           <a href="{{ url_for('.list_view', model_name=model,page=1)}}">{{model}}</a>
         </li>

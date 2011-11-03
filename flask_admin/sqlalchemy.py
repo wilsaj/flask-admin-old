@@ -91,7 +91,7 @@ class SQLAlchemyAdminDatastore(object):
         """
         Returns a list of model names available in the datastore.
         """
-        return sorted(self.model_classes.keys())
+        return self.model_classes.keys()
 
     def model_pagination(self, model_name, page, per_page=25):
         """
