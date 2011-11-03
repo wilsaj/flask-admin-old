@@ -122,16 +122,15 @@ class SQLAlchemyAdminDatastore(object):
         """
         return self.form_dict[model_name]
 
+    def update_from_form(self, model_instance, form):
+        """
+        Returns a model instance whose values have been updated with
+        the values from a given form.
+        """
+        for name, field in form._fields.iteritems():
+            field.populate_obj(model_instance, name)
 
-def _populate_model_from_form(model_instance, form):
-    """
-    Returns a model instance that has been populated with the data
-    from a form.
-    """
-    for name, field in form._fields.iteritems():
-        field.populate_obj(model_instance, name)
-
-    return model_instance
+        return model_instance
 
 
 def _get_pk_value(model_instance):
@@ -198,7 +197,6 @@ def _query_factory_for(model_class, db_session):
         return sorted(db_session.query(model_class).all(), key=repr)
 
     return query_factory
-
 
 
 class AdminConverter(ModelConverter):

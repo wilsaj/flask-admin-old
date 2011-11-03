@@ -29,8 +29,7 @@ from wtforms.ext.sqlalchemy import fields as sa_fields
 
 from flask.ext.admin.wtforms import has_file_field
 from flask.ext.admin.sqlalchemy import (SQLAlchemyAdminDatastore,
-                                        _get_pk_value, _get_pk_name,
-                                        _populate_model_from_form)
+                                        _get_pk_value, _get_pk_name)
 
 
 def create_admin_blueprint(
@@ -167,7 +166,7 @@ def create_admin_blueprint(
                 form = model_form(request.form, obj=model_instance)
                 form._has_file_field = has_file_field(form)
                 if form.validate():
-                    model_instance = _populate_model_from_form(
+                    model_instance = datastore.update_from_form(
                         model_instance, form)
                     db_session.add(model_instance)
                     db_session.commit()
@@ -211,7 +210,7 @@ def create_admin_blueprint(
                 form = model_form(request.form)
                 form._has_file_field = has_file_field(form)
                 if form.validate():
-                    model_instance = _populate_model_from_form(
+                    model_instance = datastore.update_from_form(
                         model_instance, form)
                     db_session.add(model_instance)
                     db_session.commit()
