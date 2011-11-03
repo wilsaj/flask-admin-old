@@ -93,7 +93,7 @@ class SQLAlchemyDatastore(object):
         """
         return _get_pk_value(model_instance)
 
-    def model_names(self):
+    def list_model_names(self):
         """
         Returns a list of model names available in the datastore.
         """

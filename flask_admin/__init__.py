@@ -110,7 +110,7 @@ def create_admin_blueprint(
             """
             return render_template(
                 'admin/index.html',
-                model_names=datastore.model_names())
+                model_names=datastore.list_model_names())
         return index
 
     def create_list_view():
@@ -120,7 +120,7 @@ def create_admin_blueprint(
             Lists instances of a given model, so they can be selected for
             editing or deletion.
             """
-            if not model_name in datastore.model_names():
+            if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
             per_page = list_view_pagination
@@ -129,7 +129,7 @@ def create_admin_blueprint(
                                                     per_page)
             return render_template(
                 'admin/list.html',
-                model_names=datastore.model_names(),
+                model_names=datastore.list_model_names(),
                 get_model_key=datastore.get_model_key,
                 model_name=model_name,
                 pagination=pagination)
@@ -141,7 +141,7 @@ def create_admin_blueprint(
             """
             Edit a particular instance of a model.
             """
-            if not model_name in datastore.model_names():
+            if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
 
@@ -157,7 +157,7 @@ def create_admin_blueprint(
                 form._has_file_field = has_file_field(form)
                 return render_template(
                     'admin/edit.html',
-                    model_names=datastore.model_names(),
+                    model_names=datastore.list_model_names(),
                     model_instance=model_instance,
                     model_name=model_name, form=form)
 
@@ -180,7 +180,7 @@ def create_admin_blueprint(
                           'error')
                     return render_template(
                         'admin/edit.html',
-                        model_names=datastore.model_names(),
+                        model_names=datastore.list_model_names(),
                         model_instance=model_instance,
                         model_name=model_name, form=form)
         return edit
@@ -191,7 +191,7 @@ def create_admin_blueprint(
             """
             Create a new instance of a model.
             """
-            if not model_name in datastore.model_names():
+            if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
             model_class = datastore.model_from_name(model_name)
@@ -202,7 +202,7 @@ def create_admin_blueprint(
                 form._has_file_field = has_file_field(form)
                 return render_template(
                     'admin/add.html',
-                    model_names=datastore.model_names(),
+                    model_names=datastore.list_model_names(),
                     model_name=model_name,
                     form=form)
             elif request.method == 'POST':
@@ -222,7 +222,7 @@ def create_admin_blueprint(
                           '%s has not been saved.' % model_name, 'error')
                     return render_template(
                         'admin/add.html',
-                        model_names=datastore.model_names(),
+                        model_names=datastore.list_model_names(),
                         model_name=model_name,
                         form=form)
         return add
@@ -233,7 +233,7 @@ def create_admin_blueprint(
             """
             Delete an instance of a model.
             """
-            if not model_name in datastore.model_names():
+            if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
             model_instance = datastore.delete_model_instance(model_name,
