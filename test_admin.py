@@ -15,6 +15,7 @@ from example.declarative import custom_form
 from example.authentication import view_decorator
 from example.flask_sqlalchemy import flaskext_sa_simple
 from example.flask_sqlalchemy import flaskext_sa_example
+import test.filefield
 
 
 class SimpleTest(TestCase):
@@ -258,6 +259,25 @@ class LargePaginationTest(TestCase):
         assert '<a href="/admin/list/Student/?page=2">></a>' not in rv.data
 
 
+class FileFieldTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = test.filefield.create_app('sqlite://')
+        test_model = test.filefield.TestModel()
+        app.db_session.add(test_model)
+        app.db_session.commit()
+        return app
+
+    def test_file_field_enctype_rendered_on_add(self):
+        rv = self.client.get('/admin/add/TestModel/')
+        assert 'enctype="multipart/form-data"' in rv.data
+
+    def test_file_field_enctype_rendered_on_edit(self):
+        rv = self.client.get('/admin/edit/TestModel/1/')
+        assert 'enctype="multipart/form-data"' in rv.data
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(SimpleTest))
@@ -270,6 +290,7 @@ def suite():
     suite.addTest(unittest.makeSuite(ExcludePKsFalseTest))
     suite.addTest(unittest.makeSuite(SmallPaginationTest))
     suite.addTest(unittest.makeSuite(LargePaginationTest))
+    suite.addTest(unittest.makeSuite(FileFieldTest))
     return suite
 
 
