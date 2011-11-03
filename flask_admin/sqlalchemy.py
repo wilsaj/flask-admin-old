@@ -104,6 +104,12 @@ class SQLAlchemyDatastore(object):
         """
         return self.model_classes[model_name]
 
+    def get_model_form(self, model_name):
+        """
+        Returns a form, given a model name.
+        """
+        return self.form_dict[model_name]
+
     def get_model_key(self, model_instance):
         """
         Returns the primary key for a given a model instance.
@@ -116,12 +122,6 @@ class SQLAlchemyDatastore(object):
         """
         return self.model_classes.keys()
 
-    def get_model_form(self, model_name):
-        """
-        Returns a form, given a model name.
-        """
-        return self.form_dict[model_name]
-
     def update_from_form(self, model_instance, form):
         """
         Returns a model instance whose values have been updated with
@@ -131,29 +131,6 @@ class SQLAlchemyDatastore(object):
             field.populate_obj(model_instance, name)
 
         return model_instance
-
-
-def _get_pk_value(model_instance):
-    """
-    Return the primary key value for a given model instance. Assumes
-    single primary key.
-    """
-    return getattr(model_instance, _get_pk_name(model_instance))
-
-
-def _get_pk_name(model):
-    """
-    Return the primary key attribute name for a given model (either
-    instance or class). Assumes single primary key.
-    """
-    model_mapper = model.__mapper__
-
-    for prop in model_mapper.iterate_properties:
-        if isinstance(prop, sa.orm.properties.ColumnProperty) and \
-               prop.columns[0].primary_key:
-            return prop.key
-
-    return None
 
 
 def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
@@ -185,6 +162,29 @@ def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
                       converter=AdminConverter(db_session))
 
     return form
+
+
+def _get_pk_name(model):
+    """
+    Return the primary key attribute name for a given model (either
+    instance or class). Assumes single primary key.
+    """
+    model_mapper = model.__mapper__
+
+    for prop in model_mapper.iterate_properties:
+        if isinstance(prop, sa.orm.properties.ColumnProperty) and \
+               prop.columns[0].primary_key:
+            return prop.key
+
+    return None
+
+
+def _get_pk_value(model_instance):
+    """
+    Return the primary key value for a given model instance. Assumes
+    single primary key.
+    """
+    return getattr(model_instance, _get_pk_name(model_instance))
 
 
 def _query_factory_for(model_class, db_session):
