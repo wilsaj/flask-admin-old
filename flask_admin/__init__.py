@@ -141,7 +141,7 @@ def create_admin_blueprint(
             """
             Edit a particular instance of a model.
             """
-            if not model_name in datastore.model_dict.keys():
+            if not model_name in datastore.model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
 
@@ -191,10 +191,10 @@ def create_admin_blueprint(
             """
             Create a new instance of a model.
             """
-            if not model_name in datastore.model_dict.keys():
+            if not model_name in datastore.model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
-            model = datastore.model_from_name(model_name)
+            model_class = datastore.model_from_name(model_name)
             model_form = datastore.form_from_name(model_name)
             model_instance = model()
             if request.method == 'GET':
@@ -233,7 +233,7 @@ def create_admin_blueprint(
             """
             Delete an instance of a model.
             """
-            if not model_name in datastore.model_dict.keys():
+            if not model_name in datastore.model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
             model_instance = datastore.delete_model_instance(model_name,
