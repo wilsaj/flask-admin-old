@@ -31,9 +31,7 @@ from flask.ext.admin.wtforms import has_file_field
 from flask.ext.admin.sqlalchemy import SQLAlchemyDatastore
 
 
-def create_admin_blueprint(
-    models, db_session, name='admin', model_forms=None, exclude_pks=True,
-    list_view_pagination=25, view_decorator=None, **kwargs):
+def create_admin_blueprint(*args, **kwargs):
     """
     Returns a blueprint that provides the admin interface views. The
     blueprint that is returned will still need to be registered to
@@ -84,14 +82,33 @@ def create_admin_blueprint(
         authentication/view_decorator.py for an example of how this
         might be used.
     """
+    if isinstance(args[0], SQLAlchemyDatastore):
+        return create_admin_blueprint_new(*args, **kwargs)
+
+    else:
+        return create_admin_blueprint_deprecated(*args, **kwargs)
+
+
+def create_admin_blueprint_deprecated(
+     models, db_session, name='admin', model_forms=None, exclude_pks=True,
+     list_view_pagination=25, view_decorator=None, **kwargs):
+
+    datastore = SQLAlchemyDatastore(models, db_session, model_forms,
+                                    exclude_pks)
+
+    return create_admin_blueprint_new(datastore, name, list_view_pagination,
+                                      view_decorator)
+
+
+def create_admin_blueprint_new(
+     datastore, name='admin', list_view_pagination=25, view_decorator=None,
+     **kwargs):
 
     admin_blueprint = flask.Blueprint(
         name, 'flask.ext.admin',
         static_folder=os.path.join(_get_admin_extension_dir(), 'static'),
         template_folder=os.path.join(_get_admin_extension_dir(), 'templates'),
         **kwargs)
-
-    datastore = SQLAlchemyDatastore(models, db_session, model_forms, exclude_pks)
 
     # if no view decorator was assigned, let view_decorator be a dummy
     # decorator that doesn't really do anything

@@ -70,9 +70,10 @@ def create_app(database_uri='sqlite://', pagination=25):
     app.db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False,
         bind=engine))
+    datastore = admin.sqlalchemy.SQLAlchemyDatastore(
+        (Course, Student, Teacher), app.db_session)
     admin_blueprint = admin.create_admin_blueprint(
-        (Course, Student, Teacher), app.db_session,
-        list_view_pagination=pagination)
+        datastore, list_view_pagination=pagination)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     Base.metadata.create_all(bind=engine)
 
