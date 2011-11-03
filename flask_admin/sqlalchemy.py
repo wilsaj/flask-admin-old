@@ -54,10 +54,10 @@ class SQLAlchemyAdminDatastore(object):
             self.form_dict = dict(
                 [(k, _form_for_model(v, db_session,
                                      exclude_pk=exclude_pks))
-            for model, form in self.model_forms.items():
-                if model in self.form_dict:
-                    self.form_dict[model] = form
                  for k, v in self.model_classes.items()])
+            for model_name, form in self.model_forms.items():
+                if model_name in self.form_dict:
+                    self.form_dict[model_name] = form
 
     def delete_model_instance(self, model_name, model_key):
         """
