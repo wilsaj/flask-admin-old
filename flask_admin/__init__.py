@@ -167,8 +167,7 @@ def create_admin_blueprint(
                 if form.validate():
                     model_instance = datastore.update_from_form(
                         model_instance, form)
-                    db_session.add(model_instance)
-                    db_session.commit()
+                    datastore.save_model(model_instance)
                     flash('%s updated: %s' % (model_name, model_instance),
                           'success')
                     return redirect(
@@ -211,8 +210,7 @@ def create_admin_blueprint(
                 if form.validate():
                     model_instance = datastore.update_from_form(
                         model_instance, form)
-                    db_session.add(model_instance)
-                    db_session.commit()
+                    datastore.save_model(model_instance)
                     flash('%s added: %s' % (model_name, model_instance),
                           'success')
                     return redirect(url_for('.list_view',

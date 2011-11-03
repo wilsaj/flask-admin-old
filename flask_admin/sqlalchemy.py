@@ -122,6 +122,14 @@ class SQLAlchemyDatastore(object):
         """
         return self.model_classes.keys()
 
+    def save_model(self, model_instance):
+        """
+        Persists a model instance to the datastore. Note: this could
+        be called when a model instance is added or edited.
+        """
+        self.db_session.add(model_instance)
+        self.db_session.commit()
+
     def update_from_form(self, model_instance, form):
         """
         Returns a model instance whose values have been updated with
