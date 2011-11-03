@@ -93,7 +93,7 @@ class SQLAlchemyAdminDatastore(object):
         """
         return sorted(self.model_dict.keys())
 
-    def pagination_models(self, model_name, page, per_page=25):
+    def model_pagination(self, model_name, page, per_page=25):
         """
         Returns a pagination object for the list view.
         """

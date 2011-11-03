@@ -125,8 +125,8 @@ def create_admin_blueprint(
                     model_name,)
             per_page = list_view_pagination
             page = int(request.args.get('page', '1'))
-            pagination = datastore.pagination_models(model_name, page,
-                                                     per_page)
+            pagination = datastore.model_pagination(model_name, page,
+                                                    per_page)
             return render_template(
                 'admin/list.html',
                 admin_models=datastore.model_names(),
