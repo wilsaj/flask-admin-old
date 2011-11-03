@@ -196,7 +196,7 @@ def create_admin_blueprint(
                     model_name)
             model_class = datastore.model_from_name(model_name)
             model_form = datastore.form_from_name(model_name)
-            model_instance = model()
+            model_instance = model_class()
             if request.method == 'GET':
                 form = model_form()
                 form._has_file_field = has_file_field(form)
