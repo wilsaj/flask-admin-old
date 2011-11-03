@@ -14,7 +14,7 @@
       {{ render_pagination(pagination, '.list_view', model_name=model_name) }}
     </li>
     {% for model_instance in pagination.items  %}
-      {% set model_pk = key_from_model(model_instance) %}
+      {% set model_pk = get_model_key(model_instance) %}
       <li>
         <a href="{{ url_for('.edit', model_name=model_name, model_key=model_pk) }}">{{ model_instance }}</a>
         <a href="{{ url_for('.delete', model_name=model_name, model_key=model_pk) }}" title="delete">

@@ -130,7 +130,7 @@ def create_admin_blueprint(
             return render_template(
                 'admin/list.html',
                 model_names=datastore.model_names(),
-                key_from_model=datastore.key_from_model,
+                get_model_key=datastore.get_model_key,
                 model_name=model_name,
                 pagination=pagination)
         return list_view

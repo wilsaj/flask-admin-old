@@ -87,6 +87,12 @@ class SQLAlchemyDatastore(object):
         except NoResultFound:
             return None
 
+    def get_model_key(self, model_instance):
+        """
+        Returns the primary key for a given a model instance.
+        """
+        return _get_pk_value(model_instance)
+
     def model_names(self):
         """
         Returns a list of model names available in the datastore.
@@ -103,12 +109,6 @@ class SQLAlchemyDatastore(object):
         items = model_instances.limit(per_page).offset(offset).all()
         return Pagination(model_instances, page, per_page,
                           model_instances.count(), items)
-
-    def key_from_model(self, model_instance):
-        """
-        Returns a key value, given a model.
-        """
-        return _get_pk_value(model_instance)
 
     def model_from_name(self, model_name):
         """
