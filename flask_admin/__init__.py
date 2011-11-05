@@ -32,8 +32,7 @@ from flask.ext.admin.sqlalchemy import SQLAlchemyDatastore
 
 
 def create_admin_blueprint(*args, **kwargs):
-    """
-    Returns a blueprint that provides the admin interface views. The
+    """Returns a blueprint that provides the admin interfaceviews. The
     blueprint that is returned will still need to be registered to
     your flask app. Additional parameters will be passed to the
     blueprint constructor.
@@ -122,8 +121,7 @@ def create_admin_blueprint_new(
     def create_index_view():
         @view_decorator
         def index():
-            """
-            Landing page view for admin module
+            """Landing page view for admin module
             """
             return render_template(
                 'admin/index.html',
@@ -133,9 +131,8 @@ def create_admin_blueprint_new(
     def create_list_view():
         @view_decorator
         def list_view(model_name):
-            """
-            Lists instances of a given model, so they can be selected for
-            editing or deletion.
+            """Lists instances of a given model, so they can
+            beselected for editing or deletion.
             """
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
@@ -155,9 +152,7 @@ def create_admin_blueprint_new(
     def create_edit_view():
         @view_decorator
         def edit(model_name, model_key):
-            """
-            Edit a particular instance of a model.
-            """
+            """Edit a particular instance of a model."""
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
@@ -204,9 +199,7 @@ def create_admin_blueprint_new(
     def create_add_view():
         @view_decorator
         def add(model_name):
-            """
-            Create a new instance of a model.
-            """
+            """Create a new instance of a model."""
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name)
@@ -245,9 +238,7 @@ def create_admin_blueprint_new(
     def create_delete_view():
         @view_decorator
         def delete(model_name, model_key):
-            """
-            Delete an instance of a model.
-            """
+            """Delete an instance of a model."""
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
@@ -284,8 +275,7 @@ def create_admin_blueprint_new(
 
 
 def _get_admin_extension_dir():
-    """
-    Returns the directory path of this admin extension. This is
+    """Returns the directory path of this admin extension. This is
     necessary for setting the static_folder and templates_folder
     arguments when creating the blueprint.
     """

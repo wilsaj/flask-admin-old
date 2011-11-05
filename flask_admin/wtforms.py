@@ -14,9 +14,7 @@ from wtforms import widgets, validators
 
 
 class TimeField(wtf_fields.Field):
-    """
-    A text field which stores a `time.time` matching a format.
-    """
+    """A text field which stores a `time.time` matching a format."""
     widget = widgets.TextInput()
 
     def __init__(self, label=None, validators=None,
@@ -54,9 +52,7 @@ class DatePickerWidget(widgets.TextInput):
 
 
 class DateTimePickerWidget(widgets.TextInput):
-    """
-    TextInput widget that adds a 'datetimepicker' class to the html
-    input element; this makes it easy to write a jQuery selector that
+    """TextInput widget that adds a 'datetimepicker' class to the html
     adds a UI widget for datetime picking.
     """
     def __call__(self, field, **kwargs):
@@ -66,10 +62,9 @@ class DateTimePickerWidget(widgets.TextInput):
 
 
 class TimePickerWidget(widgets.TextInput):
-    """
-    TextInput widget that adds a 'timepicker' class to the html input
-    element; this makes it easy to write a jQuery selector that adds a
-    UI widget for time picking.
+    """TextInput widget that adds a 'timepicker' class to the html
+    input element; this makes it easy to write a jQuery selector that
+    adds a UI widget for time picking.
     """
     def __call__(self, field, **kwargs):
         c = kwargs.pop('class', '') or kwargs.pop('class_', '')
@@ -78,9 +73,9 @@ class TimePickerWidget(widgets.TextInput):
 
 
 def has_file_field(form):
-    """
-    Test whether or not a form has a FileField in it. This is used to
-    know whether or not we need to set enctype to multipart/form-data.
+    """Test whether or not a form has a FileField in it. This is used
+    to know whether or not we need to set enctype to
+    multipart/form-data.
     """
     for field in form:
         if isinstance(field, wtf_fields.FileField):
