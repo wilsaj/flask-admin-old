@@ -28,7 +28,7 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 from flask.ext.admin.wtforms import has_file_field
-from flask.ext.admin.sqlalchemy import SQLAlchemyDatastore
+from flask.ext.admin.datastore import SQLAlchemyDatastore
 
 
 def create_admin_blueprint(*args, **kwargs):
