@@ -65,6 +65,14 @@ def create_admin_blueprint(*args, **kwargs):
         might be used.
     """
     if not isinstance(args[0], AdminDatastore):
+        from warnings import warn
+        warn(DeprecationWarning(
+            'The interface for creating admin blueprints has changed '
+            'as of Flask-Admin 0.3. In order to support alternative '
+            'datasores, you now need to configure an admin datastore '
+            'object before calling create_admin_blueprint(). See the '
+            'Flask-Admin documentation for more information.'),
+             stacklevel=2)
         return create_admin_blueprint_deprecated(*args, **kwargs)
 
     else:
