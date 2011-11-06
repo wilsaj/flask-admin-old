@@ -29,6 +29,29 @@ from flask.ext.admin.wtforms import *
 
 
 class SQLAlchemyDatastore(object):
+    """
+    The parameters are:
+
+    `models`
+        Either a module or an iterable that contains the SQLAlchemy
+        models that will be made available through the admin
+        interface.
+
+    `db_session`
+        A SQLAlchemy session that has been set up and bound to an
+        engine. See the documentation on using Flask with SQLAlchemy
+        for more information on how to set that up.
+
+    `model_forms`
+        A dict with model names as keys, mapped to WTForm Form objects
+        that should be used as forms for creating and editing
+        instances of these models.
+
+    `exclude_pks`
+        A Boolean value that specifies whether or not to automatically
+        exclude fields representing the primary key from Flask-Admin
+        rendered forms. The default is True.
+    """
     def __init__(self, models, db_session, model_forms=None, exclude_pks=True):
         self.model_classes = {}
         self.model_forms = model_forms

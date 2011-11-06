@@ -32,22 +32,15 @@ from flask.ext.admin.datastore import SQLAlchemyDatastore
 
 
 def create_admin_blueprint(*args, **kwargs):
-    """Returns a blueprint that provides the admin interfaceviews. The
-    blueprint that is returned will still need to be registered to
-    your flask app. Additional parameters will be passed to the
-    blueprint constructor.
+    """Returns a blueprint that provides the admin interface
+    views. The blueprint that is returned will still need to be
+    registered to your flask app. Additional parameters will be passed
+    to the blueprint constructor.
 
     The parameters are:
 
-    `models`
-        Either a module or an iterable that contains the SQLAlchemy
-        models that will be made available through the admin
-        interface.
-
-    `db_session`
-        A SQLAlchemy session that has been set up and bound to an
-        engine. See the documentation on using Flask with SQLAlchemy
-        for more information on how to set that up.
+    `datastore`
+        An instantiated admin datastore object.
 
     `name`
         Specify the name for your blueprint. The name of the blueprint
@@ -57,16 +50,6 @@ def create_admin_blueprint(*args, **kwargs):
         same app, it is necessary to set this value to something
         different for each admin module so the admin blueprints will
         have distinct endpoints.
-
-    `model_forms`
-        A dict with model names as keys, mapped to WTForm Form objects
-        that should be used as forms for creating and editing
-        instances of these models.
-
-    `exclude_pks`
-        A Boolean value that specifies whether or not to automatically
-        exclude fields representing the primary key from Flask-Admin
-        rendered forms. The default is True.
 
     `list_view_pagination`
         The number of model instances that will be shown in the list
