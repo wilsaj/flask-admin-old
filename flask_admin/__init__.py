@@ -28,7 +28,7 @@ from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 from flask.ext.admin.wtforms import has_file_field
-from flask.ext.admin.datastore import SQLAlchemyDatastore
+from flask.ext.admin.datastore import AdminDatastore, SQLAlchemyDatastore
 
 
 def create_admin_blueprint(*args, **kwargs):
@@ -64,11 +64,11 @@ def create_admin_blueprint(*args, **kwargs):
         authentication/view_decorator.py for an example of how this
         might be used.
     """
-    if isinstance(args[0], SQLAlchemyDatastore):
-        return create_admin_blueprint_new(*args, **kwargs)
+    if not isinstance(args[0], AdminDatastore):
+        return create_admin_blueprint_deprecated(*args, **kwargs)
 
     else:
-        return create_admin_blueprint_deprecated(*args, **kwargs)
+        return create_admin_blueprint_new(*args, **kwargs)
 
 
 def create_admin_blueprint_deprecated(
