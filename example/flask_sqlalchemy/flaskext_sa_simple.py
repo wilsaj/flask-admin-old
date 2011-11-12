@@ -60,9 +60,9 @@ def create_app(database_uri='sqlite://'):
     app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
     app.config['SECRET_KEY'] = 'not secure'
     db.init_app(app)
-
-    admin_blueprint = admin.create_admin_blueprint(
+    datastore = admin.datastore.SQLAlchemyDatastore(
         (Course, Student, Teacher), db.session)
+    admin_blueprint = admin.create_admin_blueprint(datastore)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     db.create_all(app=app)
 

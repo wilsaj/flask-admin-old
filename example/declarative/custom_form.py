@@ -72,8 +72,10 @@ def create_app(database_uri='sqlite://'):
     db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False,
         bind=engine))
-    admin_blueprint = admin.create_admin_blueprint(
+    datastore = admin.datastore.SQLAlchemyDatastore(
         (User,), db_session, model_forms={'User': UserForm})
+    admin_blueprint = admin.create_admin_blueprint(
+        datastore)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     Base.metadata.create_all(bind=engine)
 

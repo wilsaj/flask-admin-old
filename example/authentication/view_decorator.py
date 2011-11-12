@@ -80,10 +80,10 @@ def create_app(database_uri='sqlite://'):
     app.engine = create_engine(database_uri, convert_unicode=True)
     db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False, bind=app.engine))
-
+    datastore = admin.datastore.SQLAlchemyDatastore(
+        (Course, Student, Teacher), db_session)
     admin_blueprint = admin.create_admin_blueprint(
-        (Course, Student, Teacher), db_session,
-        view_decorator=login_required)
+        datastore, view_decorator=login_required)
 
     @admin_blueprint.route('/login/', methods=('GET', 'POST'))
     def login():

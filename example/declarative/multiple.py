@@ -68,12 +68,16 @@ def create_app(database_uri='sqlite://'):
     app.config['SECRET_KEY'] = 'not secure'
 
     app.engine = create_engine(database_uri, convert_unicode=True)
-    app.db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False,
-                                                 bind=app.engine))
+    app.db_session = scoped_session(sessionmaker(
+        autocommit=False, autoflush=False, bind=app.engine))
+    datastore1 = admin.datastore.SQLAlchemyDatastore(
+        (Student, Teacher), app.db_session)
     admin_blueprint1 = admin.create_admin_blueprint(
-        (Student, Teacher), app.db_session, name='admin1')
+        datastore1, name='admin1')
+    datastore2 = admin.datastore.SQLAlchemyDatastore(
+        (Course,), app.db_session)
     admin_blueprint2 = admin.create_admin_blueprint(
-        (Course,), app.db_session, name='admin2')
+        datastore2, name='admin2')
     app.register_blueprint(admin_blueprint1, url_prefix='/admin1')
     app.register_blueprint(admin_blueprint2, url_prefix='/admin2')
     Base.metadata.create_all(bind=app.engine)

@@ -59,8 +59,9 @@ def create_app(database_uri='sqlite://'):
     app.config['SECRET_KEY'] = 'seeeeecret'
 
     db.init_app(app)
-    admin_blueprint = admin.create_admin_blueprint(
+    datastore = admin.datastore.SQLAlchemyDatastore(
         (User, Post, Category), db.session)
+    admin_blueprint = admin.create_admin_blueprint(datastore)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
     db.create_all(app=app)
 
