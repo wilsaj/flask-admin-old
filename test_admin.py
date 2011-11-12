@@ -15,6 +15,7 @@ from example.declarative import custom_form
 from example.authentication import view_decorator
 from example.flask_sqlalchemy import flaskext_sa_simple
 from example.flask_sqlalchemy import flaskext_sa_example
+import test.deprecation
 import test.filefield
 
 
@@ -278,6 +279,21 @@ class FileFieldTest(TestCase):
         assert 'enctype="multipart/form-data"' in rv.data
 
 
+class DeprecationTest(TestCase):
+    """test that the old deprecated method of calling
+    create_admin_blueprint still works
+    """
+    TESTING = True
+
+    def create_app(self):
+        app = test.deprecation.create_app('sqlite://')
+        return app
+
+    def test_index(self):
+        rv = self.client.get('/admin/')
+        self.assert_200(rv)
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(SimpleTest))
@@ -291,6 +307,7 @@ def suite():
     suite.addTest(unittest.makeSuite(SmallPaginationTest))
     suite.addTest(unittest.makeSuite(LargePaginationTest))
     suite.addTest(unittest.makeSuite(FileFieldTest))
+    suite.addTest(unittest.makeSuite(DeprecationTest))
     return suite
 
 
