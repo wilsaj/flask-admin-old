@@ -60,7 +60,7 @@ First create some SQLAlchemy declarative models using `SQLAlchemy`_ or
    won't be very useful for distinguishing model instances.
 
 
-Then create a blueprint using those models and your sqlalchemy
+Then create a datastore object using those models and your sqlalchemy
 session::
 
     from flask.ext import admin
@@ -70,22 +70,27 @@ session::
         autocommit=False, autoflush=False,
         bind=engine))
 
-    admin_blueprint = admin.create_admin_blueprint(
-         (Student, Teacher), db_session)
+    admin_datastore = admin.datastore.SQLAlchemyDatastore(
+        (Student, Teacher), db_session)
 
-The first argument to :func:`create_admin_blueprint()` can have two forms:
-it can either be some python iterable like a list or tuple, or it can
-be a python module that contains your models. The second argument is
-the sqlalchemy session that will be used to access the database. By
-default, Flask-Admin will not expose the primary keys of your
-models. This is usually a good idea if you are using a primary key
-that doesn't have any meaning outside of the database, like an
+
+The first argument to :func:`SQLAlchemyDatastore()` can have two
+forms: it can either be some python iterable like a list or tuple, or
+it can be a python module that contains your models. The second
+argument is the SQLAlchemy session that will be used to access the
+database. By default, Flask-Admin will not expose the primary keys of
+your models. This is usually a good idea if you are using a primary
+key that doesn't have any meaning outside of the database, like an
 auto-incrementing integer, because changing a primary key changes the
 nature of foreign key relationships. If you want to expose the primary
-key, set ``exclude_pks=False`` in the :func:`create_admin_blueprint()` call.
+key, set ``exclude_pks=False`` when instantiating your
+:func:`SQLAlchemyDatastore()`.
 
-Then register this blueprint on your Flask app::
 
+Then create a blueprint using this datastore object and register this
+blueprint on your Flask app::
+
+    admin_blueprint = admin.create_admin_blueprint(admin_datastore)
     app = Flask(__name__)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
@@ -244,11 +249,12 @@ confirmation field form, you could create the following form::
 
 
 And just use the model_forms argument when calling
-:func:`create_admin_blueprint` to associate this form with the User
+:func:`SQLAlchemyDatastore` to associate this form with the User
 model::
 
-    admin_blueprint = admin.create_admin_blueprint(
+    admin_blueprint = admin.datastore.SQLAlchemyDatastore(
         (User,), db_session, model_forms={'User': UserForm})
+
 
 Now the :class:`UserForm` will be used for editing and adding a new
 user. If the form passes the validation checks, then password will
