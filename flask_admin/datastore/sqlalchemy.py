@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    flask.ext.sqlalchemy
+    flask.ext.datastore.sqlalchemy
     ~~~~~~~~~~~~~~
 
+    Defines a SQLAlchemy datastore.
 
     :copyright: (c) 2011 by wilsaj.
     :license: BSD, see LICENSE for more details.
