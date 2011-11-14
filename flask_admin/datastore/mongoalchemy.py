@@ -93,4 +93,5 @@ class MongoAlchemyDatastore(AdminDatastore):
 def _form_for_model(document_class, db_session):
     """returns a wtform Form object for a given document model class.
     """
-    return form.BaseForm({'subject': fields.TextField(u'Subject')})
+    #XXX: needs to be implemented
+    return None
