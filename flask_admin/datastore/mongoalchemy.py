@@ -63,11 +63,11 @@ class MongoAlchemyDatastore(AdminDatastore):
 
     def get_model_class(self, model_name):
         """Returns a model class, given a model name."""
-        raise NotImplementedError()
+        return self.model_classes.get(model_name, None)
 
     def get_model_form(self, model_name):
         """Returns a form, given a model name."""
-        raise NotImplementedError()
+        return self.model_forms.get(model_name, None)
 
     def get_model_key(self, model_instance):
         """Returns the primary key for a given a model instance."""
