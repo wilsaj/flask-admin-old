@@ -91,7 +91,9 @@ class MongoAlchemyDatastore(AdminDatastore):
         """Returns a model instance whose values have been updated
         with the values from a given form.
         """
-        raise NotImplementedError()
+        for field in form:
+            setattr(model_instance, field.name, field.data)
+        return model_instance
 
 
 class MongoAlchemyPagination(util.Pagination):
