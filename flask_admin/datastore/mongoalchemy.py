@@ -85,7 +85,7 @@ class MongoAlchemyDatastore(AdminDatastore):
         """Persists a model instance to the datastore. Note: this
         could be called when a model instance is added or edited.
         """
-        raise NotImplementedError()
+        return model_instance.commit(self.db_session.db)
 
     def update_from_form(self, model_instance, form):
         """Returns a model instance whose values have been updated
