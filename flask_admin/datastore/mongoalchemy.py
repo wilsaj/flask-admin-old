@@ -63,7 +63,9 @@ class MongoAlchemyDatastore(AdminDatastore):
         model_name and model_key. Returns None if no such model
         instance exists.
         """
-        raise NotImplementedError()
+        model_class = self.get_model_class(model_name)
+        return self.db_session.query(model_class).filter(
+            model_class.mongo_id==model_key).one()
 
     def get_model_class(self, model_name):
         """Returns a model class, given a model name."""
