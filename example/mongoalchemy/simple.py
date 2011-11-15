@@ -39,10 +39,10 @@ class CourseForm(Form):
     subject = wtfields.TextField(u'Subject')
 
 
-def create_app(database_uri='sqlite://', pagination=25):
+def create_app(mongo_database='simple-example', pagination=25):
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'not secure'
-    app.db_session = session.Session.connect('simple-example')
+    app.db_session = session.Session.connect(mongo_database)
     datastore = admin.datastore.MongoAlchemyDatastore(
         (Course,), app.db_session, model_forms={'Course': CourseForm})
     admin_blueprint = admin.create_admin_blueprint(
@@ -57,5 +57,5 @@ def create_app(database_uri='sqlite://', pagination=25):
 
 
 if __name__ == '__main__':
-    app = create_app('sqlite:///simple.db')
+    app = create_app()
     app.run(debug=True)
