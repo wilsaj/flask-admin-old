@@ -15,6 +15,7 @@ from mongoalchemy.document import Document
 from wtforms import fields, form
 
 from flask.ext.admin.datastore import AdminDatastore
+from flask.ext.admin import util
 
 
 class MongoAlchemyDatastore(AdminDatastore):
@@ -46,7 +47,10 @@ class MongoAlchemyDatastore(AdminDatastore):
 
     def create_model_pagination(self, model_name, page, per_page=25):
         """Returns a pagination object for the list view."""
-        raise NotImplementedError()
+        model_class = self.get_model_class(model_name)
+        query = self.db_session.query(model_class).skip(
+            (page - 1) * per_page).limit(per_page)
+        return MongoAlchemyPagination(page, per_page, query)
 
     def delete_model_instance(self, model_name, model_key):
         """Deletes a model instance. Returns True if model instance
@@ -88,6 +92,13 @@ class MongoAlchemyDatastore(AdminDatastore):
         with the values from a given form.
         """
         raise NotImplementedError()
+
+
+class MongoAlchemyPagination(util.Pagination):
+    def __init__(self, page, per_page, query, *args, **kwargs):
+        super(MongoAlchemyPagination, self).__init__(
+            page, per_page, total_count=query.count(), items=query.all(),
+            *args, **kwargs)
 
 
 def _form_for_model(document_class, db_session):
