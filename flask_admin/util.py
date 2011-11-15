@@ -3,10 +3,11 @@ import math
 
 # original source:  http://flask.pocoo.org/snippets/44/
 class Pagination(object):
-    def __init__(self, page, per_page, total_count):
+    def __init__(self, page, per_page, total_count, items):
         self.page = page
         self.per_page = per_page
         self.total_count = total_count
+        self.items = items
 
     @property
     def pages(self):
