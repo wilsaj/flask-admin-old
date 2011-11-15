@@ -11,6 +11,7 @@ from __future__ import absolute_import
 
 import types
 
+from bson.errors import InvalidId
 from mongoalchemy.document import Document
 from wtforms import fields, form
 
@@ -56,7 +57,13 @@ class MongoAlchemyDatastore(AdminDatastore):
         """Deletes a model instance. Returns True if model instance
         was successfully deleted, returns False otherwise.
         """
-        raise NotImplementedError()
+        model_class = self.get_model_class(model_name)
+        try:
+            last_error = self.db_session.remove_query(model_class).filter(
+                model_class.mongo_id==model_key).set_safe(True).execute()
+            return True
+        except InvalidId:
+            return False
 
     def find_model_instance(self, model_name, model_key):
         """Returns a model instance, if one exists, that matches
