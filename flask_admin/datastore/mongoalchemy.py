@@ -75,7 +75,7 @@ class MongoAlchemyDatastore(AdminDatastore):
 
     def get_model_key(self, model_instance):
         """Returns the primary key for a given a model instance."""
-        raise NotImplementedError()
+        return model_instance.mongo_id
 
     def list_model_names(self):
         """Returns a list of model names available in the datastore."""
