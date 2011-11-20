@@ -60,7 +60,7 @@ class MongoAlchemyDatastore(AdminDatastore):
         model_class = self.get_model_class(model_name)
         try:
             last_error = self.db_session.remove_query(model_class).filter(
-                model_class.mongo_id==model_key).set_safe(True).execute()
+                model_class.mongo_id == model_key).set_safe(True).execute()
             return True
         except InvalidId:
             return False
@@ -72,7 +72,7 @@ class MongoAlchemyDatastore(AdminDatastore):
         """
         model_class = self.get_model_class(model_name)
         return self.db_session.query(model_class).filter(
-            model_class.mongo_id==model_key).one()
+            model_class.mongo_id == model_key).one()
 
     def get_model_class(self, model_name):
         """Returns a model class, given a model name."""
