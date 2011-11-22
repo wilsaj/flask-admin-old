@@ -179,7 +179,8 @@ class ModelConverterBase(object):
 
         converter = None
         for ma_field_type in types:
-            type_string = '%s.%s' % (ma_field_type.__module__, ma_field_type.__name__)
+            type_string = '%s.%s' % (
+                ma_field_type.__module__, ma_field_type.__name__)
             if type_string.startswith('mongoalchemy.fields'):
                 type_string = type_string[20:]
 
