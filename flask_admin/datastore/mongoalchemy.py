@@ -232,8 +232,10 @@ class ModelConverter(ModelConverterBase):
     @converts('StringField')
     def conv_String(self, ma_field, field_args, **extra):
         if ma_field.min or ma_field.max:
+            min = ma_field.min or -1
+            max = ma_field.max or -1
             field_args['validators'].append(
-                validators.Length(min=ma_field.min, max=ma_field.max))
+                validators.Length(min=min, max=max))
         return f.TextField(**field_args)
 
 
