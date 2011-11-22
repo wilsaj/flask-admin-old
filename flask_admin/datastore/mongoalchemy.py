@@ -200,6 +200,29 @@ class ModelConverter(ModelConverterBase):
     def __init__(self, extra_converters=None):
         super(ModelConverter, self).__init__(extra_converters)
 
+    @converts('BoolField')
+    def conv_Bool(self, ma_field, field_args, **extra):
+        return f.BooleanField(**field_args)
+
+    @converts('DateTimeField')
+    def conv_DateTime(self, ma_field, field_args, **extra):
+        # TODO: add custom validator for date range
+        return f.DateTimeField(**field_args)
+
+    @converts('FloatField')
+    def conv_Float(self, ma_field, field_args, **extra):
+        if ma_field.min or ma_field.max:
+            field_args['validators'].append(
+                validators.NumberRange(min=ma_field.min, max=ma_field.max))
+        return f.FloatField(**field_args)
+
+    @converts('IntField')
+    def conv_Int(self, ma_field, field_args, **extra):
+        if ma_field.min or ma_field.max:
+            field_args['validators'].append(
+                validators.NumberRange(min=ma_field.min, max=ma_field.max))
+        return f.IntegerField(**field_args)
+
     @converts('ObjectIdField')
     def conv_ObjectId(self, field_args, **extra):
         widget = DisabledTextInput()
@@ -211,37 +234,6 @@ class ModelConverter(ModelConverterBase):
             field_args['validators'].append(
                 validators.Length(min=ma_field.min, max=ma_field.max))
         return f.TextField(**field_args)
-
-    # @converts('Text', 'UnicodeText', 'types.LargeBinary', 'types.Binary')
-    # def conv_Text(self, field_args, **extra):
-    #     self._string_common(field_args=field_args, **extra)
-    #     return f.TextAreaField(**field_args)
-
-    # @converts('Boolean')
-    # def conv_Boolean(self, field_args, **extra):
-    #     return f.BooleanField(**field_args)
-
-    # @converts('Date')
-    # def conv_Date(self, field_args, **extra):
-    #     return f.DateField(**field_args)
-
-    # @converts('DateTime')
-    # def conv_DateTime(self, field_args, **extra):
-    #     return f.DateTimeField(**field_args)
-
-    # @converts('Integer', 'SmallInteger')
-    # def handle_integer_types(self, column, field_args, **extra):
-    #     unsigned = getattr(column.type, 'unsigned', False)
-    #     if unsigned:
-    #         field_args['validators'].append(validators.NumberRange(min=0))
-    #     return f.IntegerField(**field_args)
-
-    # @converts('Numeric', 'Float')
-    # def handle_decimal_types(self, column, field_args, **extra):
-    #     places = getattr(column.type, 'scale', 2)
-    #     if places is not None:
-    #         field_args['places'] = places
-    #     return f.DecimalField(**field_args)
 
 
 def model_fields(model, only=None, exclude=None, field_args=None,
