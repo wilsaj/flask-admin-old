@@ -86,7 +86,12 @@ class ConversionTest(TestCase):
         assert_convert(ma_fields.DateTimeField, wtf_fields.DateTimeField)
 
     def test_enum_field_conversion(self):
-        assert False
+        class TestModel(Document):
+            int_field = ma_fields.EnumField(ma_fields.IntField(), 4, 6, 7)
+
+        form = model_form(TestModel)
+        assert form.int_field.field_class == wtf_fields.IntegerField
+        assert form.int_field.kwargs['validators'][0].values == (4, 6, 7)
 
     def test_float_field_conversion(self):
         assert_convert(ma_fields.FloatField, wtf_fields.FloatField)

@@ -210,6 +210,13 @@ class ModelConverter(ModelConverterBase):
         # TODO: add custom validator for date range
         return f.DateTimeField(**field_args)
 
+    @converts('EnumField')
+    def conv_Enum(self, model, ma_field, field_args, **extra):
+        converted_field = self.convert(model, ma_field.item_type, {})
+        converted_field.kwargs['validators'].append(
+            validators.AnyOf(ma_field.values, values_formatter=str))
+        return converted_field
+
     @converts('FloatField')
     def conv_Float(self, ma_field, field_args, **extra):
         if ma_field.min or ma_field.max:
