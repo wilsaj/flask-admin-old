@@ -13,23 +13,25 @@ from wtforms import Form
 # ----------------------------------------------------------------------
 class Course(Document):
     subject = fields.StringField()
+    start_date = fields.DateTimeField()
+    end_date = fields.DateTimeField()
 
     def __repr__(self):
         return self.subject
 
 
-# class Student(Base):
-#     name = fields.StringField()
+class Student(Document):
+    name = fields.StringField()
 
-#     def __repr__(self):
-#         return self.name
+    def __repr__(self):
+        return self.name
 
 
-# class Teacher(Base):
-#     name = fields.StringField()
+class Teacher(Document):
+    name = fields.StringField()
 
-#     def __repr__(self):
-#         return self.name
+    def __repr__(self):
+        return self.name
 
 
 # ----------------------------------------------------------------------
@@ -44,7 +46,7 @@ def create_app(mongo_database='simple-example', pagination=25):
     app.config['SECRET_KEY'] = 'not secure'
     app.db_session = session.Session.connect(mongo_database)
     datastore = admin.datastore.MongoAlchemyDatastore(
-        (Course,), app.db_session, model_forms={'Course': CourseForm})
+        (Course, Student, Teacher), app.db_session)
     admin_blueprint = admin.create_admin_blueprint(
         datastore, list_view_pagination=pagination)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
