@@ -104,10 +104,17 @@ class MongoAlchemyDatastore(AdminDatastore):
         with the values from a given form.
         """
         for field in form:
+            # handle FormFields that were generated for mongoalchemy
+            # TupleFields as a special case
+            if field.__class__ == f.FormField:
+                data_tuple = tuple([subfield.data for subfield in field])
+                setattr(model_instance, field.name, data_tuple)
+                continue
+
             # don't use the mongo id from the form - it comes from the
             # key/url and if someone tampers with the form somehow, we
             # should ignore that
-            if field.name != 'mongo_id':
+            elif field.name != 'mongo_id':
                 setattr(model_instance, field.name, field.data)
         return model_instance
 
@@ -244,6 +251,31 @@ class ModelConverter(ModelConverterBase):
             field_args['validators'].append(
                 validators.Length(min=min, max=max))
         return f.TextField(**field_args)
+
+    @converts('TupleField')
+    def conv_Tuple(self, model, ma_field, field_args, **extra):
+        def convert_field(field):
+            return self.convert(model, field, {})
+        fields = map(convert_field, ma_field.types)
+        fields_dict = dict([('%s_%s' % (ma_field._name, i), field)
+                            for i, field in enumerate(fields)])
+
+        class ConvertedTupleForm(Form):
+            def process(self, formdata=None, obj=None, **kwargs):
+                # if the field is being populated from a mongoalchemy
+                # TupleField, obj will be a tuple object so we can set
+                # the fields by reversing the field name to get the
+                # index and then passing that along to wtforms in the
+                # kwargs dict
+                if type(obj) == tuple:
+                    for name, field in self._fields.items():
+                        tuple_index = int(name.split('_')[-1])
+                        kwargs[name] = obj[tuple_index]
+                super(ConvertedTupleForm, self).process(
+                    formdata, obj, **kwargs)
+
+        fields_form = type(ma_field._name + 'Form', (ConvertedTupleForm,), fields_dict)
+        return f.FormField(fields_form)
 
 
 def model_fields(model, only=None, exclude=None, field_args=None,

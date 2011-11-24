@@ -109,8 +109,16 @@ class ConversionTest(TestCase):
         assert_min_max_length(ma_fields.StringField)
 
     def test_tuple_field_conversion(self):
-        # TODO
-        assert False
+        class TestModel(Document):
+            tuple_field = ma_fields.TupleField(
+                ma_fields.IntField(), ma_fields.BoolField(),
+                ma_fields.StringField())
+
+        unbound_form = model_form(TestModel)
+        form = unbound_form()
+        assert form.tuple_field.tuple_field_0.__class__ == wtf_fields.IntegerField
+        assert form.tuple_field.tuple_field_1.__class__ == wtf_fields.BooleanField
+        assert form.tuple_field.tuple_field_2.__class__ == wtf_fields.TextField
 
 
 if __name__ == '__main__':
