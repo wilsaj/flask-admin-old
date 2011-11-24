@@ -19,6 +19,7 @@ from wtforms import form, validators, widgets
 from wtforms.form import Form
 
 from flask.ext.admin.datastore import AdminDatastore
+from flask.ext.admin import wtforms as admin_wtf
 from flask.ext.admin import util
 
 
@@ -215,6 +216,7 @@ class ModelConverter(ModelConverterBase):
     @converts('DateTimeField')
     def conv_DateTime(self, ma_field, field_args, **extra):
         # TODO: add custom validator for date range
+        field_args['widget'] = admin_wtf.DateTimePickerWidget()
         return f.DateTimeField(**field_args)
 
     @converts('EnumField')
