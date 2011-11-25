@@ -32,12 +32,12 @@ setup(
     install_requires=[
         'Flask>=0.7',
         'Flask-WTF',
-        'Flask-SQLAlchemy',
     ],
     test_suite='test_admin.suite',
     tests_require=[
         'Flask-SQLAlchemy>=0.12',
         'Flask-Testing',
+        'MongoAlchemy>=0.10',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
