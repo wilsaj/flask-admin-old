@@ -120,9 +120,11 @@ class SQLAlchemyDatastore(AdminDatastore):
         instance exists.
         """
         model_class = self.get_model_class(model_name)
-        pk = _get_pk_name(model_class)
-        pk_query_dict = {pk: model_key}
+        pk_query_dict = {}
 
+        for key, value in zip(_get_pk_name(model_class), model_key.split('|')):
+            pk_query_dict[key] = value
+            
         try:
             return self.db_session.query(model_class).filter_by(
                 **pk_query_dict).one()
@@ -173,10 +175,10 @@ def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
     model_mapper = sa.orm.class_mapper(model_class)
     relationship_fields = []
 
-    pk_name = _get_pk_name(model_class)
+    pk_names = _get_pk_name(model_class)
 
     if exclude_pk:
-        exclude.append(pk_name)
+        exclude.extend(pk_names)
 
     # exclude any foreign_keys that we have relationships for;
     # relationships will be mapped to select fields by the
@@ -185,7 +187,7 @@ def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
                     for relationship in model_mapper.iterate_properties
                     if isinstance(relationship,
                                   sa.orm.properties.RelationshipProperty)
-                    and relationship.local_side[0].name != pk_name])
+                    and relationship.local_side[0].name not in pk_names])
     form = model_form(model_class, exclude=exclude,
                       converter=AdminConverter(db_session))
 
@@ -198,19 +200,25 @@ def _get_pk_name(model):
     """
     model_mapper = model.__mapper__
 
+    keys = []
+
     for prop in model_mapper.iterate_properties:
         if isinstance(prop, sa.orm.properties.ColumnProperty) and \
                prop.columns[0].primary_key:
-            return prop.key
+            keys.append(prop.key)
 
-    return None
+    return keys
 
 
 def _get_pk_value(model_instance):
     """Return the primary key value for a given model
     instance. Assumes single primary key.
     """
-    return getattr(model_instance, _get_pk_name(model_instance))
+    values = []
+    for value in _get_pk_name(model_instance):
+        values.append(getattr(model_instance, value))
+
+    return "|".join(values)
 
 
 def _query_factory_for(model_class, db_session):
