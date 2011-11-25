@@ -254,14 +254,19 @@ class AdminConverter(ModelConverter):
                                 'column properties currently')
 
             column = prop.columns[0]
+            default_value = None
+
+            if hasattr(column, 'default'):
+                default_value = column.default
+
             kwargs = {
                 'validators': [],
                 'filters': [],
-                'default': column.default,
+                'default': default_value,
             }
             if field_args:
                 kwargs.update(field_args)
-            if column.nullable:
+            if hasattr(column, 'nullable') and column.nullable:
                 kwargs['validators'].append(validators.Optional())
             if self.use_mro:
                 types = inspect.getmro(type(column.type))
