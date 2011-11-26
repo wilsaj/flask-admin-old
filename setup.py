@@ -31,7 +31,7 @@ setup(
     platforms='any',
     install_requires=[
         'Flask>=0.7',
-        'Flask-WTF',
+        'wtforms>=0.6.3',
     ],
     test_suite='test_admin.suite',
     tests_require=[
