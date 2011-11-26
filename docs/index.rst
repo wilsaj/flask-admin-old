@@ -4,9 +4,8 @@ Flask-Admin
 ===========
 
 Flask-Admin is a `Flask`_ extension that aims to be a flexible,
-customizable web-based interface to your datastore. Currently,
-Flask-Admin only works with SQLAlchemy declarative models but support
-for additional datastores will be added in future versions.
+customizable web-based interface to your datastore.
+
 
 .. note::
 
