@@ -2,6 +2,7 @@ import sys
 
 from flask import Flask,  redirect
 from flask.ext import admin
+from flask.ext.admin.datastore.sqlalchemy import SQLAlchemyDatastore
 from sqlalchemy import create_engine, Table
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -70,11 +71,11 @@ def create_app(database_uri='sqlite://'):
     app.engine = create_engine(database_uri, convert_unicode=True)
     app.db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False, bind=app.engine))
-    datastore1 = admin.datastore.SQLAlchemyDatastore(
+    datastore1 = SQLAlchemyDatastore(
         (Student, Teacher), app.db_session)
     admin_blueprint1 = admin.create_admin_blueprint(
         datastore1, name='admin1')
-    datastore2 = admin.datastore.SQLAlchemyDatastore(
+    datastore2 = SQLAlchemyDatastore(
         (Course,), app.db_session)
     admin_blueprint2 = admin.create_admin_blueprint(
         datastore2, name='admin2')

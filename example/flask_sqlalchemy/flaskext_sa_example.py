@@ -1,5 +1,6 @@
 from flask import Flask, redirect
 from flask.ext import admin
+from flask.ext.admin.datastore.sqlalchemy import SQLAlchemyDatastore
 from flaskext.sqlalchemy import SQLAlchemy
 
 from datetime import datetime
@@ -59,7 +60,7 @@ def create_app(database_uri='sqlite://'):
     app.config['SECRET_KEY'] = 'seeeeecret'
 
     db.init_app(app)
-    datastore = admin.datastore.SQLAlchemyDatastore(
+    datastore = SQLAlchemyDatastore(
         (User, Post, Category), db.session)
     admin_blueprint = admin.create_admin_blueprint(datastore)
     app.register_blueprint(admin_blueprint, url_prefix='/admin')

@@ -3,13 +3,13 @@ import sys
 
 from flask import Flask, g, redirect, render_template, request, session, url_for
 from flask.ext import admin
+from flask.ext.admin.datastore.sqlalchemy import SQLAlchemyDatastore
 from sqlalchemy import create_engine, Table
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Text, String, Float, Time, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import ForeignKey
-from flask.ext.wtf import Form, TextField
 
 Base = declarative_base()
 
@@ -80,7 +80,7 @@ def create_app(database_uri='sqlite://'):
     app.engine = create_engine(database_uri, convert_unicode=True)
     db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False, bind=app.engine))
-    datastore = admin.datastore.SQLAlchemyDatastore(
+    datastore = SQLAlchemyDatastore(
         (Course, Student, Teacher), db_session)
     admin_blueprint = admin.create_admin_blueprint(
         datastore, view_decorator=login_required)

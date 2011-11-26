@@ -20,15 +20,13 @@ import types
 
 import flask
 from flask import flash, render_template, redirect, request, url_for
-import sqlalchemy as sa
-from sqlalchemy.orm.exc import NoResultFound
 from wtforms import widgets, validators
 from wtforms import fields as wtf_fields
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
 from flask.ext.admin.wtforms import has_file_field
-from flask.ext.admin.datastore import AdminDatastore, SQLAlchemyDatastore
+from flask.ext.admin.datastore import AdminDatastore
 
 
 def create_admin_blueprint(*args, **kwargs):
@@ -83,6 +81,7 @@ def create_admin_blueprint_deprecated(
     models, db_session, name='admin', model_forms=None, exclude_pks=True,
     list_view_pagination=25, view_decorator=None, **kwargs):
 
+    from flask.ext.admin.datastore.sqlalchemy import SQLAlchemyDatastore
     datastore = SQLAlchemyDatastore(models, db_session, model_forms,
                                     exclude_pks)
 
