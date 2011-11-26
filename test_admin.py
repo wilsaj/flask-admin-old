@@ -17,6 +17,7 @@ from example.flask_sqlalchemy import flaskext_sa_simple
 from example.flask_sqlalchemy import flaskext_sa_example
 import test.deprecation
 import test.filefield
+from test.mongoalchemy_datastore import ConversionTest
 
 
 class SimpleTest(TestCase):
@@ -308,8 +309,10 @@ def suite():
     suite.addTest(unittest.makeSuite(LargePaginationTest))
     suite.addTest(unittest.makeSuite(FileFieldTest))
     suite.addTest(unittest.makeSuite(DeprecationTest))
+    suite.addTest(unittest.makeSuite(ConversionTest))
     return suite
 
 
 if __name__ == '__main__':
-    unittest.main()
+    test_suite = suite()
+    unittest.TextTestRunner(verbosity=2).run(test_suite)
