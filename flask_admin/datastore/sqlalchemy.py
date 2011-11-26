@@ -31,7 +31,8 @@ from flask.ext.admin.datastore import AdminDatastore
 
 
 class SQLAlchemyDatastore(AdminDatastore):
-    """
+    """A datastore for SQLAlchemy models.
+
     The parameters are:
 
     `models`
@@ -40,9 +41,10 @@ class SQLAlchemyDatastore(AdminDatastore):
         interface.
 
     `db_session`
-        A SQLAlchemy session that has been set up and bound to an
-        engine. See the documentation on using Flask with SQLAlchemy
-        for more information on how to set that up.
+        The SQLAlchemy session that the datastore will be use to
+        access the database. It should be bound to an engine. See the
+        documentation on using Flask with SQLAlchemy for more
+        information on how to configure the session.
 
     `model_forms`
         A dict with model names as keys, mapped to WTForm Form objects
@@ -52,7 +54,14 @@ class SQLAlchemyDatastore(AdminDatastore):
     `exclude_pks`
         A Boolean value that specifies whether or not to automatically
         exclude fields representing the primary key from Flask-Admin
-        rendered forms. The default is True.
+        rendered forms. The default is True, so Flask-Admin will not
+        expose the primary keys of your models. This is usually a good
+        idea if you are using a primary key that doesn't have any
+        meaning outside of the database, like an auto-incrementing
+        integer, because changing a primary key changes the nature of
+        foreign key relationships. If you want to expose the primary
+        key, set this to False.
+
     """
     def __init__(self, models, db_session, model_forms=None, exclude_pks=True):
         self.model_classes = {}

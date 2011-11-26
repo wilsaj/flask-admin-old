@@ -1,5 +1,8 @@
 class AdminDatastore(object):
-    """A base class for admin datastore objects."""
+    """A base class for admin datastore objects. All datastores used
+    in Flask-Admin should subclass this object and define the
+    following methods.
+    """
 
     def create_model_pagination(self, model_name, page, per_page=25):
         """Returns a pagination object for the list view."""

@@ -24,6 +24,24 @@ from flask.ext.admin import util
 
 
 class MongoAlchemyDatastore(AdminDatastore):
+    """A datastore for MongoAlchemy document models.
+
+    The parameters are:
+
+    `models`
+        Either a module or an iterable that contains the MongoAlchemy
+        models that will be made available through the admin
+        interface.
+
+    `db_session`
+        An initialized MongoAlchemy session object.
+
+    `model_forms`
+        A dict with model names as keys, mapped to WTForm Form objects
+        that should be used as forms for creating and editing
+        instances of these models.
+
+    """
     def __init__(self, models, db_session, model_forms=None):
         self.model_classes = {}
         self.model_forms = model_forms
