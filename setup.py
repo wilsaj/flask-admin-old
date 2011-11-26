@@ -36,7 +36,7 @@ setup(
     test_suite='test_admin.suite',
     tests_require=[
         'Flask-SQLAlchemy>=0.12',
-        'Flask-Testing',
+        'Flask-Testing>=0.3',
         'MongoAlchemy>=0.10',
     ],
     classifiers=[
