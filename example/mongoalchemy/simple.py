@@ -2,6 +2,7 @@ import sys
 
 from flask import Flask,  redirect
 from flask.ext import admin
+from flask.ext.admin.datastore.mongoalchemy import MongoAlchemyDatastore
 from mongoalchemy.document import Document
 from mongoalchemy import fields, session
 from wtforms import fields as wtfields
@@ -45,7 +46,7 @@ def create_app(mongo_database='simple-example', pagination=25):
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'not secure'
     app.db_session = session.Session.connect(mongo_database)
-    datastore = admin.datastore.MongoAlchemyDatastore(
+    datastore = MongoAlchemyDatastore(
         (Course, Student, Teacher), app.db_session)
     admin_blueprint = admin.create_admin_blueprint(
         datastore, list_view_pagination=pagination)
