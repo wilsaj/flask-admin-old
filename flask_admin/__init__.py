@@ -20,10 +20,6 @@ import types
 
 import flask
 from flask import flash, render_template, redirect, request, url_for
-from wtforms import widgets, validators
-from wtforms import fields as wtf_fields
-from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
-from wtforms.ext.sqlalchemy import fields as sa_fields
 
 from flask.ext.admin.wtforms import has_file_field
 from flask.ext.admin.datastore import AdminDatastore
