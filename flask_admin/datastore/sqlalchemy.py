@@ -22,7 +22,7 @@ from flask import flash, render_template, redirect, request, url_for
 from flaskext.sqlalchemy import Pagination
 import sqlalchemy as sa
 from sqlalchemy.orm.exc import NoResultFound
-from wtforms import widgets
+from wtforms import validators, widgets
 from wtforms.ext.sqlalchemy.orm import model_form, converts, ModelConverter
 from wtforms.ext.sqlalchemy import fields as sa_fields
 
