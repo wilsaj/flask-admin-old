@@ -5,9 +5,6 @@ User's Guide
    :maxdepth: 2
 
    overview
-   endpoints
-   customizing
-   more
 
 
 API Reference
