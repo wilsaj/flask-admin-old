@@ -36,9 +36,7 @@ session::
     from flask.ext.admin.datastore.sqlalchemy import SQLAlchemyDatastore
     from sqlalchemy.orm import scoped_session, sessionmaker
 
-    db_session = scoped_session(sessionmaker(
-        autocommit=False, autoflush=False,
-        bind=engine))
+    db_session = scoped_session(sessionmaker(bind=engine))
 
     admin_datastore = SQLAlchemyDatastore((Student, Teacher), db_session)
 
