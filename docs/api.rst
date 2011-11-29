@@ -3,7 +3,7 @@
 API
 ---
 
-.. autofunction:: create_admin_blueprint
+.. autofunction:: create_admin_blueprint(datastore, name='admin', list_view_pagination=25, view_decorator=None, **kwargs)
 
 
 Datastores
