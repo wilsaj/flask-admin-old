@@ -24,23 +24,33 @@ from flask.ext.admin import util
 
 
 class MongoAlchemyDatastore(AdminDatastore):
-    """A datastore for MongoAlchemy document models.
+    """A datastore for accessing MongoAlchemy document models.
 
-    The parameters are:
+    The `models` parameter should be either a module or an iterable
+    that contains the MongoAlchemy models that will be made available
+    through the admin interface.
 
-    `models`
-        Either a module or an iterable that contains the MongoAlchemy
-        models that will be made available through the admin
-        interface.
+    `db_session` should be an initialized MongoAlchemy session
+    object. See the `MongoAlchemy documentation`_ for information on
+    how to do that.
 
-    `db_session`
-        An initialized MongoAlchemy session object.
+    By default, a form for adding and editing data will be
+    automatically generated for each MongoAlchemy model. Only
+    primitive MongoAlchemy types are supported so if you need to
+    support other fields you will need to create custom forms. You can
+    also use custom forms if you want more control over form behavior.
+    To use custom forms, set the `model_forms` parameter to be a dict
+    with model names as keys matched to custom forms for the forms you
+    want to override. Forms should be WTForms form objects; see the
+    `WTForms documentation`_ for more information on how to configure
+    forms.
 
-    `model_forms`
-        A dict with model names as keys, mapped to WTForm Form objects
-        that should be used as forms for creating and editing
-        instances of these models.
+    A dict with model names as keys, mapped to WTForm Form objects
+    that should be used as forms for creating and editing instances of
+    these models.
 
+    .. _MongoAlchemy documentation: http://www.mongoalchemy.org/api/session.html
+    .. _WTForms documentation: http://wtforms.simplecodes.com/
     """
     def __init__(self, models, db_session, model_forms=None):
         self.model_classes = {}
