@@ -293,14 +293,14 @@ class AdminConverter(ModelConverter):
                              column=column, field_args=kwargs)
 
         if isinstance(prop, sa.orm.properties.RelationshipProperty):
-            if prop.direction == sa.orm.interfaces.MANYTOONE and \
-                   len(prop.local_remote_pairs) != 1:
-                raise TypeError('Do not know how to convert multiple'
-                                '-column properties currently')
-            elif prop.direction == sa.orm.interfaces.MANYTOMANY and \
-                     len(prop.local_remote_pairs) != 2:
-                raise TypeError('Do not know how to convert multiple'
-                                '-column properties currently')
+#            if prop.direction == sa.orm.interfaces.MANYTOONE and \
+#                   len(prop.local_remote_pairs) != 1:
+#                raise TypeError('Do not know how to convert multiple'
+#                                '-column properties currently')
+#            elif prop.direction == sa.orm.interfaces.MANYTOMANY and \
+#                     len(prop.local_remote_pairs) != 2:
+#                raise TypeError('Do not know how to convert multiple'
+#                                '-column properties currently')
 
             local_column = prop.local_remote_pairs[0][0]
             foreign_model = prop.mapper.class_
