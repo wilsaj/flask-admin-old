@@ -216,7 +216,7 @@ def _get_pk_value(model_instance):
     """
     values = []
     for value in _get_pk_name(model_instance):
-        values.append(str(getattr(model_instance, value)))
+        values.append(unicode(getattr(model_instance, value)))
 
     return "|".join(values)
 
