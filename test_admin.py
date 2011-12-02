@@ -15,6 +15,7 @@ from example.declarative import custom_form
 from example.authentication import view_decorator
 from example.flask_sqlalchemy import flaskext_sa_simple
 from example.flask_sqlalchemy import flaskext_sa_example
+from example.flask_sqlalchemy import flaskext_sa_multi_pk
 import test.deprecation
 import test.filefield
 from test.mongoalchemy_datastore import ConversionTest
@@ -187,6 +188,80 @@ class FlaskSQLAlchemyExampleTest(TestCase):
         self.assert_200(rv)
 
 
+class FlaskSQLAlchemyMultiPKsTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = flaskext_sa_multi_pk.create_app('sqlite://')
+
+        # set app.db_session to the db.session so the SimpleTest tests
+        # will work
+        app.db_session = flaskext_sa_multi_pk.db.session
+
+        # need to grab a request context since we use db.init_app() in
+        # our application
+        with app.test_request_context():
+            address = flaskext_sa_multi_pk.Address(
+                shortname=u'K2',
+                name=u'K-II',
+                street=u'Hauptstrasse 1',
+                zipcode='10000',
+                city=u'Berlin',
+                country=u'Germany')
+            flaskext_sa_multi_pk.db.session.add(address)
+            flaskext_sa_multi_pk.db.session.flush()
+            location = flaskext_sa_multi_pk.Location(
+                address_shortname=address.shortname,
+                room=u'2.01',
+                position=u'left side')
+            flaskext_sa_multi_pk.db.session.add(location)
+            flaskext_sa_multi_pk.db.session.flush()
+            flaskext_sa_multi_pk.db.session.add(
+                flaskext_sa_multi_pk.Asset(name=u'asset1',
+                                           address_shortname=address.shortname,
+                                           location_room=location.room,
+                                           location_position=location.position))
+            flaskext_sa_multi_pk.db.session.commit()
+        return app
+
+    def test_index(self):
+        # just make sure the app is initialized and works
+        rv = self.client.get('/admin/')
+        self.assert_200(rv)
+
+    def test_list_asset(self):
+        rv = self.client.get('/admin/list/Asset/?page=1')
+        self.assert_200(rv)
+
+    def test_list_location(self):
+        rv = self.client.get('/admin/list/Location/')
+        self.assert_200(rv)
+
+    def test_view_location(self):
+        rv = self.client.get('/admin/edit/Location/K2|2.01|left side/')
+        self.assert_200(rv)
+
+    def test_add_location(self):
+        self.assertEqual(self.app.db_session.query(
+                flaskext_sa_multi_pk.Location).count(), 1)
+        rv = self.client.post('/admin/add/Location/',
+                              data=dict(address=u'K2',
+                                        address_shortname=u'K2',
+                                        room=u'2.03',
+                                        position=u''))
+        self.assertEqual(self.app.db_session.query(
+                flaskext_sa_multi_pk.Location).count(), 2)
+        rv = self.client.get('/admin/edit/Location/K2|2.03|/')
+        self.assert_200(rv)
+
+    def test_edit_location(self):
+        rv = self.client.post('/admin/edit/Location/K2|2.01|left side/',
+                              data=dict(position='right side'))
+        rv = self.client.get('/admin/edit/Location/K2|2.01|right side/')
+        self.assert_200(rv)
+
+
+
 class ExcludePKsTrueTest(TestCase):
     TESTING = True
 
@@ -303,6 +378,7 @@ def suite():
     suite.addTest(unittest.makeSuite(CustomFormTest))
     suite.addTest(unittest.makeSuite(FlaskSQLAlchemySimpleTest))
     suite.addTest(unittest.makeSuite(FlaskSQLAlchemyExampleTest))
+    suite.addTest(unittest.makeSuite(FlaskSQLAlchemyMultiPKsTest))
     suite.addTest(unittest.makeSuite(ExcludePKsTrueTest))
     suite.addTest(unittest.makeSuite(ExcludePKsFalseTest))
     suite.addTest(unittest.makeSuite(SmallPaginationTest))
