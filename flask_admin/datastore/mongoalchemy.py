@@ -102,6 +102,7 @@ class MongoAlchemyDatastore(AdminDatastore):
         model_name and model_key. Returns None if no such model
         instance exists.
         """
+        model_key = model_key[0]
         model_class = self.get_model_class(model_name)
         return self.db_session.query(model_class).filter(
             model_class.mongo_id == model_key).one()
