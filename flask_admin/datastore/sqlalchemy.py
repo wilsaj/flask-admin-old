@@ -199,18 +199,13 @@ def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
 
 def _get_pk_name(model):
     """Return the primary key attribute name for a given model (either
-    instance or class). Assumes single primary key.
+    instance or class).
     """
     model_mapper = model.__mapper__
 
-    keys = []
-
-    for prop in model_mapper.iterate_properties:
-        if isinstance(prop, sa.orm.properties.ColumnProperty) and \
-               prop.columns[0].primary_key:
-            keys.append(prop.key)
-
-    return keys
+    return [prop.key for prop in model_mapper.iterate_properties
+            if isinstance(prop, sa.orm.properties.ColumnProperty) and \
+                prop.columns[0].primary_key]
 
 
 def _query_factory_for(model_class, db_session):
