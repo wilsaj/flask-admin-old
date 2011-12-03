@@ -148,6 +148,8 @@ def create_admin_blueprint_new(
             """Edit a particular instance of a model."""
             if '/' in model_key:
                 model_key = model_key.split('/')
+            else:
+                model_key = [model_key]
 
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
