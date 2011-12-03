@@ -122,7 +122,7 @@ class SQLAlchemyDatastore(AdminDatastore):
         model_class = self.get_model_class(model_name)
         pk_query_dict = {}
 
-        for key, value in zip(_get_pk_name(model_class), model_key):
+        for key, value in zip(_get_pk_names(model_class), model_key):
             pk_query_dict[key] = value
 
         try:
@@ -142,7 +142,7 @@ class SQLAlchemyDatastore(AdminDatastore):
     def get_model_key(self, model_instance):
         """Returns the primary key for a given a model instance."""
         values = []
-        for value in _get_pk_name(model_instance):
+        for value in _get_pk_names(model_instance):
             values.append(unicode(getattr(model_instance, value)))
         return "/".join(values)
 
@@ -178,7 +178,7 @@ def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
     model_mapper = sa.orm.class_mapper(model_class)
     relationship_fields = []
 
-    pk_names = _get_pk_name(model_class)
+    pk_names = _get_pk_names(model_class)
 
     if exclude_pk:
         exclude.extend(pk_names)
@@ -197,9 +197,9 @@ def _form_for_model(model_class, db_session, exclude=None, exclude_pk=True):
     return form
 
 
-def _get_pk_name(model):
-    """Return the primary key attribute name for a given model (either
-    instance or class).
+def _get_pk_names(model):
+    """Return the primary key attribute names for a given model
+    (either instance or class).
     """
     model_mapper = model.__mapper__
 
