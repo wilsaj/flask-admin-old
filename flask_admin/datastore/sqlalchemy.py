@@ -122,9 +122,9 @@ class SQLAlchemyDatastore(AdminDatastore):
         model_class = self.get_model_class(model_name)
         pk_query_dict = {}
 
-        for key, value in zip(_get_pk_name(model_class), model_key.split('|')):
+        for key, value in zip(_get_pk_name(model_class), model_key):
             pk_query_dict[key] = value
-            
+
         try:
             return self.db_session.query(model_class).filter_by(
                 **pk_query_dict).one()
@@ -218,7 +218,7 @@ def _get_pk_value(model_instance):
     for value in _get_pk_name(model_instance):
         values.append(unicode(getattr(model_instance, value)))
 
-    return "|".join(values)
+    return "/".join(values)
 
 
 def _query_factory_for(model_class, db_session):

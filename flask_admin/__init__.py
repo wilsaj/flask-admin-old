@@ -146,6 +146,9 @@ def create_admin_blueprint_new(
         @view_decorator
         def edit(model_name, model_key):
             """Edit a particular instance of a model."""
+            if '/' in model_key:
+                model_key = model_key.split('/')
+
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
@@ -252,11 +255,11 @@ def create_admin_blueprint_new(
     admin_blueprint.add_url_rule('/list/<model_name>/',
                       'list_view',
                       view_func=create_list_view())
-    admin_blueprint.add_url_rule('/edit/<model_name>/<model_key>/',
+    admin_blueprint.add_url_rule('/edit/<model_name>/<path:model_key>/',
                       'edit',
                       view_func=create_edit_view(),
                       methods=['GET', 'POST'])
-    admin_blueprint.add_url_rule('/delete/<model_name>/<model_key>/',
+    admin_blueprint.add_url_rule('/delete/<model_name>/<path:model_key>/',
                       'delete',
                       view_func=create_delete_view())
     admin_blueprint.add_url_rule('/add/<model_name>/',
