@@ -141,7 +141,10 @@ class SQLAlchemyDatastore(AdminDatastore):
 
     def get_model_key(self, model_instance):
         """Returns the primary key for a given a model instance."""
-        return _get_pk_value(model_instance)
+        values = []
+        for value in _get_pk_name(model_instance):
+            values.append(unicode(getattr(model_instance, value)))
+        return "/".join(values)
 
     def list_model_names(self):
         """Returns a list of model names available in the datastore."""
@@ -208,17 +211,6 @@ def _get_pk_name(model):
             keys.append(prop.key)
 
     return keys
-
-
-def _get_pk_value(model_instance):
-    """Return the primary key value for a given model
-    instance. Assumes single primary key.
-    """
-    values = []
-    for value in _get_pk_name(model_instance):
-        values.append(unicode(getattr(model_instance, value)))
-
-    return "/".join(values)
 
 
 def _query_factory_for(model_class, db_session):
