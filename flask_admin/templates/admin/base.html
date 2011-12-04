@@ -46,7 +46,7 @@
     <ul>
       {% for model in model_names|sort %}
         <li>
-          <a href="{{ url_for('.list_view', model_name=model,page=1)}}">{{model}}</a>
+          <a href="{{ url_for('.list', model_name=model,page=1)}}">{{model}}</a>
         </li>
       {% endfor %}
     </ul>

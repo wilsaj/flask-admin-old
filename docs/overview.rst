@@ -101,7 +101,8 @@ are available:
 
 :meth:`url_for('admin.index')`
     returns the url for the index view
-:meth:`url_for('admin.list_view', model_name='some_model')`
+
+:meth:`url_for('admin.list', model_name='some_model')`
     returns the list view for a given model
 
 :meth:`url_for('admin.edit', model_name='some_model', model_key=primary_key)`
