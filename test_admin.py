@@ -238,7 +238,7 @@ class FlaskSQLAlchemyMultiPKsTest(TestCase):
         self.assert_200(rv)
 
     def test_view_location(self):
-        rv = self.client.get('/admin/edit/Location/K2|2.01|left side/')
+        rv = self.client.get('/admin/edit/Location/K2/2.01/left side/')
         self.assert_200(rv)
 
     def test_add_location(self):
@@ -251,13 +251,13 @@ class FlaskSQLAlchemyMultiPKsTest(TestCase):
                                         position=u''))
         self.assertEqual(self.app.db_session.query(
                 flaskext_sa_multi_pk.Location).count(), 2)
-        rv = self.client.get('/admin/edit/Location/K2|2.03|/')
+        rv = self.client.get('/admin/edit/Location/K2/2.03//')
         self.assert_200(rv)
 
     def test_edit_location(self):
-        rv = self.client.post('/admin/edit/Location/K2|2.01|left side/',
+        rv = self.client.post('/admin/edit/Location/K2/2.01/left side/',
                               data=dict(position='right side'))
-        rv = self.client.get('/admin/edit/Location/K2|2.01|right side/')
+        rv = self.client.get('/admin/edit/Location/K2/2.01/right side/')
         self.assert_200(rv)
 
 
