@@ -191,7 +191,7 @@ generated form isn't what you want, so you can also create a custom
 form for Flask-Admin to use for a given model.
 
 For example, consider the following model of a User that stores hashed
-passwords::
+passwords (originally from http://flask.pocoo.org/snippets/54/)::
 
     from sqlalchemy import Boolean, Column, Integer, String
     from sqlalchemy.ext.declarative import declarative_base
