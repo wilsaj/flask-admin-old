@@ -280,6 +280,22 @@ that demonstrate all of the patterns above, plus some additional ideas
 on how you can configure the admin.
 
 
+Changelog
+---------
+
+0.3.0
+  - added datastore API to support additional datastores more easily
+  - added MongoAlchemy support
+  - added composite primary key support
+  - changed `admin.list_view` endpoint to `admin.list` for consistency
+
+0.2.0
+  - 
+
+0.1.0
+  - initial release
+
+
 .. _example directory: https://github.com/wilsaj/flask-admin/tree/master/example
 .. _Flask-SQLAlchemy: http://packages.python.org/Flask-SQLAlchemy/
 .. _MongoAlchemy: http://www.mongoalchemy.org/
