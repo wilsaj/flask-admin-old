@@ -298,6 +298,7 @@ Changelog
 
 .. _example directory: https://github.com/wilsaj/flask-admin/tree/master/example
 .. _Flask-SQLAlchemy: http://packages.python.org/Flask-SQLAlchemy/
+.. _Flask documentation on blueprints: http://flask.pocoo.org/docs/blueprints/
 .. _MongoAlchemy: http://www.mongoalchemy.org/
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _view decorator example: https://github.com/wilsaj/flask-admin/tree/master/example/authentication/view_decorator.py
