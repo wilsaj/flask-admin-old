@@ -146,10 +146,14 @@ def create_admin_blueprint_new(
         @view_decorator
         def edit(model_name, model_key):
             """Edit a particular instance of a model."""
-            if '/' in model_key:
-                model_key = model_key.split('/')
-            else:
-                model_key = [model_key]
+
+            keys = []
+            for elem in model_key.split('/'):
+                if elem == datastore.empty_char:
+                    keys.append('')
+                else:
+                    keys.append(elem)
+            model_key = keys
 
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
@@ -237,10 +241,14 @@ def create_admin_blueprint_new(
         @view_decorator
         def delete(model_name, model_key):
             """Delete an instance of a model."""
-            if '/' in model_key:
-                model_key = model_key.split('/')
-            else:
-                model_key = [model_key]
+
+            keys = []
+            for elem in model_key.split('/'):
+                if elem == datastore.empty_char:
+                    keys.append('')
+                else:
+                    keys.append(elem)
+            model_key = keys
 
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (

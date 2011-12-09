@@ -251,7 +251,8 @@ class FlaskSQLAlchemyMultiPKsTest(TestCase):
                                         position=u''))
         self.assertEqual(self.app.db_session.query(
                 flaskext_sa_multi_pk.Location).count(), 2)
-        rv = self.client.get('/admin/edit/Location/K2/2.03//')
+        # will raise an error if datastore.empty_char is set to another char!
+        rv = self.client.get(u'/admin/edit/Location/K2/2.03/%01/')
         self.assert_200(rv)
 
     def test_edit_location(self):
