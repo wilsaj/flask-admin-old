@@ -103,26 +103,26 @@ class SQLAlchemyDatastore(AdminDatastore):
         return Pagination(model_instances, page, per_page,
                           model_instances.count(), items)
 
-    def delete_model_instance(self, model_name, model_key):
+    def delete_model_instance(self, model_name, model_keys):
         """Deletes a model instance. Returns True if model instance
         was successfully deleted, returns False otherwise.
         """
-        model_instance = self.find_model_instance(model_name, model_key)
+        model_instance = self.find_model_instance(model_name, model_keys)
         if not model_instance:
             return False
         self.db_session.delete(model_instance)
         self.db_session.commit()
         return True
 
-    def find_model_instance(self, model_name, model_key):
+    def find_model_instance(self, model_name, model_keys):
         """Returns a model instance, if one exists, that matches
-        model_name and model_key. Returns None if no such model
+        model_name and model_keys. Returns None if no such model
         instance exists.
         """
         model_class = self.get_model_class(model_name)
         pk_query_dict = {}
 
-        for key, value in zip(_get_pk_names(model_class), model_key):
+        for key, value in zip(_get_pk_names(model_class), model_keys):
             pk_query_dict[key] = value
 
         try:

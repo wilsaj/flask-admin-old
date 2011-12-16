@@ -85,11 +85,12 @@ class MongoAlchemyDatastore(AdminDatastore):
             (page - 1) * per_page).limit(per_page)
         return MongoAlchemyPagination(page, per_page, query)
 
-    def delete_model_instance(self, model_name, model_key):
+    def delete_model_instance(self, model_name, model_keys):
         """Deletes a model instance. Returns True if model instance
         was successfully deleted, returns False otherwise.
         """
         model_class = self.get_model_class(model_name)
+        model_key = model_keys[0]
         try:
             last_error = self.db_session.remove_query(model_class).filter(
                 model_class.mongo_id == model_key).set_safe(True).execute()
@@ -97,12 +98,12 @@ class MongoAlchemyDatastore(AdminDatastore):
         except InvalidId:
             return False
 
-    def find_model_instance(self, model_name, model_key):
+    def find_model_instance(self, model_name, model_keys):
         """Returns a model instance, if one exists, that matches
-        model_name and model_key. Returns None if no such model
+        model_name and model_keys. Returns None if no such model
         instance exists.
         """
-        model_key = model_key[0]
+        model_key = model_keys[0]
         model_class = self.get_model_class(model_name)
         return self.db_session.query(model_class).filter(
             model_class.mongo_id == model_key).one()
