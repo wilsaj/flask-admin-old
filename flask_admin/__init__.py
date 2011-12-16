@@ -160,18 +160,18 @@ def create_admin_blueprint_new(
 
     def create_edit_view():
         @view_decorator
-        def edit(model_name, model_key):
+        def edit(model_name, model_url_key):
             """Edit a particular instance of a model."""
-            model_key = [key if key != empty_sequence else u''
-                         for key in model_key.split('/')]
+            model_keys = [key if key != empty_sequence else u''
+                         for key in model_url_key.split('/')]
 
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
 
             model_form = datastore.get_model_form(model_name)
-            model_instance = datastore.find_model_instance(model_name,
-                                                           model_key)
+            model_instance = datastore.find_model_instance(
+                model_name, model_keys)
 
             if not model_instance:
                 return "%s not found: %s" % (model_name, model_key)
@@ -249,18 +249,18 @@ def create_admin_blueprint_new(
 
     def create_delete_view():
         @view_decorator
-        def delete(model_name, model_key):
+        def delete(model_name, model_url_key):
             """Delete an instance of a model."""
-            model_key = [key if key != empty_sequence else u''
-                         for key in model_key.split('/')]
+            model_keys = [key if key != empty_sequence else u''
+                          for key in model_url_key.split('/')]
 
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
             model_instance = datastore.delete_model_instance(model_name,
-                                                             model_key)
+                                                             model_keys)
             if not model_instance:
-                return "%s not found: %s" % (model_name, model_key)
+                return "%s not found: %s" % (model_name, model_keys)
 
             flash('%s deleted: %s' % (model_name, model_instance),
                   'success')
@@ -274,11 +274,11 @@ def create_admin_blueprint_new(
     admin_blueprint.add_url_rule('/list/<model_name>/',
                       'list',
                       view_func=create_list_view())
-    admin_blueprint.add_url_rule('/edit/<model_name>/<path:model_key>/',
+    admin_blueprint.add_url_rule('/edit/<model_name>/<path:model_url_key>/',
                       'edit',
                       view_func=create_edit_view(),
                       methods=['GET', 'POST'])
-    admin_blueprint.add_url_rule('/delete/<model_name>/<path:model_key>/',
+    admin_blueprint.add_url_rule('/delete/<model_name>/<path:model_url_key>/',
                       'delete',
                       view_func=create_delete_view())
     admin_blueprint.add_url_rule('/add/<model_name>/',
