@@ -166,7 +166,7 @@ def create_admin_blueprint_new(
             keys = []
             for elem in model_key.split('/'):
                 if elem == empty_sequence:
-                    keys.append('')
+                    keys.append(u'')
                 else:
                     keys.append(elem)
             model_key = keys
