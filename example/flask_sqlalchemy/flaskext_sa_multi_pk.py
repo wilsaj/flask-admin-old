@@ -5,6 +5,7 @@ from flaskext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 # ----------------------------------------------------------------------
 # Models
 # ----------------------------------------------------------------------
@@ -39,17 +40,19 @@ class Location(db.Model):
     db.PrimaryKeyConstraint('address_shortname', 'room', 'position',
                             name='location_key')
 
-    asset = db.relationship('Asset', backref='location',
-                            lazy='select',
-                            primaryjoin='(Location.room==Asset.location_room) &'\
-                            '(Location.address_shortname==Asset.address_shortname) &'\
-                            '(Location.position==Asset.location_position)')
-                            
+    asset = db.relationship(
+        'Asset', backref='location',
+        lazy='select',
+        primaryjoin='(Location.room==Asset.location_room) &'\
+            '(Location.address_shortname==Asset.address_shortname) &'\
+            '(Location.position==Asset.location_position)')
+
     # additional fields in real world example
 
     def __repr__(self):
-        return u"%s|%s|%s" % (self.address_shortname, self.room, 
-                                          self.position)
+        return u"%s|%s|%s" % (self.address_shortname, self.room,
+                              self.position)
+
 
 class Asset(db.Model):
     __tablename__ = 'asset'
