@@ -251,16 +251,14 @@ class FlaskSQLAlchemyMultiPKsTest(TestCase):
                                         position=u''))
         self.assertEqual(self.app.db_session.query(
                 flaskext_sa_multi_pk.Location).count(), 2)
-        # will raise an error if datastore.empty_char is set to another char!
-        rv = self.client.get(u'/admin/edit/Location/K2/2.03/%01/')
-        self.assert_200(rv)
+        rv = self.client.get('/admin/edit/Location/K2/2.03/%1A/')
+        assert 'edit_form' in rv.data
 
     def test_edit_location(self):
         rv = self.client.post('/admin/edit/Location/K2/2.01/left side/',
                               data=dict(position='right side'))
         rv = self.client.get('/admin/edit/Location/K2/2.01/right side/')
         self.assert_200(rv)
-
 
 
 class ExcludePKsTrueTest(TestCase):
