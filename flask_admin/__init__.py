@@ -64,6 +64,13 @@ def create_admin_blueprint(*args, **kwargs):
 
     The `list_view_pagination` parameter sets the number of items that
     will be listed per page in the list view.
+
+    Finally, the `empty_sequence` keyword can be used to designate a
+    sequence of characters that can be used as a substitute for cases
+    where part of the key url may be empty.  This should be a rare
+    occurance, but might comes up when using composite keys which can
+    contain empty parts. By default, `empty_sequence` is set to %1A,
+    the substitute control character.
     """
     if not isinstance(args[0], AdminDatastore):
         from warnings import warn
