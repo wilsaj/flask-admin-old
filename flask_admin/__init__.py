@@ -94,7 +94,7 @@ def create_admin_blueprint_deprecated(
 
 def create_admin_blueprint_new(
     datastore, name='admin', list_view_pagination=25, view_decorator=None,
-    **kwargs):
+    empty_sequence=u'\x1a', **kwargs):
 
     admin_blueprint = flask.Blueprint(
         name, 'flask.ext.admin',
@@ -149,7 +149,7 @@ def create_admin_blueprint_new(
 
             keys = []
             for elem in model_key.split('/'):
-                if elem == datastore.empty_char:
+                if elem == empty_sequence:
                     keys.append('')
                 else:
                     keys.append(elem)
@@ -244,7 +244,7 @@ def create_admin_blueprint_new(
 
             keys = []
             for elem in model_key.split('/'):
-                if elem == datastore.empty_char:
+                if elem == empty_sequence:
                     keys.append('')
                 else:
                     keys.append(elem)

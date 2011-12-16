@@ -68,8 +68,6 @@ class SQLAlchemyDatastore(AdminDatastore):
         self.model_classes = {}
         self.model_forms = model_forms
         self.db_session = db_session
-        #: replacement character for empty values in urls
-        self.empty_char = u'\1'
 
         if not self.model_forms:
             self.model_forms = {}
@@ -142,14 +140,9 @@ class SQLAlchemyDatastore(AdminDatastore):
         return self.form_dict[model_name]
 
     def get_model_key(self, model_instance):
-        """Returns the primary key for a given a model instance."""
-        values = []
-        for value in _get_pk_names(model_instance):
-            data = unicode(getattr(model_instance, value))
-            if not data:
-                data = self.empty_char
-            values.append(data)
-        return "/".join(values)
+        """Returns the keys for a given a model instance."""
+        return '/'.join([getattr(model_instance, value)
+                         for value in _get_pk_names(model_instance)])
 
     def list_model_names(self):
         """Returns a list of model names available in the datastore."""
