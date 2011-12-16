@@ -89,9 +89,8 @@ class MongoAlchemyDatastore(AdminDatastore):
         was successfully deleted, returns False otherwise.
         """
         model_class = self.get_model_class(model_name)
-        model_key = model_keys[0]
         try:
-            model_instance = self.find_model_instance(model_name, model_key)
+            model_instance = self.find_model_instance(model_name, model_keys)
             self.db_session.remove(model_instance)
             return True
         except ma.query.BadResultException:
