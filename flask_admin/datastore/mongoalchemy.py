@@ -11,7 +11,6 @@ from __future__ import absolute_import
 
 import types
 
-from bson.errors import InvalidId
 import mongoalchemy as ma
 from mongoalchemy.document import Document
 from wtforms import fields as f
@@ -92,10 +91,10 @@ class MongoAlchemyDatastore(AdminDatastore):
         model_class = self.get_model_class(model_name)
         model_key = model_keys[0]
         try:
-            last_error = self.db_session.remove_query(model_class).filter(
-                model_class.mongo_id == model_key).set_safe(True).execute()
+            model_instance = self.find_model_instance(model_name, model_key)
+            self.db_session.remove(model_instance)
             return True
-        except InvalidId:
+        except ma.query.BadResultException:
             return False
 
     def find_model_instance(self, model_name, model_keys):

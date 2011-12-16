@@ -195,7 +195,7 @@ def create_admin_blueprint_new(
                     flash('%s updated: %s' % (model_name, model_instance),
                           'success')
                     return redirect(
-                        url_for('.list_view',
+                        url_for('.list',
                                 model_name=model_name))
                 else:
                     flash('There was an error processing your form. '
@@ -235,7 +235,7 @@ def create_admin_blueprint_new(
                     datastore.save_model(model_instance)
                     flash('%s added: %s' % (model_name, model_instance),
                           'success')
-                    return redirect(url_for('.list_view',
+                    return redirect(url_for('.list',
                                             model_name=model_name))
                 else:
                     flash('There was an error processing your form. This '
@@ -265,14 +265,14 @@ def create_admin_blueprint_new(
             flash('%s deleted: %s' % (model_name, model_instance),
                   'success')
             return redirect(url_for(
-                '.list_view',
+                '.list',
                 model_name=model_name))
         return delete
 
     admin_blueprint.add_url_rule('/', 'index',
                       view_func=create_index_view())
     admin_blueprint.add_url_rule('/list/<model_name>/',
-                      'list_view',
+                      'list',
                       view_func=create_list_view())
     admin_blueprint.add_url_rule('/edit/<model_name>/<path:model_key>/',
                       'edit',

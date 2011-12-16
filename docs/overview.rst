@@ -101,7 +101,8 @@ are available:
 
 :meth:`url_for('admin.index')`
     returns the url for the index view
-:meth:`url_for('admin.list_view', model_name='some_model')`
+
+:meth:`url_for('admin.list', model_name='some_model')`
     returns the list view for a given model
 
 :meth:`url_for('admin.edit', model_name='some_model', model_key=primary_key)`
@@ -128,13 +129,55 @@ are available:
 Custom Templates and Static Files
 ---------------------------------
 
-Using Flask blueprints makes customizing the admin interface really
+Using Flask blueprints makes customizing the admin interface
 easy. Flask-Admin comes with a default set of templates and static
-files. You can customize as much of the interface as you'd like by
-just overriding any files you'd like to change. Just create your own
-version of the files in the templates and/or static directories of
-your app. Refer to the documentation on Flask blueprints for
-more. There is also an example of this in the `view decorator
+files. It's possible to customize as much of the interface as you'd
+like by overriding the files you'd like to change. To do this, just
+create your own version of the files in the templates and/or static
+directories used by your Flask application.
+
+The following templates are defined in Flask-Admin:
+
+`admin/base.html` - This is the primary base template that defines the
+bulk of the look and feel of the Admin. If you are using any of the
+default admin view templates, the base templates should provide the
+following blocks::
+
+    ``title`` - The title of the page (in the html title element)
+    ``main`` - This is where the main content of each of the admin
+    views is placed (like editing forms)
+
+`admin/extra_base.html` - This is the template that is actually
+inheritted by the default admin view templates. By extending
+base.html, this template allows you to override some of behaviors
+provided in the `base.html` template (e.g. navigation) while
+maintaining the most of base template behavior (like setting up
+Javascript-enhanced UI elements).
+
+`admin/index.html` - The template used by the ``admin.index`` view
+
+`admin/list.html` - The template used by the ``admin.list`` view
+
+`admin/add.html` - The template used by the ``admin.add`` view
+
+`admin/edit.html` - The template used by the ``admin.edit`` view
+
+
+In addition, the following "helper" templates are defined. These
+define Jinja macros that are used for rendering things like the
+pagination and forms:
+
+`admin/_formhelpers.html`
+
+`admin/_paginationhelpers.html`
+
+`admin/_statichelpers.html`
+
+
+
+Refer to the `Flask documentation on blueprints`_ for specifics on how
+blueprints effect the template search path. There is also an example
+of extending the default admin templates in the `view decorator
 example`_.
 
 
@@ -148,7 +191,7 @@ generated form isn't what you want, so you can also create a custom
 form for Flask-Admin to use for a given model.
 
 For example, consider the following model of a User that stores hashed
-passwords::
+passwords (originally from http://flask.pocoo.org/snippets/54/)::
 
     from sqlalchemy import Boolean, Column, Integer, String
     from sqlalchemy.ext.declarative import declarative_base
@@ -237,8 +280,25 @@ that demonstrate all of the patterns above, plus some additional ideas
 on how you can configure the admin.
 
 
+Changelog
+---------
+
+0.3.0
+  - added datastore API to support additional datastores more easily
+  - added MongoAlchemy support
+  - added composite primary key support
+  - changed `admin.list_view` endpoint to `admin.list` for consistency
+
+0.2.0
+  - 
+
+0.1.0
+  - initial release
+
+
 .. _example directory: https://github.com/wilsaj/flask-admin/tree/master/example
 .. _Flask-SQLAlchemy: http://packages.python.org/Flask-SQLAlchemy/
+.. _Flask documentation on blueprints: http://flask.pocoo.org/docs/blueprints/
 .. _MongoAlchemy: http://www.mongoalchemy.org/
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _view decorator example: https://github.com/wilsaj/flask-admin/tree/master/example/authentication/view_decorator.py
