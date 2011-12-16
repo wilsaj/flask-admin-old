@@ -240,7 +240,7 @@ class FlaskSQLAlchemyMultiPKsTest(TestCase):
         self.assert_200(rv)
 
     def test_view_location(self):
-        rv = self.client.get('/admin/edit/Location/K2/2.01/left side/')
+        rv = self.client.get('/admin/edit/Location/K2/2.01/left%20side/')
         self.assert_200(rv)
 
     def test_add_location(self):
@@ -257,9 +257,12 @@ class FlaskSQLAlchemyMultiPKsTest(TestCase):
         assert 'edit_form' in rv.data
 
     def test_edit_location(self):
-        rv = self.client.post('/admin/edit/Location/K2/2.01/left side/',
-                              data=dict(position='right side'))
-        rv = self.client.get('/admin/edit/Location/K2/2.01/right side/')
+        rv = self.client.post('/admin/edit/Location/K2/2.01/left%20side/',
+                              data=dict(address=u'K2',
+                                        address_shortname=u'K2',
+                                        room=u'2.01',
+                                        position='right side'))
+        rv = self.client.get('/admin/edit/Location/K2/2.01/right%20side/')
         self.assert_200(rv)
 
 
