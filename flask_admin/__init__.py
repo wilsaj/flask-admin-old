@@ -111,6 +111,14 @@ def create_admin_blueprint_new(
                 return f(*args, **kwds)
             return wrapper
 
+    def get_model_url_key(model_instance):
+        """Helper function that turns a set of model keys into a
+        unique key for a url.
+        """
+        values = datastore.get_model_keys(model_instance)
+        return '/'.join([unicode(value) if value else empty_sequence
+                         for value in values])
+
     def create_index_view():
         @view_decorator
         def index():
@@ -134,10 +142,11 @@ def create_admin_blueprint_new(
             page = int(request.args.get('page', '1'))
             pagination = datastore.create_model_pagination(
                 model_name, page, per_page)
+
             return render_template(
                 'admin/list.html',
                 model_names=datastore.list_model_names(),
-                get_model_key=datastore.get_model_key,
+                get_model_url_key=get_model_url_key,
                 model_name=model_name,
                 pagination=pagination)
         return list_view

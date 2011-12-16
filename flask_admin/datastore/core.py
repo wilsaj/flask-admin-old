@@ -29,8 +29,10 @@ class AdminDatastore(object):
         """Returns a form, given a model name."""
         raise NotImplementedError()
 
-    def get_model_key(self, model_instance):
-        """Returns the primary key for a given a model instance."""
+    def get_model_keys(self, model_instance):
+        """Returns the keys for a given a model instance. This should
+        be an iterable (e.g. list or tuple) containing the keys.
+        """
         raise NotImplementedError()
 
     def list_model_names(self):

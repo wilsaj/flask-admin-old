@@ -14,13 +14,13 @@
       {{ render_pagination(pagination, '.list_view', model_name=model_name) }}
     </li>
     {% for model_instance in pagination.items  %}
-      {% set model_pk = get_model_key(model_instance) %}
+      {% set model_url_key = get_model_url_key(model_instance) %}
       <li>
-        <a href="{{ url_for('.edit', model_name=model_name, model_key=model_pk) }}">{{ model_instance }}</a>
-        <a href="{{ url_for('.delete', model_name=model_name, model_key=model_pk) }}" title="delete">
+        <a href="{{ url_for('.edit', model_name=model_name, model_key=model_url_key) }}">{{ model_instance }}</a>
+        <a href="{{ url_for('.delete', model_name=model_name, model_key=model_url_key) }}" title="delete">
           <div class="ui-widget ui-state-default ui-corner-all" title="delete"><span class="ui-icon ui-icon-trash"></span></div>
         </a>
-        <a href="{{ url_for('.edit', model_name=model_name, model_key=model_pk) }}" title="edit">
+        <a href="{{ url_for('.edit', model_name=model_name, model_key=model_url_key) }}" title="edit">
           <div class="ui-widget ui-state-default ui-corner-all" title="edit"><span class="ui-icon ui-icon-pencil"></span></div>
         </a>
       </li>

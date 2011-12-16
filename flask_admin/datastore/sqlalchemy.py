@@ -139,10 +139,10 @@ class SQLAlchemyDatastore(AdminDatastore):
         """Returns a form, given a model name."""
         return self.form_dict[model_name]
 
-    def get_model_key(self, model_instance):
+    def get_model_keys(self, model_instance):
         """Returns the keys for a given a model instance."""
-        return '/'.join([getattr(model_instance, value)
-                         for value in _get_pk_names(model_instance)])
+        return [getattr(model_instance, value)
+                for value in _get_pk_names(model_instance)]
 
     def list_model_names(self):
         """Returns a list of model names available in the datastore."""

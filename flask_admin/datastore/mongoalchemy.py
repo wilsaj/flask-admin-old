@@ -115,9 +115,9 @@ class MongoAlchemyDatastore(AdminDatastore):
         """Returns a form, given a model name."""
         return self.form_dict.get(model_name, None)
 
-    def get_model_key(self, model_instance):
-        """Returns the primary key for a given a model instance."""
-        return model_instance.mongo_id
+    def get_model_keys(self, model_instance):
+        """Returns the keys for a given a model instance."""
+        return [model_instance.mongo_id]
 
     def list_model_names(self):
         """Returns a list of model names available in the datastore."""
