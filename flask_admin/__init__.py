@@ -271,9 +271,13 @@ def create_admin_blueprint_new(
 
     admin_blueprint.add_url_rule('/', 'index',
                       view_func=create_index_view())
+    list_view = create_list_view()
     admin_blueprint.add_url_rule('/list/<model_name>/',
                       'list',
-                      view_func=create_list_view())
+                      view_func=list_view)
+    admin_blueprint.add_url_rule('/list/<model_name>/',
+                      'list_view',
+                      view_func=list_view)
     admin_blueprint.add_url_rule('/edit/<model_name>/<path:model_url_key>/',
                       'edit',
                       view_func=create_edit_view(),
