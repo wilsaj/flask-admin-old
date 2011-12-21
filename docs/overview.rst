@@ -280,21 +280,13 @@ that demonstrate all of the patterns above, plus some additional ideas
 on how you can configure the admin.
 
 
+
+
+
 Changelog
 ---------
 
-0.3.0
-  - added datastore API to support additional datastores more easily
-  - added MongoAlchemy support
-  - added composite primary key support
-  - changed `admin.list_view` endpoint to `admin.list` for consistency
-
-0.2.x
-  - move from flaskext namespace to flask_admin
-  - miscellaneous fixes and frontend tweaks
-
-0.1.x
-  - initial release
+.. include:: ../CHANGES
 
 
 .. _example directory: https://github.com/wilsaj/flask-admin/tree/master/example
