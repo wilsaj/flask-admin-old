@@ -138,40 +138,47 @@ directories used by your Flask application.
 
 The following templates are defined in Flask-Admin:
 
-`admin/base.html` - This is the primary base template that defines the
+``admin/base.html`` - This is the primary base template that defines the
 bulk of the look and feel of the Admin. If you are using any of the
 default admin view templates, the base templates should provide the
-following blocks::
+following blocks:
 
-    ``title`` - The title of the page (in the html title element)
-    ``main`` - This is where the main content of each of the admin
+    **title** - The title of the page (in the html title element)
+
+    **main** - This is where the main content of each of the admin
     views is placed (like editing forms)
 
-`admin/extra_base.html` - This is the template that is actually
+``admin/extra_base.html`` - This is the template that is actually
 inheritted by the default admin view templates. By extending
 base.html, this template allows you to override some of behaviors
 provided in the `base.html` template (e.g. navigation) while
 maintaining the most of base template behavior (like setting up
 Javascript-enhanced UI elements).
 
-`admin/index.html` - The template used by the ``admin.index`` view
+``admin/index.html`` - The template used by the ``admin.index`` view.
 
-`admin/list.html` - The template used by the ``admin.list`` view
+``admin/list.html`` - The template used by the ``admin.list`` view.
 
-`admin/add.html` - The template used by the ``admin.add`` view
+``admin/add.html`` - The template used by the ``admin.add`` view.
 
-`admin/edit.html` - The template used by the ``admin.edit`` view
+``admin/edit.html`` - The template used by the ``admin.edit`` view.
 
 
 In addition, the following "helper" templates are defined. These
 define Jinja macros that are used for rendering things like the
 pagination and forms:
 
-`admin/_formhelpers.html`
+``admin/_formhelpers.html`` - The template that defines the
+``render_field`` macro which is used for rendering fields.
 
-`admin/_paginationhelpers.html`
+``admin/_paginationhelpers.html`` - The template that defines the
+``render_pagination`` macro used for creating pagination element in
+the list view.
 
-`admin/_statichelpers.html`
+``admin/_statichelpers.html`` - The template that defines the
+``static`` macro. You probably won't need to override this one: it
+just points to the ``admin.static`` endpoint, which may be easier to
+override directly.
 
 
 
