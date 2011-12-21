@@ -289,10 +289,11 @@ Changelog
   - added composite primary key support
   - changed `admin.list_view` endpoint to `admin.list` for consistency
 
-0.2.0
-  - 
+0.2.x
+  - move from flaskext namespace to flask_admin
+  - miscellaneous fixes and frontend tweaks
 
-0.1.0
+0.1.x
   - initial release
 
 
