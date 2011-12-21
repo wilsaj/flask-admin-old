@@ -292,13 +292,13 @@ class AdminConverter(ModelConverter):
 
             if prop.direction == sa.orm.properties.MANYTOONE:
                 return sa_fields.QuerySelectField(
-                    foreign_model.__name__,
+                    prop.key,
                     query_factory=_query_factory_for(foreign_model,
                                                      self.db_session),
                     allow_blank=local_column.nullable)
             if prop.direction == sa.orm.properties.MANYTOMANY:
                 return sa_fields.QuerySelectMultipleField(
-                    foreign_model.__name__,
+                    prop.key,
                     query_factory=_query_factory_for(foreign_model,
                                                      self.db_session),
                     allow_blank=local_column.nullable)
