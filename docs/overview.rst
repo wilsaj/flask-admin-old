@@ -280,7 +280,10 @@ that demonstrate all of the patterns above, plus some additional ideas
 on how you can configure the admin.
 
 
+Authors
+-------
 
+.. include:: ../AUTHORS
 
 
 Changelog
