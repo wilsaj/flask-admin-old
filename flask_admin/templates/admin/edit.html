@@ -11,16 +11,13 @@ Editing {{model_name}}
     <legend>
       Editing {{model_name}}
     </legend>
-      <ul>
-        {% for field in form %}
-          <li>
-            {{ render_field(field) }}
-          </li>
-        {% endfor %}
-        {{ form.csrf }}
-      </ul>
-      <input type="submit" value="Submit" class="button"/>
-      <input type="button" value="Cancel" class="button"
+    {% for field in form %}
+      {{ render_field(field) }}
+    {% endfor %}
+    {{ form.csrf }}
+    <div class="actions">
+      <input type="submit" value="Save {{ model_name }}" class="btn primary large"/>
+      <input type="button" value="Cancel" class="btn large"
              onclick="javascript:window.location = '{{ url_for('.list', model_name=model_name) }}'" />
     </div>
   </fieldset>

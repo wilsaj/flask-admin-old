@@ -16,10 +16,6 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <!-- CSS : implied media="all" -->
-  <link rel="stylesheet" href="{{ static('css/bootstrap.min.css') }}">
-  <link rel="stylesheet" href="{{ static('css/style.css') }}?v=1">
-
   <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
   <script src="{{ static('js/libs/modernizr-1.6.min.js')}}"></script>
 
@@ -29,44 +25,54 @@
   <link href="http://fonts.googleapis.com/css?family=Inconsolata:regular" rel="stylesheet" type="text/css" >
   <link rel="stylesheet" href="{{ static('css/Aristo/jquery-ui-1.8.7.custom.css') }}" type="text/css"/>
   <link rel="stylesheet" href=" {{ static('css/chosen.css') }}?v=1">
+
+  <link rel="stylesheet" href="{{ static('css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ static('css/style.css') }}?v=1">
 {% block extra_head %}
 {% endblock extra_head %}
 </head>
 
 <body lang="en">
-  <div class="container">
-    <header>
+  <header>
     {% block header %}
-      <h1>Flask Admin</h1>
+      <div id="admin-topbar" class="topbar">
+        <div class="topbar-inner">
+          <div class="container-fluid">
+            <h3>Flask Admin</h3>
+          </div>
+        </div>
+      </div>
     {% endblock header %}
-    </header>
+  </header>
+  <div class="container-fluid">
 
 {% block left_nav  %}
-  <div id="left_nav">
-    <h4>Models</h4>
-    <ul>
-      {% for model in model_names|sort %}
+    <div id="left_nav" class="sidebar">
+      <h3>Models</h3>
+      <ul>
+        {% for model in model_names|sort %}
         <li>
           <a href="{{ url_for('.list', model_name=model,page=1)}}">{{model}}</a>
         </li>
       {% endfor %}
-    </ul>
-  </div>
+      </ul>
+    </div>
 {% endblock left_nav %}
-    <div id="main" role="main">
+    <div id="main" class="content">
       {% if get_flashed_messages(with_categories=true) %}
-      <div id="flashed-messages">
-        {% for category, msg in get_flashed_messages(with_categories=true) %}
-          <p class="flash-{{ category }}">{{ msg }}</p>
-        {% endfor %}
-      </div>
+        <div id="flashed-messages">
+          {% for category, msg in get_flashed_messages(with_categories=true) %}
+            <p class="flash-{{ category }}">{{ msg }}</p>
+          {% endfor %}
+        </div>
       {% endif %}
 {% block main %}
 {% endblock main %}
     </div>
-      <footer>
-      </footer>
-    </div>
+  </div>
+  <footer>
+  </footer>
+
 
     <!-- JavaScript at the bottom for fast page loading -->
 

@@ -10,246 +10,63 @@
 .ui-timepicker-div td { font-size: 90%; }
 
 
+
+
 /**
  * Primary styles
  */
 
-header {
-    text-align: left;
-    background: #fafafa;
-    padding: 0 0 5px 20px;
-    margin-bottom: 5px;
-    border-bottom: 1px solid #CDCDCD;
+body {
+    padding-top: 40px;
 }
 
-header h1 {
-    font-size: 4em;
+header #admin-topbar div {
+    background-color: #eaeaea;
+    color: #3D3D3D;
+}
+
+header h3 {
+    font-size: 2em;
     font-family: 'Vollkorn', 'Georgia', serif;
     font-weight: normal;
-    word-spacing: 0.115em;
-}
-
-header span {
-    padding: 0.2em 0.5em;
-    display: inline-block;
-}
-
-body {
-    margin: 0px auto;
-    padding: 0 0 200px 0;
 }
 
 div#left_nav {
-    float: left;
-    padding: 10px 20px 0 0;
     border-right: 1px solid #CDCDCD;
     font-family: Georgia, serif;
 }
 
 div#left_nav h4 {
     font-size: 1.2em;
-    padding: 0 0 0 10px;
 }
 
 div#left_nav ul {
     margin-left: 0;
-    padding: 0 0 0 4px;
     list-style-type: none;
 }
 
 div#left_nav a {
     color: #000000;
     text-decoration: none;
-    display: block;
-    padding: 3px 1px 3px 9px;
-    /* background-color: #D5D2AF; */
-    /* border-bottom: 1px solid #CDCDCD; */
 }
 
 div#left_nav a:hover {
     color: #555;
 }
 
-#main {
-    float: left;
-    padding: 5px 0 0 40px;
-    width: 600px;
-    margin: 0px auto;
-    bottom: 0px;
+.edit_form .actions {
+    background-color: #FFF;
+    border-top: 0px;
 }
 
-#flashed-messages {
-    min-height: 30px;
-    font-family: Georgia, serif;
-    letter-spacing: 0.082em;
-    padding: 0 0 10px 0;
+/* redefine large btn css  */
+.edit_form .actions .btn.large {
+  font-size: 15px;
+  line-height: normal;
+  padding: 9px 14px 9px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  width: auto;
 }
 
-#flashed-messages .flash-error {
-    border: 1px solid;
-    padding: 3px 20px 3px 20px;
-    background-color: #FFF5F7;
-    color: #CA0C0C;
-}
-
-#flashed-messages .flash-success {
-    border: 1px solid;
-    font-weight: bold;
-    padding: 3px 20px 3px 20px;
-    background-color: #E3FAE4;
-    color: #406141;
-}
-
-ul#model_list h2 {
-    padding: 8px 0 0 8px;
-    font-size: 1.3em;
-    text-align: left;
-    font-family: Georgia, serif;
-    letter-spacing: 0.082em;
-}
-
-ul#model_list {
-    list-style-type: none;
-    font-family: 'Merriweather', Georgia, serif;
-    letter-spacing: 0.022em;
-    word-spacing: 0.131em;
-}
-
-ul#model_list a {
-    text-decoration: none;
-    color: #555;
-}
-
-ul#model_list > li {
-    overflow: auto;
-    padding: 4px 10px 4px 12px;
-    border: 1px solid #999;
-    background: #f9f9f9; /* old browsers */
-}
-
-ul#model_list > li:first-child {
-    min-height: 2.5em;
-    padding: 0 0 0 0;
-    border-top-right-radius: 20px 15px;
-    border-top-left-radius: 6px 6px;
-    background: #151616; /* old browsers */
-    background: -moz-linear-gradient(top, #151616 0%, #6e7774 5%, #F7F7F7 16%); /* firefox */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#151616), color-stop(5%,#6e7774), color-stop(16%,#F7F7F7)); /* webkit */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#151616', endColorstr='#F7F7F7',GradientType=0 ); /* ie */
-    text-align: center;
-}
-
-ul#model_list li#model_list_header .pagination {
-    margin: -2px 0 0 0;
-}
-
-ul#model_list > li:last-child {
-    overflow: auto;
-    border-bottom-left-radius: 20px 15px;
-    border-bottom-right-radius: 6px 6px;
-    background: #ffffff; /* olda browsers */
-    background: -moz-linear-gradient(top, #ffffff 0%, #f6f6f6 47%, #ededed 100%); /* firefox */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed)); /* webkit */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* ie */
-    text-align: center;
-}
-
-.pagination {
-    font-family: Georgia, serif;
-}
-
-.no-prev-next-pagination {
-    color: #DDDDDD;
-}
-
-ul#model_list .ui-widget {
-    float: right;
-    margin: 0 0 0 2px;
-}
-
-form.edit_form {
-    font-family: Georgia, serif;
-    letter-spacing: 0.082em;
-}
-
-form.edit_form fieldset {
-    margin-bottom: 10px;
-}
-
-form.edit_form legend {
-    padding: 0 2px 10px;
-    font-weight: bold;
-    font-size: 1.3em;
-}
-
-form.edit_form label {
-    display: inline-block;
-    line-height: 1.8;
-    vertical-align: top;
-    width: 180px; /* Width of labels */
-}
-
-form.edit_form .chzn-drop input {
-    min-width: 0px;
-}
-
-form.edit_form input {
-    min-width: 250px;
-}
-
-form.edit_form select {
-    min-width: 258px;
-}
-
-form.edit_form input[type="text"], textarea, select {
-    font-family: 'Inconsolata', mono;
-    font-size: 1.04em;
-}
-
-form.edit_form input[type="submit"], form.edit_form input[type="button"] {
-    min-width: 0px;
-}
-
-form.edit_form fieldset ul {
-    margin: 0;
-    padding: 0 0 10px;
-}
-
-form.edit_form fieldset li {
-    list-style: none;
-    padding: 5px;
-    margin: 0;
-}
-
-form.edit_form fieldset fieldset legend {
-    padding: 0 0 5px;
-    font-weight: normal;
-}
-
-form.edit_form textarea {
-    display: block;
-    width: 400px;
-}
-
-form.edit_form .jqxs li {
-    padding: 1px;
-}
-
-form.edit_form .jqxs input[type="button"] {
-    margin-top: 1px;
-    margin-bottom: 1px;
-}
-
-form.edit_form .error {
-    color: #CA0C0C;
-    font-weight: bold;
-    letter-spacing: 0.08em;
-}
-
-form.edit_form .error li {
-    padding: 0 0 0 14px;
-}
-
-form.edit_form .error input {
-    background-color: #FFB0B0;
-}
