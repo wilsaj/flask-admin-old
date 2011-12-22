@@ -101,12 +101,18 @@ def create_admin_blueprint_deprecated(
 
 def create_admin_blueprint_new(
     datastore, name='admin', list_view_pagination=25, view_decorator=None,
-    empty_sequence=u'\x1a', **kwargs):
+    empty_sequence=u'\x1a', template_folder=None, static_folder=None,
+    **kwargs):
+    if not template_folder:
+        template_folder = os.path.join(
+            _get_admin_extension_dir(), 'templates')
+    if not static_folder:
+        static_folder = os.path.join(
+            _get_admin_extension_dir(), 'static')
 
     admin_blueprint = flask.Blueprint(
         name, 'flask.ext.admin',
-        static_folder=os.path.join(_get_admin_extension_dir(), 'static'),
-        template_folder=os.path.join(_get_admin_extension_dir(), 'templates'),
+        static_folder=static_folder, template_folder=template_folder,
         **kwargs)
 
     # if no view decorator was assigned, let view_decorator be a dummy
