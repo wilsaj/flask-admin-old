@@ -70,3 +70,7 @@ div#left_nav a:hover {
   width: auto;
 }
 
+.admin-icon {
+  width: 18px;
+  float: left;
+}

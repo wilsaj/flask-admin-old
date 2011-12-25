@@ -1,35 +1,43 @@
 {% extends "admin/extra_base.html" %}
 {% from "admin/_paginationhelpers.html" import render_pagination %}
 
-{% block title %}
-{{model_name}}
-{% endblock %}
-
+{%- block title -%}
+  {{model_name}}
+{%- endblock -%}
 
 {% block main %}
-
-  <ul id="model_list">
-    <li id="model_list_header">
-      <h2>{{ model_name }}</h2>
-      {{ render_pagination(pagination, '.list', model_name=model_name) }}
-    </li>
+  <table class="condensed-table zebra-striped">
+    <tr>
+      <th>{{ model_name }}</th>
+      <th></th>
+    </tr>
     {% for model_instance in pagination.items  %}
       {% set model_url_key = get_model_url_key(model_instance) %}
-      <li>
-        <a href="{{ url_for('.edit', model_name=model_name, model_url_key=model_url_key) }}">{{ model_instance }}</a>
-        <a href="{{ url_for('.delete', model_name=model_name, model_url_key=model_url_key) }}" title="delete">
-          <div class="ui-widget ui-state-default ui-corner-all" title="delete"><span class="ui-icon ui-icon-trash"></span></div>
-        </a>
-        <a href="{{ url_for('.edit', model_name=model_name, model_url_key=model_url_key) }}" title="edit">
-          <div class="ui-widget ui-state-default ui-corner-all" title="edit"><span class="ui-icon ui-icon-pencil"></span></div>
-        </a>
-      </li>
+      <tr>
+        <td>
+          <a href="{{ url_for('.edit', model_name=model_name, model_url_key=model_url_key) }}">{{ model_instance }}bla</a>
+        </td>
+        <td>
+          <a href="{{ url_for('.edit', model_name=model_name, model_url_key=model_url_key) }}" title="edit">
+            <div class="admin-icon ui-widget ui-state-default ui-corner-all" title="edit">
+              <span class="ui-icon ui-icon-pencil"></span>
+            </div>
+          </a>
+          <a href="{{ url_for('.delete', model_name=model_name, model_url_key=model_url_key) }}" title="delete">
+            <div class="admin-icon ui-widget ui-state-default ui-corner-all" title="delete">
+              <span class="ui-icon ui-icon-trash"></span>
+            </div>
+          </a>
+        </td>
+      </tr>
     {% endfor %}
-    <li>
-      {{ render_pagination(pagination, '.list', model_name=model_name) }}
-      <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}">
-        <div class="ui-widget ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></div>
-      </a>
-    </li>
-  </ul>
+  </table>
+    <div class="row">
+      <div class="span7">
+        <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}">
+          <div class="admin-icon ui-widget ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span class="ui-icon ui-icon-plusthick"></span></div>
+        </a>
+      </div>
+    </div>
+    {{ render_pagination(pagination, '.list', model_name=model_name) }}
 {% endblock %}
