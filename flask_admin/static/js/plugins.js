@@ -11,3 +11,13 @@ window.log = function(){
 
 // place any jQuery/helper plugins in here, instead of separate, slower script files.
 
+$(document).ready(function() {
+    $('.delete-button').click(function() {
+        var answer = confirm("Are you sure you want delete this item?");
+        if (answer) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+});
