@@ -21,7 +21,7 @@
           <a class="edit-link" href="{{ url_for('.edit', model_name=model_name, model_url_key=model_url_key) }}">{{ model_instance }}</a>
         </td>
         <td>
-          <a href="{{ url_for('.delete', model_name=model_name, model_url_key=model_url_key) }}"  title="delete">
+          <a href="{{ url_for('.delete', model_name=model_name, model_url_key=model_url_key) }}" class="delete-link" title="delete">
             <i class="icon-remove"></i>
           </a>
         </td>

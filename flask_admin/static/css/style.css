@@ -69,3 +69,16 @@ div#left_nav a:hover {
     padding:0px;
     height:100%;
 }
+
+#list-table a.delete-link i {
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    -khtml-border-radius:10px;
+}
+
+#list-table a.delete-link i:hover {
+    background-color: #444;
+    background-image: url(../img/glyphicons-halflings-white.png);
+}
+
