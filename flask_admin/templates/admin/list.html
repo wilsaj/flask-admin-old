@@ -25,12 +25,8 @@
       </tr>
     {% endfor %}
   </table>
-    <div class="row">
-      <div class="span7">
-        <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}" class="btn btn-success">
-          <i class="icon-plus icon-white"></i> add new {{ model_name|lower }}
-        </a>
-      </div>
-    </div>
-    {{ render_pagination(pagination, '.list', model_name=model_name) }}
+  <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}" class="btn btn-success">
+    <i class="icon-plus icon-white"></i> add new {{ model_name|lower }}
+  </a>
+  {{ render_pagination(pagination, '.list', model_name=model_name) }}
 {% endblock %}
