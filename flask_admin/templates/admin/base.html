@@ -64,11 +64,12 @@
   <div class="container">
     <div id="main" class="content">
       {% if get_flashed_messages(with_categories=true) %}
-        <div id="flashed-messages">
-          {% for category, msg in get_flashed_messages(with_categories=true) %}
-            <p class="flash-{{ category }}">{{ msg }}</p>
-          {% endfor %}
-        </div>
+        {% for category, msg in get_flashed_messages(with_categories=true) %}
+          <div class="alert alert-block alert-{{ category }}">
+            <a class="close" data-dismiss="alert"><i class="icon-remove"></i></a>
+            {{ msg }}
+          </div>
+        {% endfor %}
       {% endif %}
 {% block main %}
 {% endblock main %}
