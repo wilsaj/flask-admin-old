@@ -24,10 +24,10 @@ $(function(){
         return $('label[for="'+id+'"]').text();
     };
 
-    $('.edit_form select:empty')
+    $('.edit-form select:empty')
         .append('<option value="__None"></option>');
 
-    $('.edit_form select > option[value="__None"]:only-child').parent()
+    $('.edit-form select > option[value="__None"]:only-child').parent()
         .attr('disabled', 'disabled')
         .attr('data-placeholder', (
             function(index, attr){
@@ -36,7 +36,7 @@ $(function(){
                 }
             }));
 
-    $('.edit_form select')
+    $('.edit-form select')
         .attr('data-placeholder', (
             function(index, attr){
                 if (!attr){

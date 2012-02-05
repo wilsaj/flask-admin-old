@@ -8,18 +8,18 @@
 
 {% block main %}
 
-<form class="edit_form" method="POST" {% if form._has_file_field %} enctype="multipart/form-data"{% endif %}>
+<form class="edit-form form-horizontal" method="POST" {% if form._has_file_field %} enctype="multipart/form-data"{% endif %}>
   <fieldset>
     <legend>
-      Adding a new {{ model_name }}
+      new {{ model_name | lower }}
     </legend>
       {% for field in form %}
           {{ render_field(field) }}
       {% endfor %}
       {{ form.csrf }}
-    <div class="actions">
-      <input type="submit" value="Add {{ model_name }}" class="btn primary large"/>
-      <input type="button" value="Cancel" class="large btn"
+    <div class="form-actions">
+      <input type="submit" value="add {{ model_name | lower }}" class="btn btn-primary btn-large"/>
+      <input type="button" value="cancel" class="btn btn-large"
              onclick="javascript:window.location = '{{ url_for('.list', model_name=model_name) }}'" />
     </div>
   </fieldset>
