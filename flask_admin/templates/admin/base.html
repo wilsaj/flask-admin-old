@@ -34,33 +34,36 @@
 
 <body lang="en">
   <header>
-    {% block nav_bar %}
-      <div id="admin-navbar" class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-          <div class="container-fluid">
-            <a class="brand" href="#">Flask Admin</a>
-            <ul class="nav">
-              <li class="dropdown">
-                <a href="#"
-                   class="dropdown-toggle"
-                   data-toggle="dropdown">
-                  models
-                  <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  {% for model in model_names|sort %}
-                    <li>
-                      <a href="{{ url_for('.list', model_name=model, page=1) }}">{{ model|lower }}</a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </li>
-            </ul>
+    {% block nav %}
+      <nav>
+        <div id="admin-navbar" class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container-fluid">
+              <a class="brand" href="#">Flask Admin</a>
+              <ul class="nav">
+                <li class="dropdown">
+                  <a href="#"
+                     class="dropdown-toggle"
+                     data-toggle="dropdown">
+                    models
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    {% for model in model_names|sort %}
+                      <li>
+                        <a href="{{ url_for('.list', model_name=model, page=1) }}">{{ model|lower }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    {% endblock nav_bar %}
+      </nav>
+    {% endblock nav %}
   </header>
+
   <div class="container">
     <div id="main" class="content">
       {% if get_flashed_messages(with_categories=true) %}
