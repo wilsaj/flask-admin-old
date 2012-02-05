@@ -47,6 +47,15 @@ $(function(){
                  allow_single_deselect: true});
 
     $('tr.listed').on('click', function(){
-        window.location = $('a.edit-link').attr('href');
-    })
+        window.location = $(this).find('a.edit-link').attr('href');
+    });
+
+    $('tr.listed').on('mouseover', function(){
+        $(this).toggleClass('listed-highlight');
+    });
+
+    $('tr.listed').on('mouseout', function(){
+        $(this).toggleClass('listed-highlight');
+    });
+
 });
