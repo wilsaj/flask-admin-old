@@ -2,20 +2,20 @@
 {% from "admin/_paginationhelpers.html" import render_pagination %}
 
 {%- block title -%}
-  {{model_name}}
+  {{ model_name|lower }} list
 {%- endblock -%}
 
 {% block main %}
   <table class="table table-condensed table-striped">
     <tr>
-      <th>{{ model_name }}</th>
+      <th>{{ model_name|lower }}</th>
       <th>delete</th>
     </tr>
     {% for model_instance in pagination.items  %}
       {% set model_url_key = get_model_url_key(model_instance) %}
       <tr>
-        <td class="listed">
-          <a href="{{ url_for('.edit', model_name=model_name, model_url_key=model_url_key) }}">{{ model_instance }}bla</a>
+        <td>
+          <a href="{{ url_for('.edit', model_name=model_name, model_url_key=model_url_key) }}">{{ model_instance }}</a>
         </td>
         <td>
           <a href="{{ url_for('.delete', model_name=model_name, model_url_key=model_url_key) }}"  title="delete">
@@ -27,8 +27,8 @@
   </table>
     <div class="row">
       <div class="span7">
-        <a title="new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}" class="btn btn-success">
-          <i class="icon-plus icon-white"></i> new {{ model_name }}
+        <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}" class="btn btn-success">
+          <i class="icon-plus icon-white"></i> add new {{ model_name|lower }}
         </a>
       </div>
     </div>
