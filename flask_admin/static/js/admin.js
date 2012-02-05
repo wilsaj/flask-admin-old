@@ -45,4 +45,8 @@ $(function(){
             }))
         .chosen({no_results_text: "No results matched",
                  allow_single_deselect: true});
+
+    $('tr.listed').on('click', function(){
+        window.location = $('a.edit-link').attr('href');
+    })
 });
