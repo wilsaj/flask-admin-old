@@ -6,18 +6,18 @@ Editing {{model_name}}
 
 {% block main %}
 
-<form class="edit_form" method="POST" action=""{% if form._has_file_field %} enctype="multipart/form-data"{% endif %}>
+<form class="edit-form form-horizontal" method="POST" action=""{% if form._has_file_field %} enctype="multipart/form-data"{% endif %}>
   <fieldset>
     <legend>
-      Editing {{model_name}}
+      edit {{ model_name | lower}}
     </legend>
     {% for field in form %}
       {{ render_field(field) }}
     {% endfor %}
     {{ form.csrf }}
-    <div class="actions">
-      <input type="submit" value="Save {{ model_name }}" class="btn primary large"/>
-      <input type="button" value="Cancel" class="btn large"
+    <div class="form-actions">
+      <input type="submit" value="save changes" class="btn btn-primary btn-large"/>
+      <input type="button" value="cancel" class="btn btn-large"
              onclick="javascript:window.location = '{{ url_for('.list', model_name=model_name) }}'" />
     </div>
   </fieldset>
