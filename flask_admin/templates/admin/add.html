@@ -2,7 +2,7 @@
 {% from "admin/_formhelpers.html" import render_field %}
 
 {% block title %}
-  Add a new {{model_name}}
+  add new {{ model_name|lower }}
 {% endblock %}
 
 
@@ -11,14 +11,14 @@
 <form class="edit-form form-horizontal" method="POST" {% if form._has_file_field %} enctype="multipart/form-data"{% endif %}>
   <fieldset>
     <legend>
-      new {{ model_name | lower }}
+      new {{ model_name|lower }}
     </legend>
       {% for field in form %}
           {{ render_field(field) }}
       {% endfor %}
       {{ form.csrf }}
     <div class="form-actions">
-      <input type="submit" value="add {{ model_name | lower }}" class="btn btn-primary btn-large"/>
+      <input type="submit" value="add {{ model_name|lower }}" class="btn btn-primary btn-large"/>
       <input type="button" value="cancel" class="btn btn-large"
              onclick="javascript:window.location = '{{ url_for('.list', model_name=model_name) }}'" />
     </div>
