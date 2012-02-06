@@ -6,6 +6,7 @@
 {%- endblock -%}
 
 {% block main %}
+  {{ render_pagination(pagination, '.list', model_name=model_name) }}
   <table class="table table-condensed table-striped" id="list-table">
     <thead>
       <tr>
