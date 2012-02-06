@@ -20,43 +20,10 @@ body {
     padding-top: 60px;
 }
 
-header #admin-topbar div {
-    background-color: #eaeaea;
-    color: #3D3D3D;
-}
-
 header h3 {
     font-size: 2em;
     font-family: 'Vollkorn', 'Georgia', serif;
     font-weight: normal;
-}
-
-div#left_nav {
-    border-right: 1px solid #CDCDCD;
-    font-family: Georgia, serif;
-}
-
-div#left_nav h4 {
-    font-size: 1.2em;
-}
-
-div#left_nav ul {
-    margin-left: 0;
-    list-style-type: none;
-}
-
-div#left_nav a {
-    color: #000000;
-    text-decoration: none;
-}
-
-div#left_nav a:hover {
-    color: #555;
-}
-
-.admin-icon {
-  width: 18px;
-  float: left;
 }
 
 #list-table tr.listed-highlight td {
