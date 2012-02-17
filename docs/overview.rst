@@ -105,16 +105,21 @@ are available:
 :meth:`url_for('admin.list', model_name='some_model')`
     returns the list view for a given model
 
-:meth:`url_for('admin.edit', model_name='some_model', model_key=primary_key)`
+:meth:`url_for('admin.edit', model_name='some_model', model_key=model_key)`
     returns the url for the page used for editing a specific model
-    instance
+    instance. The model_key is a key that allows the model to be
+    uniquely identified. For example, with the SQLAlchemy datastore,
+    the model_key is the set primary key value(s) for a model
+    instance. In cases where multiple values identify a model, the
+    values will be separated by a ``'/'``
 
 :meth:`url_for('admin.add', model_name='some_model')`
     returns the url for the adding a new model instance
 
-:meth:`url_for('admin.delete', model_name='some_model', model_key=primary_key)`
+:meth:`url_for('admin.delete', model_name='some_model', model_key=model_key)`
     returns the url for the page used for deleting a specific model
-    instance
+    instance; see the note about the model_key on the 'admin.edit'
+    endpoint above
 
 
 .. note::
