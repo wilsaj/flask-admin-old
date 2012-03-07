@@ -30,8 +30,8 @@ class AdminDatastore(object):
         raise NotImplementedError()
 
     def get_model_keys(self, model_instance):
-        """Returns the keys for a given a model instance. This should
-        be an iterable (e.g. list or tuple) containing the keys.
+        """Returns the values of primary keys for a given a model instance. 
+        This should be an iterable (e.g. list or tuple) containing the keys.
         """
         raise NotImplementedError()
 

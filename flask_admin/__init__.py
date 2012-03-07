@@ -125,7 +125,7 @@ def create_admin_blueprint_new(
             return wrapper
 
     def get_model_url_key(model_instance):
-        """Helper function that turns a set of model keys into a
+        """Helper function that turns a set of model primary keys into a
         unique key for a url.
         """
         values = datastore.get_model_keys(model_instance)

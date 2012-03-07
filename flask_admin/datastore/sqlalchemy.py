@@ -140,7 +140,7 @@ class SQLAlchemyDatastore(AdminDatastore):
         return self.form_dict[model_name]
 
     def get_model_keys(self, model_instance):
-        """Returns the keys for a given a model instance."""
+        """Returns the values of primary keys for a given a model instance."""
         return [getattr(model_instance, value)
                 for value in _get_pk_names(model_instance)]
 
@@ -239,10 +239,18 @@ class AdminConverter(ModelConverter):
                                 'column properties currently')
 
             column = prop.columns[0]
+
+            # Support sqlalchemy.schema.ColumnDefault, so users can benefit from
+            # setting defaults for fields, e.g.:
+            # field = Column(DateTimeField, default=datetime.utcnow)
+            # inspired by wtforms/ext/sqlalchemy/orm.py ModelConverterBase
+            # in WTForms 1.0
+
+            default = getattr(column, 'default', None)
             default_value = None
 
-            if hasattr(column, 'default'):
-                default_value = column.default
+            if default is not None:
+                default_value = getattr(default, 'arg', None) 
 
             kwargs = {
                 'validators': [],
