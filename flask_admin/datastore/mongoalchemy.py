@@ -151,7 +151,7 @@ class MongoAlchemyDatastore(AdminDatastore):
 class MongoAlchemyPagination(util.Pagination):
     def __init__(self, page, per_page, query, *args, **kwargs):
         super(MongoAlchemyPagination, self).__init__(
-            page, per_page, total_count=query.count(), items=query.all(),
+            page, per_page, total=query.count(), items=query.all(),
             *args, **kwargs)
 
 
