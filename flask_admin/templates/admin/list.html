@@ -6,6 +6,22 @@
 {%- endblock -%}
 
 {% block main %}
+{% if not pagination.total_count  %}
+  <div class="container">
+    <div id="main" class="content">
+      <div class="row">
+        Not a single {{ model_name|lower }} was found.
+      </div>
+      <div class="row">
+        <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}" class="btn btn-success">
+          <i class="icon-plus icon-white"></i> add a {{ model_name|lower }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+ {% else %}
+
   {{ render_pagination(pagination, '.list', model_name=model_name) }}
   <table class="table table-condensed table-striped" id="list-table">
     <thead>
@@ -30,8 +46,9 @@
     {% endfor %}
     </tbody>
   </table>
+  {{ render_pagination(pagination, '.list', model_name=model_name) }}
   <a title="add new {{ model_name }}" href="{{ url_for('.add', model_name=model_name) }}" class="btn btn-success">
     <i class="icon-plus icon-white"></i> add new {{ model_name|lower }}
   </a>
-  {{ render_pagination(pagination, '.list', model_name=model_name) }}
+{% endif %}
 {% endblock %}
