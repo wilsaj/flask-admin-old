@@ -263,38 +263,32 @@ def create_admin_blueprint_new(
             if not model_name in datastore.list_model_names():
                 return "%s cannot be accessed through this admin page" % (
                     model_name,)
-            model_instance = datastore.delete_model_instance(model_name,
-                                                             model_keys)
+            model_instance = datastore.delete_model_instance(
+                model_name, model_keys)
             if not model_instance:
                 return "%s not found: %s" % (model_name, model_keys)
-
             flash('%s deleted: %s' % (model_name, model_instance),
                   'success')
-            return redirect(url_for(
-                '.list',
-                model_name=model_name))
+            return redirect(
+                url_for('.list', model_name=model_name))
+
         return delete
 
     admin_blueprint.add_url_rule('/', 'index',
-                      view_func=create_index_view())
+                                 view_func=create_index_view())
     list_view = create_list_view()
     admin_blueprint.add_url_rule('/list/<model_name>/',
-                      'list',
-                      view_func=list_view)
+                                 'list', view_func=list_view)
     admin_blueprint.add_url_rule('/list/<model_name>/',
-                      'list_view',
-                      view_func=list_view)
+                                 'list_view', view_func=list_view)
     admin_blueprint.add_url_rule('/edit/<model_name>/<path:model_url_key>/',
-                      'edit',
-                      view_func=create_edit_view(),
-                      methods=['GET', 'POST'])
+                                 'edit', view_func=create_edit_view(),
+                                 methods=['GET', 'POST'])
     admin_blueprint.add_url_rule('/delete/<model_name>/<path:model_url_key>/',
-                      'delete',
-                      view_func=create_delete_view())
+                                 'delete', view_func=create_delete_view())
     admin_blueprint.add_url_rule('/add/<model_name>/',
-                      'add',
-                      view_func=create_add_view(),
-                      methods=['GET', 'POST'])
+                                 'add', view_func=create_add_view(),
+                                 methods=['GET', 'POST'])
 
     return admin_blueprint
 
