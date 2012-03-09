@@ -239,10 +239,17 @@ class AdminConverter(ModelConverter):
                                 'column properties currently')
 
             column = prop.columns[0]
-            default_value = None
 
-            if hasattr(column, 'default'):
-                default_value = column.default
+#            default_value = None
+#            if hasattr(column, 'default'):      #always is True
+#                default_value = column.default 
+
+            default_value = getattr(column, 'default', None)
+
+            if default_value is not None and \
+                    not callable(default_value.arg):
+                # for the default value such as number or string
+                default_value = default_value.arg
 
             kwargs = {
                 'validators': [],
