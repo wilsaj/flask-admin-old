@@ -1,9 +1,7 @@
 
 
-Flask-Admin has been primarily developed by Andy Wilson.
-
-
-These folks have contributed some very welcome patches and suggestions:
+Flask-Admin was initially developed by Andy Wilson. The current list
+of authors and contributors includes:
 
 - mfa (Andreas Madsack)
 - ralfonso (Ryan Roemmich)
