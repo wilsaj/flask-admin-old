@@ -20,6 +20,7 @@ from example.flask_sqlalchemy import flaskext_sa_multi_pk
 from example.mongoalchemy import simple as ma_simple
 import test.deprecation
 import test.filefield
+import test.sqlalchemy_with_defaults
 from test.mongoalchemy_datastore import ConversionTest
 
 
@@ -152,6 +153,20 @@ class CustomFormTest(TestCase):
         assert "Confirm Password"  in rv.data
         assert "Is Active"  in rv.data
         assert "_password_hash" not in rv.data
+
+
+class SQLAlchemyWithDefaultsTest(TestCase):
+    TESTING = True
+
+    def create_app(self):
+        app = test.sqlalchemy_with_defaults.create_app('sqlite://')
+        return app
+
+    def test_defaults_work(self):
+        rv = self.client.get('/admin/add/TestModel/')
+        assert "2194112" in rv.data
+        assert "128uasdn1uinvuio12ioj!!@Rfja" in rv.data
+        assert "22341.29"  in rv.data
 
 
 class FlaskSQLAlchemySimpleTest(SimpleTest):
@@ -447,6 +462,7 @@ def suite():
     suite.addTest(unittest.makeSuite(FlaskSQLAlchemySimpleTest))
     suite.addTest(unittest.makeSuite(FlaskSQLAlchemyExampleTest))
     suite.addTest(unittest.makeSuite(FlaskSQLAlchemyMultiPKsTest))
+    suite.addTest(unittest.makeSuite(SQLAlchemyWithDefaultsTest))
     suite.addTest(unittest.makeSuite(ExcludePKsTrueTest))
     suite.addTest(unittest.makeSuite(ExcludePKsFalseTest))
     suite.addTest(unittest.makeSuite(SmallPaginationTest))
