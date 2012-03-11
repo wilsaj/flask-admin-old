@@ -29,7 +29,7 @@ class TestModel(Base):
 def create_app(database_uri='sqlite://'):
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'not secure'
-    engine = create_engine(database_uri, convert_unicode=True, echo=True)
+    engine = create_engine(database_uri, convert_unicode=True)
     app.db_session = scoped_session(sessionmaker(
         autocommit=False, autoflush=False, bind=engine))
     datastore = SQLAlchemyDatastore(
