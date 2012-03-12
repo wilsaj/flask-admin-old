@@ -1,3 +1,5 @@
+from __future__ import with_statement
+
 from datetime import datetime
 import sys
 import unittest
@@ -12,12 +14,12 @@ sys.path.append('./example/')
 
 from example.declarative import simple
 from example.declarative import multiple
-from example.declarative import custom_form
 from example.authentication import view_decorator
 from example.flask_sqlalchemy import flaskext_sa_simple
 from example.flask_sqlalchemy import flaskext_sa_example
 from example.flask_sqlalchemy import flaskext_sa_multi_pk
 from example.mongoalchemy import simple as ma_simple
+import test.custom_form
 import test.deprecation
 import test.filefield
 import test.sqlalchemy_with_defaults
@@ -143,7 +145,7 @@ class CustomFormTest(TestCase):
     TESTING = True
 
     def create_app(self):
-        app = custom_form.create_app('sqlite://')
+        app = test.custom_form.create_app('sqlite://')
         return app
 
     def test_custom_form(self):
