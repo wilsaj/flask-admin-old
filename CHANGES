@@ -1,3 +1,6 @@
+0.4.2
+  - fix bug with converting SQLAlchemy models to forms
+
 0.4.1
   - fix Flask-SQLAlchemy import path
 
