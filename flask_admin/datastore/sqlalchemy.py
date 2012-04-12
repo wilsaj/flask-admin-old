@@ -319,7 +319,7 @@ class AdminConverter(ModelConverter):
     def conv_DateTime(self, field_args, **extra):
         # XXX: should show disabled (greyed out) w/current value,
         #      indicating it is updated internally?
-        if field_args['default']:
+        if hasattr(field_args['default'], 'arg'):
             if inspect.isfunction(field_args['default'].arg):
                 return None
         field_args['widget'] = DateTimePickerWidget()
