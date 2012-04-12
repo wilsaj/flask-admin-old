@@ -19,7 +19,7 @@ import types
 
 import flask
 from flask import flash, render_template, redirect, request, url_for
-from flaskext.sqlalchemy import Pagination
+from flask.ext.sqlalchemy import Pagination
 import sqlalchemy as sa
 from sqlalchemy.orm.exc import NoResultFound
 from wtforms import validators, widgets
