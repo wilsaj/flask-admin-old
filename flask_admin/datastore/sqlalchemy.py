@@ -242,7 +242,7 @@ class AdminConverter(ModelConverter):
 
 #            default_value = None
 #            if hasattr(column, 'default'):      #always is True
-#                default_value = column.default 
+#                default_value = column.default
 
             default_value = getattr(column, 'default', None)
 
