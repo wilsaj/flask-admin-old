@@ -1,3 +1,10 @@
+0.4.1
+  - fix Flask-SQLAlchemy import path
+
+0.4.0
+  - front end redesign
+  - fix bug with displaying default value from SQLAlchemy models
+
 0.3.0
   - added datastore API to support additional datastores more easily
   - added MongoAlchemy support
