@@ -1,4 +1,4 @@
-Flask-Admin
+This is the code for the deprecated Flask-Admin 0.x branch.
 
-Flask-Admin is a Flask extension module that aims to be a flexible,
-customizable web-based interface to your datastore.
+Flask-Admin 1.x is way better. Go check it out at:
+http://github.com/mrjoes/flask-admin
